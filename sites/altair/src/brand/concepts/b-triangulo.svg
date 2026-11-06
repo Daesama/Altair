@@ -1,0 +1,8 @@
+<!-- Concepto B · Triángulo de verano. Vega, Deneb y Altair con sus proporciones reales; girado, Altair queda arriba y el triángulo es la A. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 198 40" data-symbol="-5 0 40 40" fill="currentColor">
+  <g class="symbol" fill-rule="evenodd">
+    <path d="M17.6 0 0 32.9 29.6 40z M15.9 16.96 9.71 28.54 20.13 31.04z"/>
+    <rect class="accent" x="12.1" y="0" width="11" height="10"/>
+  </g>
+  <g class="wordmark" fill-rule="evenodd" transform="translate(-8 0)"><path transform="translate(44 0)" d="M0 0h9.4v31.5H30V40H0z"/><path transform="translate(76 0)" d="M0 0h34v8.5H21.7V40h-9.4V8.5H0z"/><path transform="translate(111 0)" d="M0 40 13 0h12l13 40h-9.4l-2.27-7H11.68L9.4 40z M14.3 25h9.4L19 10.46z"/><path transform="translate(155 0)" d="M0 0h9.4v40H0z"/><path transform="translate(170 0)" d="M0 0h20a12 12 0 0 1 5.5 22.7L33 40H23l-6.6-16H9.4v16H0z M9.4 8v8H20a4 4 0 0 0 0-8z"/></g>
+</svg>

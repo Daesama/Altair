@@ -1,0 +1,10 @@
+<!-- Concepto A · Alineación. Tarazed (γ), Altair (α) y Alshain (β) casi en línea recta, con sus posiciones relativas reales. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 262 40" data-symbol="0 0 40 40" fill="currentColor">
+  <g class="symbol">
+    <path d="M31.4 3.4 8.4 37" stroke="currentColor" stroke-width="2.4" fill="none"/>
+    <rect class="accent" x="12" y="11" width="15" height="15"/>
+    <rect x="27.4" y="0" width="8" height="8"/>
+    <rect x="4.6" y="33.4" width="6.6" height="6.6"/>
+  </g>
+  <g class="wordmark" fill-rule="evenodd" transform="translate(58 0)"><path transform="translate(0 0)" d="M0 40 13 0h12l13 40h-9.4l-2.27-7H11.68L9.4 40z M14.3 25h9.4L19 10.46z"/><path transform="translate(44 0)" d="M0 0h9.4v31.5H30V40H0z"/><path transform="translate(76 0)" d="M0 0h34v8.5H21.7V40h-9.4V8.5H0z"/><path transform="translate(111 0)" d="M0 40 13 0h12l13 40h-9.4l-2.27-7H11.68L9.4 40z M14.3 25h9.4L19 10.46z"/><path transform="translate(155 0)" d="M0 0h9.4v40H0z"/><path transform="translate(170 0)" d="M0 0h20a12 12 0 0 1 5.5 22.7L33 40H23l-6.6-16H9.4v16H0z M9.4 8v8H20a4 4 0 0 0 0-8z"/></g>
+</svg>
