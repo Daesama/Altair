@@ -1,0 +1,209 @@
+/* ───────────────────────── Fuentes (autoalojadas, solo latin) ───────────────────────── */
+@font-face {
+  font-family: 'Archivo';
+  src: url('../assets/fonts/archivo-latin-wdth-normal.woff2') format('woff2-variations');
+  font-weight: 100 900;
+  font-stretch: 62% 125%;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Martian Mono';
+  src: url('../assets/fonts/martian-mono-latin-wdth-normal.woff2') format('woff2-variations');
+  font-weight: 100 800;
+  font-stretch: 75% 112.5%;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* Respaldo métrico para reducir el salto de diseño mientras carga Archivo. */
+@font-face {
+  font-family: 'Archivo Fallback';
+  src: local('Arial Black'), local('Arial Bold'), local('Arial');
+  size-adjust: 104%;
+  ascent-override: 88%;
+  descent-override: 21%;
+}
+
+/* ───────────────────────── Tokens ───────────────────────── */
+:root {
+  --bg: #07060a;
+  --bg-2: #0e0c14;
+  --fg: #e9e6f2;
+  --mute: #8f89a0;
+  --line: #26222f;
+  --line-2: #3a3448;
+  --violet: #7a4bff;
+  --violet-ink: #b9a4ff; /* violeta legible en texto pequeño sobre negro */
+  --blue: #4d8dff;
+  --blue-ink: #a9c6ff;
+
+  --f-display: 'Archivo', 'Archivo Fallback', 'Arial Black', sans-serif;
+  --f-mono: 'Martian Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+
+  --gutter: 16px;
+  --cols: 4;
+  --maxw: 1600px;
+  --header-h: 56px;
+
+  --t-xs: 0.6875rem;  /* 11px etiquetas mono */
+  --t-sm: 0.8125rem;  /* 13px */
+  --t-base: 1rem;
+  --t-lg: clamp(1.0625rem, 0.9rem + 0.5vw, 1.25rem);
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  color-scheme: dark;
+}
+
+@media (min-width: 768px) {
+  :root { --gutter: 32px; --cols: 8; --header-h: 64px; }
+}
+@media (min-width: 1200px) {
+  :root { --gutter: 48px; --cols: 12; }
+}
+
+/* ───────────────────────── Base ───────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-padding-top: calc(var(--header-h) + 16px);
+}
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--f-mono);
+  font-size: var(--t-sm);
+  line-height: 1.6;
+  font-stretch: 87.5%;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: clip;
+}
+img, svg { display: block; max-width: 100%; }
+img { height: auto; }
+a { color: inherit; }
+button { font: inherit; color: inherit; }
+h1, h2, h3, h4, p, ul, ol, dl, dd, figure { margin: 0; }
+ul, ol { padding: 0; list-style: none; }
+::selection { background: var(--violet); color: #fff; }
+
+:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 3px;
+}
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px; overflow: hidden;
+  clip-path: inset(50%); white-space: nowrap;
+}
+
+.skip {
+  position: fixed; top: 8px; left: 8px; z-index: 100;
+  padding: 10px 14px; background: var(--violet); color: #fff;
+  font-weight: 600; text-decoration: none;
+  transform: translateY(-200%);
+}
+.skip:focus { transform: none; }
+
+/* ───────────────────────── Tipografía ───────────────────────── */
+.display {
+  font-family: var(--f-display);
+  font-stretch: 125%;
+  font-weight: 800;
+  line-height: 0.92;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+.label {
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--mute);
+}
+.data { color: var(--blue); font-variant-numeric: tabular-nums; }
+.nocaps { text-transform: none; }
+
+/* ───────────────────────── Layout ───────────────────────── */
+.wrap {
+  width: 100%;
+  max-width: var(--maxw);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+  column-gap: var(--gutter);
+}
+
+/* Encabezado de sección: número + título + línea */
+.sec { position: relative; border-top: 1px solid var(--line); }
+.sec-head {
+  display: flex; justify-content: space-between; align-items: baseline;
+  gap: 16px; padding-block: 14px;
+  border-bottom: 1px solid var(--line);
+}
+.sec-num { color: var(--violet-ink); }
+.sec-num b { color: var(--fg); font-weight: 500; }
+
+/* ───────────────────────── Botones ───────────────────────── */
+.btn {
+  --b-bg: var(--violet);
+  --b-fg: #fff;
+  position: relative;
+  display: inline-flex; align-items: center; gap: 14px;
+  min-height: 52px; padding: 0 20px;
+  background: var(--b-bg); color: var(--b-fg);
+  font-family: var(--f-mono); font-size: var(--t-sm); font-weight: 600;
+  letter-spacing: 0.02em; text-transform: uppercase; text-decoration: none;
+  border: 1px solid var(--b-bg);
+  overflow: hidden;
+  isolation: isolate;
+}
+/* Relleno que barre de izquierda a derecha (solo transform). */
+.btn::before {
+  content: ''; position: absolute; inset: 0; z-index: -1;
+  background: var(--fg);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform 0.45s var(--ease-out);
+}
+.btn .arrow { display: inline-block; transition: transform 0.45s var(--ease-out); }
+.btn:hover, .btn:focus-visible { color: var(--bg); }
+.btn:hover::before, .btn:focus-visible::before { transform: scaleX(1); }
+.btn:hover .arrow, .btn:focus-visible .arrow { transform: translateX(6px); }
+.btn:active { transform: translateY(1px); }
+
+.btn--ghost { --b-bg: transparent; --b-fg: var(--fg); border-color: var(--line-2); }
+
+.link {
+  position: relative; text-decoration: none;
+  text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px;
+}
+.link::after {
+  content: ''; position: absolute; left: 0; right: 0; bottom: -1px; height: 1px;
+  background: var(--violet);
+  transform: scaleX(0); transform-origin: right;
+  transition: transform 0.4s var(--ease-out);
+}
+.link:hover::after, .link:focus-visible::after { transform: scaleX(1); transform-origin: left; }
+
+/* ───────────────────────── Estados de animación ─────────────────────────
+   Con JS y sin movimiento reducido, los elementos de entrada empiezan ocultos
+   y GSAP los muestra. Si el JS no corre en 3 s se muestran igual. */
+.js:not(.rm) [data-in] { opacity: 0; }
+.js:not(.rm) [data-reveal], .js:not(.rm) [data-hero-title] { visibility: hidden; }
+.motion-fallback [data-in] { opacity: 1 !important; }
+.motion-fallback [data-reveal], .motion-fallback [data-hero-title] { visibility: visible !important; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

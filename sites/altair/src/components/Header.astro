@@ -1,0 +1,79 @@
+---
+import WhatsAppLink from '@altair/core/WhatsAppLink.astro';
+import Logo from '../brand/Logo.astro';
+import { contacto, estrella, mensajes } from '../../site.config';
+
+const enInicio = Astro.url.pathname === '/';
+const base = enInicio ? '' : '/';
+const nav = [
+  { n: '02', label: 'Planes', href: `${base}#planes` },
+  { n: '03', label: 'Portafolio', href: `${base}#portafolio` },
+  { n: '04', label: 'Contacto', href: `${base}#contacto` },
+];
+---
+<header class="hdr" data-in>
+  <div class="wrap hdr-in">
+    <a href="/" class="hdr-logo" aria-label="Altair Studio, ir al inicio">
+      <Logo etiqueta="" />
+    </a>
+    <p class="hdr-coord label" aria-hidden="true">
+      <span class="nocaps">{estrella.designacion}</span>
+      <span class="data">AR {estrella.ar}</span>
+      <span class="data">DEC {estrella.dec}</span>
+    </p>
+    <nav aria-label="Principal" class="hdr-nav">
+      <ul>
+        {nav.map((i) => (
+          <li>
+            <a href={i.href}><span class="n">{i.n}</span>{i.label}</a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+    <WhatsAppLink class="hdr-wa" telefono={contacto.whatsapp} mensaje={mensajes.general}>
+      WhatsApp <span aria-hidden="true">↗</span>
+    </WhatsAppLink>
+  </div>
+</header>
+
+<style>
+  .hdr {
+    position: sticky; top: 0; z-index: 50;
+    height: var(--header-h);
+    background: var(--bg);
+    border-bottom: 1px solid var(--line);
+  }
+  .hdr-in {
+    height: 100%;
+    display: flex; align-items: center; gap: 20px;
+  }
+  .hdr-logo { display: block; font-size: 17px; color: var(--fg); --logo-accent: var(--violet); }
+  .hdr-logo:hover { --logo-accent: var(--blue); }
+  .hdr-coord { display: none; gap: 16px; margin-left: auto; }
+  .hdr-nav { margin-left: auto; }
+  .hdr-nav ul { display: flex; gap: 4px; }
+  .hdr-nav li:not(:first-child) { display: none; }
+  .hdr-nav a {
+    display: inline-flex; align-items: center; gap: 6px;
+    min-height: 44px; padding: 0 8px;
+    font-size: var(--t-xs); letter-spacing: 0.06em; text-transform: uppercase; text-decoration: none;
+  }
+  .hdr-nav .n { color: var(--violet-ink); }
+  .hdr-nav a:hover { color: var(--violet-ink); }
+  .hdr-wa {
+    display: inline-flex; align-items: center; gap: 8px;
+    min-height: 40px; padding: 0 14px;
+    background: var(--violet); color: #fff;
+    font-size: var(--t-xs); font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; text-decoration: none;
+    transition: background-color 0.2s;
+  }
+  .hdr-wa:hover { background: #6236f0; }
+  @media (min-width: 768px) {
+    .hdr-logo { font-size: 19px; }
+    .hdr-nav li:not(:first-child) { display: block; }
+  }
+  @media (min-width: 1200px) {
+    .hdr-coord { display: flex; }
+    .hdr-nav { margin-left: 32px; }
+  }
+</style>

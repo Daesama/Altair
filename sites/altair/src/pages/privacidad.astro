@@ -1,0 +1,81 @@
+---
+import Legal from '../layouts/Legal.astro';
+import { contacto, legal, marca } from '../../site.config';
+---
+<!-- BORRADOR: revisar con abogado antes de publicar -->
+<Legal
+  titulo="Política de tratamiento de datos personales"
+  descripcion="Cómo Altair Studio recoge, usa y protege los datos personales, conforme a la Ley 1581 de 2012 de Colombia."
+  actualizado={legal.fechaActualizacion}
+>
+  <h2>1. Responsable del tratamiento</h2>
+  <ul>
+    <li><strong>Responsable:</strong> {legal.responsable} ({marca.nombre})</li>
+    <li><strong>Identificación:</strong> {legal.tipoDocumento} {legal.documento}</li>
+    <li><strong>Dirección:</strong> {legal.direccion}</li>
+    <li><strong>Correo para asuntos de datos:</strong> <a href={`mailto:${legal.emailDatos}`}>{legal.emailDatos}</a></li>
+    <li><strong>WhatsApp:</strong> {contacto.whatsapp}</li>
+  </ul>
+
+  <h2>2. Marco legal</h2>
+  <p>
+    Esta política sigue la Ley Estatutaria 1581 de 2012, el Decreto 1377 de 2013 (compilado en el Decreto Único
+    Reglamentario 1074 de 2015) y las demás normas que los modifiquen o complementen.
+  </p>
+
+  <h2>3. Qué datos recogemos</h2>
+  <ul>
+    <li>Nombre, número de WhatsApp, correo y nombre del negocio, cuando usted nos escribe o nos contrata.</li>
+    <li>Los datos que usted nos comparta sobre su negocio para hacer su página.</li>
+    <li>Datos técnicos anónimos de visitas (páginas vistas, tipo de dispositivo), si se activa una herramienta de estadísticas. Este sitio no usa cookies de publicidad ni de rastreo.</li>
+  </ul>
+  <p>No recogemos datos sensibles ni datos de niñas, niños o adolescentes.</p>
+
+  <h2>4. Para qué los usamos</h2>
+  <ol>
+    <li>Responder sus mensajes y enviarle cotizaciones.</li>
+    <li>Prestar el servicio contratado: diseño, desarrollo, publicación y soporte de su página.</li>
+    <li>Facturar y cumplir obligaciones contables y legales.</li>
+    <li>Enviarle información sobre el servicio, solo si usted lo autoriza.</li>
+  </ol>
+
+  <h2>5. Autorización</h2>
+  <p>
+    Al escribirnos por WhatsApp, correo o Instagram, usted autoriza de forma previa, expresa e informada el tratamiento de sus
+    datos para las finalidades anteriores. Puede revocar esta autorización en cualquier momento, salvo cuando exista un deber
+    legal o contractual de conservarlos.
+  </p>
+
+  <h2>6. Sus derechos como titular</h2>
+  <ul>
+    <li>Conocer, actualizar y rectificar sus datos.</li>
+    <li>Pedir prueba de la autorización que nos dio.</li>
+    <li>Saber para qué se han usado sus datos.</li>
+    <li>Presentar quejas ante la Superintendencia de Industria y Comercio (SIC).</li>
+    <li>Revocar la autorización o pedir que se borren sus datos.</li>
+    <li>Acceder gratis a sus datos personales.</li>
+  </ul>
+
+  <h2>7. Cómo ejercer sus derechos</h2>
+  <p>Escriba a <a href={`mailto:${legal.emailDatos}`}>{legal.emailDatos}</a> con su nombre, documento, lo que pide y un dato de contacto.</p>
+  <ul>
+    <li><strong>Consultas:</strong> respondemos en máximo 10 días hábiles. Si no es posible, le avisamos el motivo y respondemos en máximo 5 días hábiles más.</li>
+    <li><strong>Reclamos</strong> (corrección, actualización, supresión o revocatoria): respondemos en máximo 15 días hábiles. Si no es posible, le avisamos el motivo y respondemos en máximo 8 días hábiles más.</li>
+  </ul>
+
+  <h2>8. Con quién compartimos sus datos</h2>
+  <p>
+    No vendemos ni alquilamos datos. Solo los compartimos con proveedores necesarios para prestar el servicio
+    (por ejemplo, hosting o correo), que pueden estar fuera de Colombia y que deben protegerlos con medidas equivalentes,
+    o cuando una autoridad competente lo exija.
+  </p>
+
+  <h2>9. Seguridad</h2>
+  <p>Usamos medidas técnicas y administrativas razonables para evitar el acceso no autorizado, la pérdida o el uso indebido de sus datos.</p>
+
+  <h2>10. Vigencia</h2>
+  <p>
+    Esta política rige desde el {legal.fechaActualizacion}. Los datos se conservan mientras dure la relación comercial
+    y el tiempo que exija la ley. Si cambia la política, publicaremos la nueva versión en esta página.
+  </p>
+</Legal>

@@ -1,0 +1,34 @@
+---
+/**
+ * Único punto de uso del logo. Lee src/brand/logo.svg tal cual: para cambiar
+ * el logo en todo el sitio basta con reemplazar ese archivo.
+ *
+ * - variante="completo" (por defecto): símbolo + logotipo.
+ * - variante="simbolo": recorta el viewBox a `data-symbol`.
+ * Color: hereda `color` (currentColor); las piezas .accent usan --logo-accent.
+ */
+import raw from './logo.svg?raw';
+
+interface Props {
+  variante?: 'completo' | 'simbolo';
+  class?: string;
+  /** Texto accesible. Pase "" si el logo es decorativo junto a texto visible. */
+  etiqueta?: string;
+}
+
+const { variante = 'completo', class: clase = '', etiqueta = 'Altair Studio' } = Astro.props;
+
+let svg = raw.replace(/<!--[\s\S]*?-->/g, '').trim();
+if (variante === 'simbolo') {
+  const caja = svg.match(/data-symbol="([^"]+)"/)?.[1];
+  if (caja) svg = svg.replace(/viewBox="[^"]+"/, `viewBox="${caja}"`).replace(/<g class="wordmark"[\s\S]*?<\/g>/, '');
+}
+const a11y = etiqueta ? `role="img" aria-label="${etiqueta}"` : 'aria-hidden="true"';
+svg = svg.replace('<svg ', `<svg class="logo logo--${variante} ${clase}" ${a11y} focusable="false" `);
+---
+<Fragment set:html={svg} />
+<style is:global>
+  .logo { height: 1em; width: auto; overflow: visible; }
+  .logo .accent { fill: var(--logo-accent, currentColor); }
+  .logo [stroke].accent { stroke: var(--logo-accent, currentColor); fill: none; }
+</style>

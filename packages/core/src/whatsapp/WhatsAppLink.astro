@@ -1,0 +1,19 @@
+---
+/**
+ * Enlace a WhatsApp sin estilos propios. El sitio decide el aspecto con `class`.
+ * Abre en pestaña nueva y anuncia el destino a lectores de pantalla.
+ */
+import type { HTMLAttributes } from 'astro/types';
+import { waLink } from './wa';
+
+interface Props extends HTMLAttributes<'a'> {
+  telefono: string;
+  mensaje?: string;
+}
+
+const { telefono, mensaje, ...rest } = Astro.props;
+---
+<a href={waLink(telefono, mensaje)} target="_blank" rel="noopener" data-wa {...rest}>
+  <slot />
+  <span style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap"> (abre WhatsApp en una pestaña nueva)</span>
+</a>

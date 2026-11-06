@@ -1,0 +1,67 @@
+---
+/**
+ * Carta de la constelación del Águila con Altair señalada.
+ * Proyección simple: x = (305° − AR) · 10, y = (17° − Dec) · 10 (J2000, aprox.).
+ * Solo es textura gráfica; los únicos datos numéricos visibles son los de Altair,
+ * verificados en site.config.ts.
+ */
+const k = 10;
+const p = (ra: number, dec: number) => ({ x: +((305 - ra) * k).toFixed(1), y: +((17 - dec) * k).toFixed(1) });
+
+const estrellas = {
+  alfa: { ...p(297.7, 8.87), mag: 0.76, nombre: 'Altair' },
+  gamma: { ...p(296.56, 10.61), mag: 2.7, nombre: 'Tarazed' },
+  beta: { ...p(298.83, 6.41), mag: 3.7, nombre: 'Alshain' },
+  delta: { ...p(291.37, 3.11), mag: 3.4 },
+  zeta: { ...p(286.35, 13.86), mag: 3.0 },
+  epsilon: { ...p(284.91, 15.07), mag: 4.0 },
+  theta: { ...p(302.83, -0.82), mag: 3.2 },
+  eta: { ...p(298.12, 1.01), mag: 3.9 },
+  lambda: { ...p(286.56, -4.88), mag: 3.4 },
+  iota: { ...p(294.18, -1.29), mag: 4.4 },
+} as const;
+type K = keyof typeof estrellas;
+
+const trazos: [K, K][] = [
+  ['gamma', 'alfa'], ['alfa', 'beta'], ['alfa', 'delta'], ['delta', 'zeta'],
+  ['zeta', 'epsilon'], ['delta', 'lambda'], ['delta', 'eta'], ['eta', 'theta'],
+];
+const r = (mag: number) => +Math.max(1.2, 3.6 - mag * 0.6).toFixed(2);
+const a = estrellas.alfa;
+---
+<svg class="chart" viewBox="0 0 222 240" role="img" aria-labelledby="chart-t">
+  <title id="chart-t">Constelación del Águila con la estrella Altair señalada</title>
+  <g class="chart-lines">
+    {trazos.map(([i, j]) => {
+      const s = estrellas[i], e = estrellas[j];
+      return <line x1={s.x} y1={s.y} x2={e.x} y2={e.y} data-chart-line />;
+    })}
+  </g>
+  <g class="chart-stars">
+    {Object.entries(estrellas).map(([id, s]) => id !== 'alfa' && <circle cx={s.x} cy={s.y} r={r(s.mag)} data-chart-star />)}
+  </g>
+  <g class="chart-alfa" data-chart-alfa>
+    <line x1={a.x - 26} y1={a.y} x2={a.x - 8} y2={a.y} />
+    <line x1={a.x + 8} y1={a.y} x2={a.x + 26} y2={a.y} />
+    <line x1={a.x} y1={a.y - 26} x2={a.x} y2={a.y - 8} />
+    <line x1={a.x} y1={a.y + 8} x2={a.x} y2={a.y + 26} />
+    <circle class="core" cx={a.x} cy={a.y} r="4.2" />
+  </g>
+  <g class="chart-names">
+    <text x={a.x + 10} y={a.y - 10}>ALTAIR</text>
+    <text x={estrellas.gamma.x + 7} y={estrellas.gamma.y - 4}>γ</text>
+    <text x={estrellas.beta.x - 12} y={estrellas.beta.y + 3}>β</text>
+  </g>
+</svg>
+
+<style>
+  .chart { width: 100%; height: auto; overflow: visible; }
+  .chart-lines line { stroke: var(--line-2); stroke-width: 0.8; }
+  .chart-stars circle { fill: var(--fg); }
+  .chart-alfa line { stroke: var(--violet); stroke-width: 1.2; }
+  .chart-alfa .core { fill: var(--blue); }
+  .chart-names text {
+    fill: var(--blue-ink);
+    font-family: var(--f-mono); font-size: 7px; letter-spacing: 0.08em;
+  }
+</style>

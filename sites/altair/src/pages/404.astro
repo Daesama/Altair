@@ -1,0 +1,18 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base titulo="Página no encontrada — Altair Studio" descripcion="Esta dirección no existe en altair.lat." noindex>
+  <section class="sec nf">
+    <div class="wrap">
+      <div class="sec-head label"><span class="sec-num"><b>404</b></span><span>Fuera de catálogo</span></div>
+      <h1 class="display nf-h">Esta página no existe.</h1>
+      <p class="nf-p">Revise la dirección o vuelva al inicio.</p>
+      <a class="btn" href="/">Ir al inicio <span class="arrow" aria-hidden="true">→</span></a>
+    </div>
+  </section>
+</Base>
+<style>
+  .nf { min-height: 70vh; }
+  .nf-h { font-size: clamp(2.5rem, 1.5rem + 6vw, 7rem); margin: 48px 0 20px; max-width: 12ch; }
+  .nf-p { margin-bottom: 28px; font-size: var(--t-lg); }
+</style>

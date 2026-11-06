@@ -1,0 +1,96 @@
+---
+import Seo from '@altair/core/Seo.astro';
+import Consent from '@altair/core/Consent.astro';
+import { seo, marca } from '../../site.config';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import GridLines from '../components/GridLines.astro';
+import '../styles/global.css';
+import archivoUrl from '../assets/fonts/archivo-latin-wdth-normal.woff2?url';
+import martianUrl from '../assets/fonts/martian-mono-latin-wdth-normal.woff2?url';
+
+interface Props {
+  titulo?: string;
+  descripcion?: string;
+  noindex?: boolean;
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
+}
+
+const { titulo = seo.titulo, descripcion = seo.descripcion, noindex = false, jsonLd } = Astro.props;
+---
+<!doctype html>
+<html lang="es-CO">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script is:inline>
+      (function () {
+        var d = document.documentElement;
+        d.classList.add('js');
+        if (matchMedia('(prefers-reduced-motion: reduce)').matches) d.classList.add('rm');
+        setTimeout(function () { d.classList.add('motion-fallback'); }, 3000);
+      })();
+    </script>
+    <link rel="preload" href={archivoUrl} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={martianUrl} as="font" type="font/woff2" crossorigin />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <Seo
+      titulo={titulo}
+      descripcion={descripcion}
+      sitio={seo.url}
+      ogImage={seo.ogImage}
+      nombreSitio={marca.nombre}
+      locale={seo.locale}
+      noindex={noindex}
+      themeColor="#07060a"
+      jsonLd={jsonLd}
+    />
+  </head>
+  <body>
+    <a class="skip" href="#contenido">Saltar al contenido</a>
+    <GridLines />
+    <Header />
+    <main id="contenido">
+      <slot />
+    </main>
+    <Footer />
+    <Consent class="consent" aceptarClass="consent-ok" etiquetaAceptar="Entendido">
+      <p>
+        Sin cookies de rastreo. Si nos escribe, usamos sus datos según la
+        <a class="link" href="/privacidad">política de datos</a>.
+      </p>
+    </Consent>
+    <script>
+      import { initMotion } from '@altair/core/motion';
+      import { revealAll } from '@altair/core/reveal';
+      import { runPage } from '../scripts/main';
+      const motion = initMotion();
+      revealAll(motion);
+      runPage(motion);
+    </script>
+  </body>
+</html>
+
+<style is:global>
+  .consent {
+    position: fixed; z-index: 60; left: var(--gutter); right: var(--gutter); bottom: 16px;
+    max-width: 520px;
+    display: flex; gap: 16px; align-items: center; justify-content: space-between;
+    padding: 14px 16px;
+    background: var(--bg-2); border: 1px solid var(--line-2);
+    font-size: var(--t-xs); line-height: 1.5; color: var(--mute);
+    transform: translateY(16px); opacity: 0;
+    transition: transform 0.5s var(--ease-out), opacity 0.5s var(--ease-out);
+  }
+  .consent[data-open] { transform: none; opacity: 1; }
+  .consent a { color: var(--fg); }
+  .consent-ok {
+    flex: none; min-height: 44px; padding: 0 14px;
+    background: transparent; border: 1px solid var(--line-2); color: var(--fg); cursor: pointer;
+    font-size: var(--t-xs); text-transform: uppercase; letter-spacing: 0.06em;
+  }
+  .consent-ok:hover { border-color: var(--violet); }
+</style>

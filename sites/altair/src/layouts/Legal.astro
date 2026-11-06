@@ -1,0 +1,55 @@
+---
+import Base from './Base.astro';
+
+interface Props {
+  titulo: string;
+  descripcion: string;
+  actualizado: string;
+}
+const { titulo, descripcion, actualizado } = Astro.props;
+---
+<Base titulo={`${titulo} — Altair Studio`} descripcion={descripcion}>
+  <article class="sec legal">
+    <div class="wrap">
+      <div class="sec-head label">
+        <span class="sec-num"><b>Legal</b></span>
+        <span>Actualizado: {actualizado}</span>
+      </div>
+      <div class="grid legal-grid">
+        <header class="legal-head">
+          <h1 class="display legal-h">{titulo}</h1>
+          <p class="legal-draft label">Borrador · sujeto a revisión jurídica</p>
+        </header>
+        <div class="legal-body">
+          <slot />
+        </div>
+      </div>
+    </div>
+  </article>
+</Base>
+
+<style>
+  .legal { padding-bottom: 80px; }
+  .legal-grid { padding-top: 40px; row-gap: 32px; }
+  .legal-head { grid-column: 1 / -1; display: grid; gap: 16px; align-content: start; }
+  .legal-h { font-size: clamp(2rem, 1.2rem + 3.6vw, 4.25rem); max-width: 14ch; }
+  .legal-draft { color: var(--violet-ink); }
+  .legal-body { grid-column: 1 / -1; max-width: 72ch; font-size: var(--t-base); line-height: 1.7; font-stretch: 87.5%; }
+  .legal-body :global(h2) {
+    font-family: var(--f-display); font-stretch: 112%; font-weight: 700; text-transform: uppercase;
+    font-size: 1.125rem; letter-spacing: 0.01em; margin: 40px 0 12px; padding-top: 16px; border-top: 1px solid var(--line);
+  }
+  .legal-body :global(h2:first-child) { margin-top: 0; }
+  .legal-body :global(p), .legal-body :global(ul), .legal-body :global(ol) { margin-bottom: 14px; color: var(--fg); }
+  .legal-body :global(ul li) { position: relative; padding-left: 20px; margin-bottom: 6px; }
+  .legal-body :global(ul li)::before { content: '—'; position: absolute; left: 0; color: var(--violet-ink); }
+  .legal-body :global(ol) { counter-reset: n; }
+  .legal-body :global(ol li) { counter-increment: n; position: relative; padding-left: 32px; margin-bottom: 6px; }
+  .legal-body :global(ol li)::before { content: counter(n, decimal-leading-zero); position: absolute; left: 0; color: var(--blue); font-size: var(--t-xs); top: 3px; }
+  .legal-body :global(strong) { font-weight: 600; }
+  .legal-body :global(a) { color: var(--violet-ink); }
+  @media (min-width: 1200px) {
+    .legal-head { grid-column: 1 / span 4; position: sticky; top: calc(var(--header-h) + 32px); align-self: start; }
+    .legal-body { grid-column: 6 / span 7; }
+  }
+</style>

@@ -1,0 +1,62 @@
+---
+/**
+ * Meta tags, Open Graph, Twitter y JSON-LD. No renderiza nada visible.
+ * Uso: <Seo titulo descripcion sitio ogImage? jsonLd? />
+ */
+interface Props {
+  /** Título de la página. Se usa tal cual (el sitio arma "Página — Marca"). */
+  titulo: string;
+  descripcion: string;
+  /** URL absoluta del sitio, sin barra final. */
+  sitio: string;
+  /** Ruta pública o URL absoluta de la imagen OG (1200×630). */
+  ogImage: string;
+  ogAlt?: string;
+  nombreSitio: string;
+  locale?: string;
+  tipo?: 'website' | 'article';
+  noindex?: boolean;
+  themeColor?: string;
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
+}
+
+const {
+  titulo,
+  descripcion,
+  sitio,
+  ogImage,
+  ogAlt = titulo,
+  nombreSitio,
+  locale = 'es_CO',
+  tipo = 'website',
+  noindex = false,
+  themeColor,
+  jsonLd,
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, sitio).href;
+const og = new URL(ogImage, sitio).href;
+---
+<title>{titulo}</title>
+<meta name="description" content={descripcion} />
+<link rel="canonical" href={canonical} />
+{noindex && <meta name="robots" content="noindex, nofollow" />}
+{themeColor && <meta name="theme-color" content={themeColor} />}
+
+<meta property="og:type" content={tipo} />
+<meta property="og:site_name" content={nombreSitio} />
+<meta property="og:locale" content={locale} />
+<meta property="og:title" content={titulo} />
+<meta property="og:description" content={descripcion} />
+<meta property="og:url" content={canonical} />
+<meta property="og:image" content={og} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content={ogAlt} />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={titulo} />
+<meta name="twitter:description" content={descripcion} />
+<meta name="twitter:image" content={og} />
+
+{jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}

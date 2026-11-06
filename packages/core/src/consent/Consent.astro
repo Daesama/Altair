@@ -1,0 +1,39 @@
+---
+/**
+ * Aviso de cookies/datos. Solo lógica: recuerda la decisión en localStorage y
+ * se oculta. El sitio da el aspecto con `class` y las clases de los botones.
+ * Los sitios son estáticos y no usan cookies de rastreo; el aviso informa y
+ * enlaza a la política de datos (Ley 1581 de 2012).
+ *
+ * Estado: el contenedor tiene `hidden` hasta que el script decide mostrarlo;
+ * cuando se muestra recibe `data-open`.
+ */
+interface Props {
+  clave?: string;
+  class?: string;
+  aceptarClass?: string;
+  etiquetaAceptar?: string;
+}
+
+const { clave = 'aviso-datos', class: clase, aceptarClass, etiquetaAceptar = 'Entendido' } = Astro.props;
+---
+<div class={clase} role="region" aria-label="Aviso de tratamiento de datos" data-consent={clave} hidden>
+  <slot />
+  <button type="button" class={aceptarClass} data-consent-ok>{etiquetaAceptar}</button>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-consent]').forEach((el) => {
+    const key = 'consent:' + el.dataset.consent;
+    let visto = false;
+    try { visto = localStorage.getItem(key) === '1'; } catch {}
+    if (visto) return;
+    el.hidden = false;
+    requestAnimationFrame(() => el.setAttribute('data-open', ''));
+    el.querySelector('[data-consent-ok]')?.addEventListener('click', () => {
+      try { localStorage.setItem(key, '1'); } catch {}
+      el.removeAttribute('data-open');
+      el.hidden = true;
+    });
+  });
+</script>

@@ -1,0 +1,22 @@
+{
+  "name": "altair-studio",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.34.9",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev:altair": "pnpm --filter altair dev",
+    "dev:barberia": "pnpm --filter demo-barberia dev",
+    "dev:restaurante": "pnpm --filter demo-restaurante dev",
+    "build": "pnpm -r --filter ./sites/* build",
+    "shots": "node tools/shots.mjs",
+    "lh": "node tools/lighthouse.mjs"
+  },
+  "devDependencies": {
+    "lighthouse": "^13.6.0",
+    "playwright": "^1.65.0",
+    "sharp": "^0.35.5"
+  }
+}

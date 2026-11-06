@@ -1,0 +1,87 @@
+---
+import Legal from '../layouts/Legal.astro';
+import { cop } from '@altair/core/types';
+import { contacto, legal, marca, planes } from '../../site.config';
+---
+<!-- BORRADOR: revisar con abogado antes de publicar -->
+<Legal
+  titulo="Términos y condiciones del servicio"
+  descripcion="Condiciones con las que Altair Studio diseña, desarrolla y entrega páginas web: alcance, pagos, revisiones, propiedad y garantía."
+  actualizado={legal.fechaActualizacion}
+>
+  <h2>1. Quiénes somos</h2>
+  <p>
+    {marca.nombre} es un estudio de diseño y desarrollo web con sede en {contacto.ciudad}, a cargo de
+    {legal.responsable}, identificado con {legal.tipoDocumento} {legal.documento} (en adelante, «Altair»).
+    Estos términos aplican a todos los proyectos que Altair realice para un cliente (en adelante, «el Cliente»).
+  </p>
+
+  <h2>2. Alcance del servicio</h2>
+  <p>
+    El alcance de cada proyecto es el del plan contratado ({planes.map((p) => p.nombre).join(', ')}) según lo publicado en
+    altair.lat el día de la contratación, más lo que se acuerde por escrito (correo o WhatsApp) antes de empezar.
+  </p>
+  <ul>
+    <li>Todo lo que no esté en el plan ni en el acuerdo escrito se considera trabajo adicional.</li>
+    <li>El Cliente entrega los textos, fotos, logos, precios y datos de su negocio. Si no los tiene, Altair puede proponer textos base que el Cliente debe revisar y aprobar.</li>
+    <li>El Cliente garantiza que tiene derecho a usar el material que entrega (fotos, logos, marcas).</li>
+  </ul>
+
+  <h2>3. Precios y forma de pago</h2>
+  <ol>
+    <li><strong>50 % al iniciar.</strong> Con este pago se reserva el cupo y empieza el trabajo.</li>
+    <li><strong>50 % al entregar.</strong> Se paga cuando el Cliente aprueba la página y antes de publicarla en su dominio.</li>
+  </ol>
+  <p>
+    Los precios de lanzamiento se mantienen solo para los cupos publicados y mientras haya cupos disponibles.
+    Las mensualidades de los planes Negocio y Total se pagan por mes anticipado. La mensualidad de lanzamiento
+    del plan Negocio queda fija durante los primeros 6 meses; después rige la mensualidad oficial vigente.
+  </p>
+
+  <h2>4. Revisiones incluidas</h2>
+  <p>
+    Cada proyecto incluye <strong>{legal.revisionesIncluidas} rondas de revisión</strong> sobre el diseño y los contenidos.
+    Una ronda es una lista de cambios enviada de una sola vez. Las rondas adicionales y los cambios fuera del alcance
+    se cobran por hora.
+  </p>
+
+  <h2>5. Cambios adicionales</h2>
+  <p>
+    Los cambios posteriores a la entrega, o los que no estén incluidos en el plan, se cobran a
+    <strong>{cop(legal.valorHoraAdicional)} por hora</strong>. Antes de hacerlos, Altair envía el estimado de horas
+    para aprobación del Cliente. En los planes con mensualidad, los arreglos de errores están cubiertos;
+    las funciones nuevas no.
+  </p>
+
+  <h2>6. Propiedad del dominio, cuentas y contenido</h2>
+  <ul>
+    <li>El dominio, el hosting, la base de datos, la pasarela de pagos y las demás cuentas de terceros se crean <strong>a nombre del Cliente</strong> y se pagan directamente al proveedor.</li>
+    <li>Altair solo tiene acceso como administrador técnico mientras dure el servicio, y lo devuelve cuando el Cliente lo pida.</li>
+    <li>Pagado el 100 %, el Cliente es dueño del diseño final y del contenido de su página. Altair puede mostrar el proyecto en su portafolio, salvo que el Cliente pida lo contrario por escrito.</li>
+  </ul>
+
+  <h2>7. Garantía</h2>
+  <p>
+    Durante los <strong>{legal.garantiaDias} días</strong> siguientes a la publicación, Altair corrige sin costo
+    cualquier error de funcionamiento de lo entregado. La garantía no cubre cambios de diseño o de contenido,
+    funciones nuevas ni daños causados por terceros o por modificaciones hechas por el Cliente.
+  </p>
+
+  <h2>8. Mensualidad</h2>
+  <p>
+    En los planes Negocio y Total, la mensualidad cubre monitoreo, arreglos de errores, actualizaciones de seguridad,
+    copias de seguridad, soporte por WhatsApp y un reporte mensual. El Cliente puede cancelarla con 30 días de aviso;
+    al cancelar, Altair entrega los accesos y una copia del proyecto.
+  </p>
+
+  <h2>9. Plazos</h2>
+  <p>
+    Los plazos se acuerdan al iniciar y empiezan a contar cuando Altair recibe el primer pago y el material del Cliente.
+    Los retrasos en la entrega de material o en las aprobaciones mueven la fecha de entrega.
+  </p>
+
+  <h2>10. Contacto</h2>
+  <p>
+    Dudas sobre estos términos: <a href={`mailto:${contacto.email}`}>{contacto.email}</a> o WhatsApp {contacto.whatsapp}.
+  </p>
+</Legal>

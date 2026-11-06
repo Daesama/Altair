@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.astro/
+.shots/
+.lighthouse/
+*.log
+.DS_Store
+.preview-*.log

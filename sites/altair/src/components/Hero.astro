@@ -1,0 +1,134 @@
+---
+import WhatsAppLink from '@altair/core/WhatsAppLink.astro';
+import { cop } from '@altair/core/types';
+import StarChart from './StarChart.astro';
+import { contacto, estrella, lanzamiento, mensajes, planes } from '../../site.config';
+
+const desde = Math.min(...planes.map((p) => p.precioLanzamiento ?? p.precioOficial));
+const datos = [
+  ['AR', estrella.ar],
+  ['DEC', estrella.dec],
+  ['MAG', estrella.magnitud],
+  ['DIST', `${estrella.distanciaAl} a. l.`],
+  ['ROT', `${estrella.rotacionHoras} h`],
+];
+---
+<section class="hero" aria-labelledby="hero-t">
+  <div class="wrap">
+    <div class="hero-top label" data-in>
+      <span class="sec-num"><b>01</b> / 04</span>
+      <span>Estudio web · {contacto.ciudad}</span>
+    </div>
+
+    <div class="grid hero-grid">
+      <h1 id="hero-t" class="display hero-h" data-hero-title>
+        Que lo encuentren en <em>Google.</em> Que le escriban por <em>WhatsApp.</em>
+      </h1>
+
+      <aside class="hero-star" aria-label="Datos de la estrella Altair" data-in>
+        <p class="label">Altair · <span class="nocaps">{estrella.designacion}</span> · {estrella.hip}</p>
+        <StarChart />
+        <dl class="hero-dl">
+          {datos.map(([k, v]) => (
+            <div>
+              <dt class="label">{k}</dt>
+              <dd class="data">{v}</dd>
+            </div>
+          ))}
+        </dl>
+      </aside>
+
+      <div class="hero-copy">
+        <p class="hero-lead" data-in>
+          Hacemos la página web de su negocio en Bogotá. Su cliente la abre en el celular, ve qué vende, cuánto cuesta,
+          dónde queda y a qué hora abre, y le escribe por WhatsApp con un toque.
+        </p>
+        <div class="hero-cta" data-in>
+          <WhatsAppLink class="btn" telefono={contacto.whatsapp} mensaje={mensajes.general}>
+            Escríbanos por WhatsApp <span class="arrow" aria-hidden="true">→</span>
+          </WhatsAppLink>
+          <a class="btn btn--ghost" href="#planes">Ver planes y precios <span class="arrow" aria-hidden="true">↓</span></a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ul class="hero-facts wrap" aria-label="Datos rápidos">
+    <li data-in>
+      <span class="label">Desde</span>
+      <strong class="fact-n">{cop(desde)}</strong>
+      <span class="label">Plan Esencial · pago único</span>
+    </li>
+    <li data-in>
+      <span class="label">Precio de lanzamiento</span>
+      <strong class="fact-n"><span data-count={lanzamiento.cuposRestantes}>{lanzamiento.cuposRestantes}</span> cupos</strong>
+      <span class="label">Quedan de {lanzamiento.cuposTotales}</span>
+    </li>
+    <li data-in>
+      <span class="label">Entrega</span>
+      <strong class="fact-n">Dominio a su nombre</strong>
+      <span class="label">La página es suya</span>
+    </li>
+  </ul>
+</section>
+
+<style>
+  .hero { padding-top: 20px; }
+  .hero-top {
+    display: flex; justify-content: space-between; gap: 16px;
+    padding-bottom: 14px; border-bottom: 1px solid var(--line);
+  }
+  .hero-grid { padding-block: 28px 40px; row-gap: 40px; }
+
+  .hero-h {
+    grid-column: 1 / -1;
+    font-size: clamp(2.35rem, 9.4vw, 7.25rem);
+    font-stretch: 112%;
+    max-width: 15ch;
+  }
+  .hero-h em { font-style: normal; color: var(--violet); }
+
+  .hero-copy { grid-column: 1 / -1; display: grid; gap: 28px; align-content: start; }
+  .hero-lead { font-size: var(--t-base); line-height: 1.55; max-width: 46ch; color: var(--fg); font-stretch: 87.5%; }
+  .hero-cta { display: flex; flex-wrap: wrap; gap: 12px; }
+  .hero-cta .btn { flex: 1 1 auto; justify-content: space-between; }
+
+  .hero-star {
+    grid-column: 1 / -1; grid-row: 3;
+    display: grid; grid-template-columns: 120px 1fr; gap: 12px 20px; align-items: start;
+    padding-top: 20px; border-top: 1px solid var(--line);
+  }
+  .hero-star > .label { grid-column: 1 / -1; }
+  .hero-dl { display: grid; gap: 6px; align-content: start; }
+  .hero-dl div { display: flex; justify-content: space-between; gap: 12px; border-bottom: 1px dashed var(--line); padding-bottom: 6px; }
+  .hero-dl dd { font-size: var(--t-xs); }
+
+  .hero-facts {
+    display: grid; grid-template-columns: 1fr;
+    border-top: 1px solid var(--line);
+  }
+  .hero-facts li {
+    display: grid; gap: 6px; padding: 20px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .fact-n {
+    font-family: var(--f-display); font-stretch: 125%; font-weight: 700;
+    font-size: clamp(1.5rem, 1rem + 2vw, 2.5rem); line-height: 1; letter-spacing: -0.01em;
+  }
+
+  @media (min-width: 768px) {
+    .hero-grid { padding-block: 40px 56px; }
+    .hero-copy { grid-column: 1 / span 5; }
+    .hero-star { grid-column: 6 / -1; grid-row: 2; grid-template-columns: 1fr; padding-top: 0; border-top: 0; }
+    .hero-facts { grid-template-columns: repeat(3, 1fr); }
+    .hero-facts li { padding: 24px 20px 28px; border-bottom: 0; border-right: 1px solid var(--line); }
+    .hero-facts li:first-child { padding-left: 0; }
+    .hero-facts li:last-child { border-right: 0; }
+  }
+  @media (min-width: 1200px) {
+    .hero { padding-top: 28px; }
+    .hero-h { grid-column: 1 / span 9; font-size: clamp(4rem, 6.4vw, 7.25rem); }
+    .hero-copy { grid-column: 1 / span 5; }
+    .hero-star { grid-column: 10 / -1; grid-row: 1 / span 2; align-self: end; }
+  }
+</style>

@@ -1,0 +1,26 @@
+---
+import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
+import Planes from '../components/Planes.astro';
+import Portafolio from '../components/Portafolio.astro';
+import { contacto, marca, seo } from '../../site.config';
+import { waNumber } from '@altair/core/whatsapp';
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ProfessionalService',
+  name: marca.nombre,
+  url: seo.url,
+  description: seo.descripcion,
+  image: new URL(seo.ogImage, seo.url).href,
+  email: contacto.email,
+  telephone: '+' + waNumber(contacto.whatsapp),
+  areaServed: { '@type': 'City', name: 'Bogotá' },
+  address: { '@type': 'PostalAddress', addressLocality: 'Bogotá', addressCountry: 'CO' },
+};
+---
+<Base jsonLd={jsonLd}>
+  <Hero />
+  <Planes />
+  <Portafolio />
+</Base>

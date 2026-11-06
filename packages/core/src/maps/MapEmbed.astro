@@ -1,0 +1,46 @@
+---
+/**
+ * Google Maps con carga diferida: muestra un marcador de posición y solo inserta
+ * el iframe cuando la persona lo pide. Así no afecta el LCP ni envía datos a
+ * Google sin interacción. El aspecto (botón, fondo) lo pone el sitio vía slot y clases.
+ *
+ * Slots:
+ *  - default: contenido del marcador de posición (dentro del <button>).
+ */
+interface Props {
+  lat: number;
+  lng: number;
+  /** Texto para la búsqueda en Maps, p. ej. "Calle 1 # 2-3, Bogotá". */
+  consulta: string;
+  titulo: string;
+  zoom?: number;
+  class?: string;
+  botonClass?: string;
+}
+
+const { lat, lng, consulta, titulo, zoom = 16, class: clase, botonClass } = Astro.props;
+const src = `https://maps.google.com/maps?q=${encodeURIComponent(consulta)}&ll=${lat},${lng}&z=${zoom}&output=embed`;
+const abrir = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(consulta)}`;
+---
+<div class={clase} data-map data-src={src} data-title={titulo}>
+  <button type="button" class={botonClass} data-map-load>
+    <slot />
+  </button>
+  <noscript><a href={abrir}>Abrir ubicación en Google Maps</a></noscript>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-map]').forEach((el) => {
+    el.querySelector('[data-map-load]')?.addEventListener('click', () => {
+      const iframe = document.createElement('iframe');
+      iframe.src = el.dataset.src!;
+      iframe.title = el.dataset.title!;
+      iframe.loading = 'lazy';
+      iframe.referrerPolicy = 'no-referrer-when-downgrade';
+      iframe.setAttribute('allowfullscreen', '');
+      iframe.style.cssText = 'border:0;width:100%;height:100%;display:block';
+      el.replaceChildren(iframe);
+      el.dataset.loaded = '';
+    }, { once: true });
+  });
+</script>

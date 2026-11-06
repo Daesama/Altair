@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <rect width="64" height="64" fill="#07060a"/>
+  <g transform="translate(8 8) scale(1.2)" fill="#e9e6f2">
+  <g class="symbol">
+    <rect x="0" y="0" width="40" height="40" fill="none" stroke="#e9e6f2" stroke-width="4"/>
+    <rect class="accent" fill="#7a4bff" x="15" y="15" width="10" height="10"/>
+  </g>
+  
+</g>
+</svg>
