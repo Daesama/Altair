@@ -1,19 +1,14 @@
-<!-- LOGO PROVISIONAL: se reemplaza por el concepto elegido en /logo-lab.
-     Contrato del archivo:
+<!-- Logo de Altair Studio · concepto B «Triángulo de verano».
+     Vega, Deneb y Altair con sus proporciones reales; girado, Altair (violeta) queda arriba y el triángulo es la A.
+     Para cambiar el logo en todo el sitio basta con reemplazar este archivo. Contrato:
      - viewBox completo = símbolo + logotipo.
-     - data-symbol="x y w h" = recorte del símbolo solo (favicon, avatar).
-     - Las piezas usan currentColor; las que llevan class="accent" usan el color de acento. -->
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 246 40" data-symbol="0 0 40 40" fill="currentColor">
-  <g class="symbol">
-    <rect x="0" y="0" width="40" height="40" fill="none" stroke="currentColor" stroke-width="4"/>
-    <rect class="accent" x="15" y="15" width="10" height="10"/>
+     - data-symbol="x y w h" = recorte del símbolo solo (favicon, avatar, imagen OG).
+     - Las piezas usan currentColor; las que llevan class="accent" usan el color de acento.
+     - El logotipo va dentro de <g class="wordmark">; el resto es el símbolo. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 198 40" data-symbol="-5 0 40 40" fill="currentColor">
+  <g class="symbol" fill-rule="evenodd">
+    <path d="M17.6 0 0 32.9 29.6 40z M15.9 16.96 9.71 28.54 20.13 31.04z"/>
+    <rect class="accent" x="12.1" y="0" width="11" height="10"/>
   </g>
-  <g class="wordmark" transform="translate(56 0)" fill-rule="evenodd">
-    <path d="M0 40 11 0h10l11 40h-8.4l-2.2-8H10.6l-2.2 8z M12.8 24h6.4L16 12.4z"/>
-    <path d="M38 0h8v32h20v8H38z"/>
-    <path d="M72 0h30v8H91v32h-8V8H72z"/>
-    <path d="M108 40 119 0h10l11 40h-8.4l-2.2-8h-10.8l-2.2 8z M120.8 24h6.4L124 12.4z"/>
-    <path d="M146 0h8v40h-8z"/>
-    <path d="M160 0h18a11 11 0 0 1 3.5 21.4L190 40h-9l-7.6-18H168v18h-8z M168 8v7h10a3.5 3.5 0 0 0 0-7z"/>
-  </g>
+  <g class="wordmark" fill-rule="evenodd" transform="translate(-8 0)"><path transform="translate(44 0)" d="M0 0h9.4v31.5H30V40H0z"/><path transform="translate(76 0)" d="M0 0h34v8.5H21.7V40h-9.4V8.5H0z"/><path transform="translate(111 0)" d="M0 40 13 0h12l13 40h-9.4l-2.27-7H11.68L9.4 40z M14.3 25h9.4L19 10.46z"/><path transform="translate(155 0)" d="M0 0h9.4v40H0z"/><path transform="translate(170 0)" d="M0 0h20a12 12 0 0 1 5.5 22.7L33 40H23l-6.6-16H9.4v16H0z M9.4 8v8H20a4 4 0 0 0 0-8z"/></g>
 </svg>

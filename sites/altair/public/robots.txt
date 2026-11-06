@@ -1,5 +1,4 @@
 User-agent: *
 Allow: /
-Disallow: /logo-lab
 
 Sitemap: https://altair.lat/sitemap-index.xml

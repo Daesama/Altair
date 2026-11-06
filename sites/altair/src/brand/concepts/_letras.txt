@@ -1,6 +1,0 @@
-Letras del logotipo (altura 40, trazo 9,4). Se usan con translate(x 0).
-A  ancho 38: M0 40 13 0h12l13 40h-9.4l-2.27-7H11.68L9.4 40z M14.3 25h9.4L19 10.46z
-L  ancho 30: M0 0h9.4v31.5H30V40H0z
-T  ancho 34: M0 0h34v8.5H21.7V40h-9.4V8.5H0z
-I  ancho 9.4: M0 0h9.4v40H0z
-R  ancho 33: M0 0h20a12 12 0 0 1 5.5 22.7L33 40H23l-6.6-16H9.4v16H0z M9.4 8v8H20a4 4 0 0 0 0-8z
