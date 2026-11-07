@@ -1,0 +1,15 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base>
+  <section class="wrap nf">
+    <p class="kicker">Página no encontrada</p>
+    <h1 class="serif nf-h">Esta silla está vacía.</h1>
+    <p>La dirección no existe. <a class="enlace" href="/">Volver al inicio</a>.</p>
+  </section>
+</Base>
+<style>
+  .nf { min-height: 60vh; display: grid; align-content: center; gap: 18px; padding-block: 80px; }
+  .nf .kicker { color: var(--vino); }
+  .nf-h { font-size: clamp(2.5rem, 1.5rem + 5vw, 6rem); }
+</style>

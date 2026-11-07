@@ -1,0 +1,14 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base>
+  <section class="wrap nf">
+    <span class="etiqueta">Página no encontrada</span>
+    <h1 class="letrero nf-h">Este plato no está en la carta.</h1>
+    <p><a class="boton" href="/">Volver al inicio</a></p>
+  </section>
+</Base>
+<style>
+  .nf { min-height: 60vh; display: grid; align-content: center; justify-items: start; gap: 20px; padding-block: 80px; }
+  .nf-h { font-size: clamp(2.5rem, 1.5rem + 5vw, 6rem); color: var(--aji); max-width: 14ch; }
+</style>

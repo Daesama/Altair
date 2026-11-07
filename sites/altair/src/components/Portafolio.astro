@@ -79,8 +79,8 @@ const dominio = (url: string) => new URL(url).hostname;
   .case-frame { border: 1px solid var(--line-2); background: var(--bg-2); overflow: hidden; transition: border-color 0.3s; }
   .case-bar { display: flex; align-items: center; gap: 10px; height: 32px; padding: 0 12px; border-bottom: 1px solid var(--line-2); }
   .dot { width: 8px; height: 8px; background: var(--violet); }
-  .case-img { aspect-ratio: 16 / 10; overflow: hidden; }
-  .case-img :global(img) { width: 100%; height: 112%; object-fit: cover; object-position: top; }
+  .case-img { aspect-ratio: 16 / 9.2; overflow: hidden; }
+  .case-img :global(img) { width: 100%; height: auto; }
   .case-missing { display: grid; place-items: center; height: 100%; }
 
   .case-meta { display: grid; gap: 8px; align-content: start; }

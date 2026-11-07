@@ -35,7 +35,7 @@ export function runPage(motion: Motion): void {
     .to('.letrero-sec .cinta', { opacity: 1, duration: 0.3 }, 0)
     .from('.letrero-sec .cinta', { rotate: -16, scale: 0.6, duration: 0.6 }, 0)
     .fromTo('.letrero-sec [data-in]:not(.cinta)', { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.5, stagger: 0.08, ease: 'power3.out' }, 0.45)
-    .from('[data-hero-foto] .hero-marco', { rotate: 10, y: 40, opacity: 0, duration: 0.8 }, 0.2)
+    .from('[data-hero-foto] .hero-marco', { rotate: 8, y: 30, duration: 0.8 }, 0)
     .from('[data-sello]', { scale: 0, rotate: -120, duration: 0.7 }, 0.75);
 
   // Cinta de especiales: avanza una mitad (dos copias iguales) y vuelve a empezar.

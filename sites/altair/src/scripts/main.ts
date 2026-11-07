@@ -89,7 +89,7 @@ export function runPage(motion: Motion): void {
     const img = $('[data-parallax]', c);
     if (img) {
       gsap.fromTo(img, { yPercent: 0 }, {
-        yPercent: -10.7,
+        yPercent: -7.5,
         ease: 'none',
         scrollTrigger: { trigger: c, start: 'top bottom', end: 'bottom top', scrub: true },
       });
