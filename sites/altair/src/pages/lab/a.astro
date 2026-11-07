@@ -1,0 +1,352 @@
+---
+import { Image } from 'astro:assets';
+import Lab from '../../layouts/Lab.astro';
+import Logo from '../../brand/Logo.astro';
+import WhatsAppLink from '@altair/core/WhatsAppLink.astro';
+import { cop } from '@altair/core/types';
+import { contacto, lanzamiento, mensajes, planes } from '../../../site.config';
+import filo from '../../assets/lab/filo-movil.png';
+import arke from '../../assets/portfolio/arke.png';
+import geist from '../../assets/fonts/geist-latin-wght-normal.woff2?url';
+import geistMono from '../../assets/fonts/geist-mono-latin-wght-normal.woff2?url';
+
+const esencial = planes[0];
+const nav = ['Inicio', 'Planes', 'Portafolio', 'Proceso', 'Contacto'];
+---
+<Lab titulo="A · Recorrido" fuentes={[geist, geistMono]}>
+  <div class="a grain">
+    <header class="hdr wrap">
+      <a href="/lab/a" class="hdr-logo" aria-label="Altair Studio, inicio"><Logo etiqueta="" /></a>
+      <nav class="pill" aria-label="Principal">
+        <span class="pill-ind" aria-hidden="true" data-pill-ind></span>
+        {nav.map((n, i) => <a href={i === 0 ? '/lab/a' : `/${n.toLowerCase()}`} aria-current={i === 0 ? 'page' : undefined} data-pill>{n}</a>)}
+      </nav>
+      <WhatsAppLink class="btn btn--sm" telefono={contacto.whatsapp} mensaje={mensajes.general} data-magnetic>Escríbanos</WhatsAppLink>
+    </header>
+
+    <main id="contenido">
+      <section class="hero wrap" aria-labelledby="hero-t">
+        <div class="hero-txt">
+          <p class="chip" data-in><span class="dot" aria-hidden="true"></span>{lanzamiento.cuposRestantes} cupos con precio de lanzamiento</p>
+          <h1 id="hero-t" class="h1" data-hero-title>
+            Que lo encuentren en <span class="hl">Google</span>. Que le escriban por <span class="hl">WhatsApp</span>.
+          </h1>
+          <p class="lead" data-in>Diseñamos la página web de comercios en Bogotá: su cliente la abre en el celular, ve precios y horarios, y le escribe con un toque.</p>
+          <div class="ctas" data-in>
+            <WhatsAppLink class="btn" telefono={contacto.whatsapp} mensaje={mensajes.general} data-magnetic>
+              Escríbanos por WhatsApp
+              <svg class="ico" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11m-4-4 4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </WhatsAppLink>
+            <a class="btn btn--ghost" href="/planes">Ver planes</a>
+          </div>
+          <ul class="trust" data-in>
+            <li><b>{cop(esencial.precioLanzamiento!)}</b> pago único</li>
+            <li><b>Dominio</b> a su nombre</li>
+            <li><b>30 días</b> de garantía</li>
+          </ul>
+        </div>
+
+        <div class="stage" data-stage>
+          <div class="phone" data-tilt>
+            <div class="screen">
+              <!-- 1. Google -->
+              <div class="scr scr-g" data-scr="0">
+                <div class="g-bar"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="9" cy="9" r="5.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><span data-typed>barbería chapinero</span><i class="caret" aria-hidden="true"></i></div>
+                <ul class="g-res">
+                  <li class="g-card g-card--on" data-gcard>
+                    <p class="g-t">Filo Barbería &amp; Spa</p>
+                    <p class="g-m"><span class="stars">4,9 ★★★★★</span> · Barbería</p>
+                    <p class="g-m"><span class="open">Abierto</span> · Cierra 8 p. m.</p>
+                    <span class="g-btn" data-gbtn>Sitio web</span>
+                  </li>
+                  <li class="g-card"><p class="g-t">Otra barbería</p><p class="g-m">Sin sitio web</p></li>
+                  <li class="g-card"><p class="g-t">Peluquería del barrio</p><p class="g-m">Sin horario publicado</p></li>
+                </ul>
+              </div>
+              <!-- 2. Página -->
+              <div class="scr scr-w" data-scr="1">
+                <Image src={filo} alt="" widths={[320, 640]} sizes="300px" class="w-img" data-wimg />
+              </div>
+              <!-- 3. WhatsApp -->
+              <div class="scr scr-wa" data-scr="2">
+                <div class="wa-top"><span class="wa-av" aria-hidden="true">F</span><span><b>Filo Barbería</b><small>en línea</small></span></div>
+                <div class="wa-chat">
+                  <p class="b b--out" data-b>Hola, quiero reservar un corte para mañana.</p>
+                  <p class="b b--typing" data-b><i></i><i></i><i></i></p>
+                  <p class="b b--in" data-b>¡Claro! ¿A las 10 a. m. le sirve?</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <p class="float f1" data-depth="0.6" aria-hidden="true"><span class="f-ico f-ico--g">G</span> Aparece en Google Maps</p>
+          <p class="float f2" data-depth="0.9" aria-hidden="true"><span class="open">●</span> Abierto ahora</p>
+          <p class="float f3" data-depth="0.4" aria-hidden="true"><span class="f-ico f-ico--wa">✓</span> Le escribieron por WhatsApp</p>
+
+          <ol class="steps" aria-label="Cómo llega un cliente">
+            <li><button type="button" data-step="0"><span>01</span> Lo buscan<i data-prog></i></button></li>
+            <li><button type="button" data-step="1"><span>02</span> Ven su página<i data-prog></i></button></li>
+            <li><button type="button" data-step="2"><span>03</span> Le escriben<i data-prog></i></button></li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="bento-sec wrap" aria-labelledby="bento-t">
+        <h2 id="bento-t" class="h2" data-reveal="lines">Todo lo que necesita, en su lugar.</h2>
+        <div class="bento">
+          <a class="tile t-plan" href="/planes" data-card>
+            <span class="t-tag">Planes</span>
+            <p class="t-old"><s>{cop(esencial.precioOficial)}</s></p>
+            <p class="t-price" data-count-from={esencial.precioOficial} data-count-to={esencial.precioLanzamiento}>{cop(esencial.precioLanzamiento!)}</p>
+            <p class="t-sub">Plan Esencial · pago único</p>
+            <ul class="t-plans">
+              {planes.map((p) => <li>{p.nombre}<span>{cop(p.precioLanzamiento ?? p.precioOficial)}{p.desde ? '+' : ''}</span></li>)}
+            </ul>
+            <span class="t-go">Comparar planes <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 15 15 5m-8 0h8v8" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></span>
+          </a>
+          <a class="tile t-port" href="/portafolio" data-card>
+            <span class="t-tag">Portafolio</span>
+            <h3 class="t-h">ARKE, Filo y La Leñera</h3>
+            <div class="t-shot" data-depth="0.4"><Image src={arke} alt="" widths={[480, 800]} sizes="(min-width: 1024px) 40vw, 90vw" /></div>
+            <span class="t-go">Ver casos <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 15 15 5m-8 0h8v8" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></span>
+          </a>
+          <a class="tile t-proc" href="/proceso" data-card>
+            <span class="t-tag">Proceso</span>
+            <h3 class="t-h">4 pasos, de la llamada a publicar.</h3>
+            <ol class="t-steps"><li>Hablamos</li><li>Diseñamos</li><li>Revisa</li><li>Publicamos</li></ol>
+          </a>
+          <a class="tile t-cont" href="/contacto" data-card>
+            <span class="t-tag">Contacto</span>
+            <h3 class="t-h">{contacto.whatsapp}</h3>
+            <p class="t-sub">{contacto.email}</p>
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="foot wrap">
+      <Logo etiqueta="" />
+      <p>© 2026 Altair Studio · Bogotá</p>
+      <p><a href="/terminos">Términos</a> · <a href="/privacidad">Datos</a></p>
+    </footer>
+  </div>
+</Lab>
+
+<style>
+  .a { font-family: 'Geist', system-ui, sans-serif; min-height: 100vh; }
+  .a :global(.logo) { height: 20px; --logo-accent: var(--violet); }
+
+  /* Header */
+  .hdr { display: flex; align-items: center; justify-content: space-between; gap: 16px; height: 76px; }
+  .hdr-logo { color: var(--fg); }
+  .pill { position: relative; display: none; padding: 4px; border-radius: 999px; background: var(--s1); border: 1px solid var(--hair); }
+  .pill a { position: relative; z-index: 1; display: inline-flex; align-items: center; height: 36px; padding: 0 16px; border-radius: 999px; font-size: 14px; color: var(--fg-2); text-decoration: none; transition: color .25s; }
+  .pill a:hover, .pill a[aria-current='page'] { color: var(--fg); }
+  .pill-ind { position: absolute; top: 4px; left: 0; height: 36px; width: 1px; border-radius: 999px; background: var(--s3); border: 1px solid var(--hair-2); transform-origin: left; }
+  @media (min-width: 900px) { .pill { display: flex; } }
+
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; height: 52px; padding: 0 22px; border-radius: 14px; background: var(--violet); color: #fff; font-weight: 600; font-size: 15px; text-decoration: none; box-shadow: inset 0 1px 0 rgba(255,255,255,.22), 0 10px 30px -12px rgba(122,75,255,.7); transition: background-color .25s; }
+  .btn:hover { background: var(--violet-2); }
+  .btn .ico { width: 18px; transition: transform .4s var(--ease-out); }
+  .btn:hover .ico { transform: translateX(4px); }
+  .btn--sm { height: 40px; padding: 0 16px; border-radius: 12px; font-size: 14px; }
+  .btn--ghost { background: var(--s1); color: var(--fg); border: 1px solid var(--hair-2); box-shadow: none; }
+  .btn--ghost:hover { background: var(--s2); }
+
+  /* Hero */
+  .hero { display: grid; gap: 48px; padding-block: 32px 64px; align-items: center; }
+  .chip { display: inline-flex; align-items: center; gap: 10px; height: 34px; padding: 0 14px 0 12px; border-radius: 999px; background: var(--s1); border: 1px solid var(--hair); font: 500 13px/1 'Geist Mono', monospace; color: var(--fg-2); }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--blue); box-shadow: 0 0 0 4px rgba(77,141,255,.18); }
+  .h1 { margin: 22px 0 20px; font-size: clamp(2.6rem, 1.4rem + 4.6vw, 5rem); line-height: 1.02; letter-spacing: -0.045em; font-weight: 600; text-wrap: balance; }
+  .hl { color: var(--violet-ink); }
+  .lead { max-width: 46ch; font-size: clamp(1.05rem, 1rem + .3vw, 1.2rem); color: var(--fg-2); }
+  .ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
+  .trust { display: flex; flex-wrap: wrap; gap: 8px 24px; margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--hair); font-size: 14px; color: var(--fg-3); }
+  .trust b { color: var(--fg); font-weight: 600; }
+
+  .stage { position: relative; display: grid; justify-items: center; gap: 28px; padding-top: 8px; }
+  .phone { width: min(250px, 70vw); aspect-ratio: 9 / 19; padding: 10px; border-radius: 46px; background: var(--s2); border: 1px solid var(--hair-2); box-shadow: inset 0 1px 0 rgba(255,255,255,.08), 0 40px 80px -30px rgba(0,0,0,.9), 0 0 0 8px var(--s1); will-change: transform; }
+  .screen { position: relative; height: 100%; border-radius: 36px; overflow: hidden; background: #fff; color: #1f1f1f; }
+  .scr { position: absolute; inset: 0; }
+  .scr-g { padding: 46px 14px 14px; background: #fff; font-family: Arial, sans-serif; }
+  .g-bar { display: flex; align-items: center; gap: 8px; height: 40px; padding: 0 14px; border-radius: 999px; border: 1px solid #dfe1e5; font-size: 13px; color: #202124; }
+  .g-bar svg { width: 16px; color: #5f6368; }
+  .caret { width: 1px; height: 14px; background: #202124; }
+  .g-res { display: grid; gap: 10px; margin-top: 16px; }
+  .g-card { padding: 12px; border-radius: 12px; border: 1px solid #ececec; font-size: 12px; color: #4d5156; }
+  .g-card--on { border-color: #c6b8ff; box-shadow: 0 6px 18px -8px rgba(98,54,240,.45); }
+  .g-t { font-size: 14px; color: #1a0dab; margin-bottom: 2px; }
+  .stars { color: #e7711b; }
+  .open { color: #188038; font-weight: 600; }
+  .g-btn { display: inline-block; margin-top: 8px; padding: 6px 12px; border-radius: 999px; background: #e8f0fe; color: #1a73e8; font-weight: 600; }
+  .scr-w { background: #f3e9d7; overflow: hidden; }
+  .scr-w :global(.w-img) { width: 100%; height: auto; }
+  .scr-wa { display: flex; flex-direction: column; background: #efe7de; font-family: Arial, sans-serif; }
+  .wa-top { display: flex; align-items: center; gap: 10px; padding: 44px 14px 12px; background: #075e54; color: #fff; font-size: 13px; }
+  .wa-top small { display: block; font-size: 11px; opacity: .8; }
+  .wa-av { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: #5a1a1f; color: #f3e9d7; font-weight: 700; }
+  .wa-chat { display: grid; gap: 8px; padding: 16px 12px; align-content: start; }
+  .b { max-width: 82%; padding: 8px 10px; border-radius: 10px; font-size: 12.5px; line-height: 1.35; background: #fff; justify-self: start; }
+  .b--out { justify-self: end; background: #dcf8c6; }
+  .b--typing { display: flex; gap: 4px; padding: 10px 12px; }
+  .b--typing i { width: 6px; height: 6px; border-radius: 50%; background: #9aa0a6; }
+
+  .float { position: absolute; display: none; align-items: center; gap: 10px; padding: 10px 14px 10px 10px; border-radius: 14px; background: var(--s2); border: 1px solid var(--hair-2); font-size: 13px; color: var(--fg); box-shadow: 0 20px 40px -20px rgba(0,0,0,.9); white-space: nowrap; }
+  .f-ico { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 8px; font-weight: 700; font-size: 13px; }
+  .f-ico--g { background: #fff; color: #4285f4; }
+  .f-ico--wa { background: var(--wa); color: #06331b; }
+  .f1 { top: 12%; left: 0; }
+  .f2 { top: 36%; right: 0; }
+  .f3 { top: 64%; left: 2%; }
+  @media (min-width: 560px) { .float { display: inline-flex; } }
+
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; width: min(100%, 420px); }
+  .steps button { position: relative; overflow: hidden; display: grid; gap: 2px; width: 100%; min-height: 56px; padding: 10px 12px; border-radius: 12px; background: var(--s1); border: 1px solid var(--hair); text-align: left; font-size: 13px; color: var(--fg-2); }
+  .steps button span { font: 500 11px/1 'Geist Mono', monospace; color: var(--fg-3); }
+  .steps button[aria-pressed='true'] { color: var(--fg); border-color: var(--hair-2); }
+  .steps i { position: absolute; left: 0; bottom: 0; height: 2px; width: 100%; background: var(--violet); transform: scaleX(0); transform-origin: left; }
+
+  @media (min-width: 1024px) {
+    .hero { grid-template-columns: 1.1fr .9fr; gap: 40px; min-height: calc(100svh - 76px); padding-block: 0 48px; }
+    .phone { width: 300px; }
+  }
+
+  /* Bento */
+  .bento-sec { padding-block: 32px 96px; }
+  .h2 { font-size: clamp(1.75rem, 1.2rem + 2vw, 2.75rem); line-height: 1.05; letter-spacing: -0.035em; font-weight: 600; margin-bottom: 28px; max-width: 20ch; }
+  .bento { display: grid; gap: 16px; grid-template-columns: 1fr; }
+  .tile { position: relative; overflow: hidden; display: flex; flex-direction: column; gap: 10px; min-height: 220px; padding: 24px; border-radius: 24px; background: var(--s1); border: 1px solid var(--hair); text-decoration: none; box-shadow: inset 0 1px 0 rgba(255,255,255,.04); transition: border-color .3s; will-change: transform; }
+  .tile:hover { border-color: var(--hair-2); }
+  .t-tag { align-self: flex-start; padding: 4px 10px; border-radius: 999px; background: var(--s2); border: 1px solid var(--hair); font: 500 12px/1.4 'Geist Mono', monospace; color: var(--fg-2); }
+  .t-h { font-size: 1.375rem; letter-spacing: -0.02em; font-weight: 600; max-width: 18ch; }
+  .t-sub { color: var(--fg-2); font-size: 14px; }
+  .t-old { margin-top: auto; color: var(--fg-3); }
+  .t-old s { text-decoration-color: var(--violet); text-decoration-thickness: 2px; }
+  .t-price { font-size: clamp(2.75rem, 2rem + 3vw, 4.5rem); font-weight: 600; letter-spacing: -0.05em; line-height: 1; font-variant-numeric: tabular-nums; }
+  .t-plans { display: grid; gap: 6px; margin-top: 12px; }
+  .t-plans li { display: flex; justify-content: space-between; padding: 10px 12px; border-radius: 12px; background: var(--s2); font-size: 14px; }
+  .t-plans span { font: 500 13px 'Geist Mono', monospace; color: var(--fg-2); }
+  .t-go { display: inline-flex; align-items: center; gap: 8px; margin-top: 12px; font-weight: 600; font-size: 14px; }
+  .t-go svg { width: 16px; transition: transform .4s var(--ease-out); }
+  .tile:hover .t-go svg { transform: translate(3px, -3px); }
+  .t-port { background: var(--violet); border-color: transparent; color: #fff; }
+  .t-port .t-tag { background: rgba(0,0,0,.18); border-color: rgba(255,255,255,.2); color: #fff; }
+  .t-shot { margin: 8px -24px -60px 24px; border-radius: 14px 0 0 0; overflow: hidden; border: 1px solid rgba(255,255,255,.25); box-shadow: 0 30px 60px -20px rgba(0,0,0,.6); }
+  .t-shot :global(img) { width: 100%; transition: transform 1.2s var(--ease-out); }
+  .t-port:hover .t-shot :global(img) { transform: translateY(-12%); }
+  .t-port .t-go { position: absolute; left: 24px; bottom: 24px; padding: 8px 12px; border-radius: 10px; background: #fff; color: #1b1030; }
+  .t-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: auto; }
+  .t-steps li { padding-top: 10px; border-top: 2px solid var(--s3); font-size: 12px; color: var(--fg-2); }
+  .t-steps li:first-child { border-color: var(--blue); color: var(--fg); }
+  .t-cont { background: var(--bone); color: #120f1a; }
+  .t-cont .t-tag { background: #fff; border-color: rgba(0,0,0,.08); color: #4a4558; }
+  .t-cont .t-h { margin-top: auto; font-size: 1.5rem; }
+  .t-cont .t-sub { color: #4a4558; }
+
+  @media (min-width: 720px) {
+    .bento { grid-template-columns: repeat(2, 1fr); }
+    .t-plan { grid-row: span 2; }
+  }
+  @media (min-width: 1024px) {
+    .bento { grid-template-columns: repeat(4, 1fr); grid-auto-rows: 240px; }
+    .t-plan { grid-column: span 2; grid-row: span 2; padding: 32px; }
+    .t-port { grid-column: span 2; }
+  }
+
+  .foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; padding-block: 32px; border-top: 1px solid var(--hair); color: var(--fg-3); font-size: 14px; }
+  .foot a { color: var(--fg-2); }
+</style>
+
+<script>
+  import { initMotion } from '@altair/core/motion';
+  import { revealAll, revealText } from '@altair/core/reveal';
+  import { magnetic, tilt, parallaxPointer } from '@altair/core/pointer';
+  import { cop } from '@altair/core/types';
+
+  const m = initMotion();
+  const { gsap } = m;
+  revealAll(m);
+  const $$ = <T extends Element = HTMLElement>(s: string) => [...document.querySelectorAll<T>(s)];
+
+  // Indicador del menú en píldora: se desliza al elemento bajo el cursor.
+  const ind = document.querySelector<HTMLElement>('[data-pill-ind]');
+  const items = $$<HTMLAnchorElement>('[data-pill]');
+  const mover = (a: HTMLElement, inst = false) => {
+    if (!ind) return;
+    const p = a.parentElement!.getBoundingClientRect();
+    const r = a.getBoundingClientRect();
+    gsap.to(ind, { x: r.left - p.left, width: r.width, duration: inst || m.reduced ? 0 : 0.45, ease: 'power3.out' });
+  };
+  const actual = items.find((a) => a.getAttribute('aria-current')) ?? items[0];
+  if (actual) requestAnimationFrame(() => mover(actual, true));
+  items.forEach((a) => a.addEventListener('pointerenter', () => mover(a)));
+  ind?.parentElement?.addEventListener('pointerleave', () => actual && mover(actual));
+
+  $$('[data-magnetic]').forEach((el) => magnetic(m, el, 0.25));
+  $$('[data-card]').forEach((el) => tilt(m, el, 4));
+  const stage = document.querySelector<HTMLElement>('[data-stage]');
+  const phone = document.querySelector<HTMLElement>('[data-tilt]');
+  if (stage && phone) { tilt(m, phone, 8, stage); parallaxPointer(m, stage); }
+
+  // Recorrido en el celular: Google → página → WhatsApp, en bucle. Los botones saltan al paso.
+  const scr = $$('[data-scr]');
+  const pasos = $$<HTMLButtonElement>('[data-step]');
+  const prog = $$('[data-prog]');
+  const typed = document.querySelector<HTMLElement>('[data-typed]');
+  const consulta = typed?.textContent ?? '';
+  const burbujas = $$('[data-b]');
+  const DUR = [3.4, 3.2, 3.6];
+  let actualPaso = 0;
+  let tl: gsap.core.Timeline | null = null;
+
+  const pintarPaso = (i: number) => {
+    scr.forEach((s, k) => gsap.set(s, { autoAlpha: k === i ? 1 : 0 }));
+    pasos.forEach((b, k) => b.setAttribute('aria-pressed', String(k === i)));
+  };
+
+  const correr = (i: number) => {
+    tl?.kill();
+    actualPaso = i;
+    pintarPaso(i);
+    prog.forEach((p, k) => gsap.set(p, { scaleX: k < i ? 1 : 0 }));
+    if (m.reduced) { prog.forEach((p, k) => gsap.set(p, { scaleX: k <= i ? 1 : 0 })); return; }
+    tl = gsap.timeline({ onComplete: () => correr((i + 1) % 3) });
+    tl.to(prog[i], { scaleX: 1, duration: DUR[i], ease: 'none' }, 0);
+    if (i === 0 && typed) {
+      const o = { n: 0 };
+      tl.to(o, { n: consulta.length, duration: 1.2, ease: 'none', onUpdate: () => { typed.textContent = consulta.slice(0, Math.round(o.n)); } }, 0.2)
+        .from('[data-gcard]', { y: 14, opacity: 0, duration: 0.5, stagger: 0.12, ease: 'power3.out' }, 1.4)
+        .to('[data-gbtn]', { scale: 0.92, duration: 0.15, yoyo: true, repeat: 1 }, 2.8);
+    }
+    if (i === 1) tl.fromTo('[data-wimg]', { y: 0 }, { y: -260, duration: DUR[1] - 0.4, ease: 'power1.inOut' }, 0.3);
+    if (i === 2) {
+      gsap.set(burbujas, { autoAlpha: 0, y: 10 });
+      tl.to(burbujas[0], { autoAlpha: 1, y: 0, duration: 0.35 }, 0.3)
+        .to(burbujas[1], { autoAlpha: 1, y: 0, duration: 0.3 }, 1.0)
+        .to(burbujas[1], { autoAlpha: 0, duration: 0.2 }, 2.0)
+        .set(burbujas[1], { display: 'none' }, 2.2)
+        .to(burbujas[2], { autoAlpha: 1, y: 0, duration: 0.35 }, 2.2)
+        .set(burbujas[1], { display: '' }, DUR[2]);
+    }
+  };
+  pasos.forEach((b, k) => b.addEventListener('click', () => correr(k)));
+  correr(0);
+
+  // Entrada
+  const t = document.querySelector('[data-hero-title]');
+  if (t) revealText(m, t, { scroll: false, delay: 0.1, stagger: 0.08 });
+  if (!m.reduced) {
+    gsap.to('[data-in]', { opacity: 1, duration: 0.8, stagger: 0.1, delay: 0.3 });
+    gsap.from('.phone', { y: 60, rotationX: 18, opacity: 0, duration: 1.2, ease: 'expo.out', delay: 0.2 });
+    gsap.from('.float', { scale: 0.6, opacity: 0, duration: 0.7, stagger: 0.12, ease: 'back.out(1.8)', delay: 0.8 });
+    gsap.from('.tile', { y: 40, opacity: 0, duration: 0.8, stagger: 0.08, ease: 'power3.out', scrollTrigger: { trigger: '.bento', start: 'top 85%', once: true } });
+  } else {
+    gsap.set('[data-in]', { opacity: 1 });
+  }
+
+  // Precio: baja del oficial al de lanzamiento cuando aparece.
+  const precio = document.querySelector<HTMLElement>('[data-count-to]');
+  if (precio && !m.reduced) {
+    const o = { v: Number(precio.dataset.countFrom) };
+    gsap.to(o, { v: Number(precio.dataset.countTo), duration: 1.4, ease: 'power3.out', onUpdate: () => { precio.textContent = cop(Math.round(o.v / 1000) * 1000); }, scrollTrigger: { trigger: precio, start: 'top 85%', once: true } });
+  }
+</script>

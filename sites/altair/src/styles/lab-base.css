@@ -1,0 +1,75 @@
+/* Base común de las maquetas: fuentes candidatas, reset y tokens de marca. */
+@font-face { font-family: 'Geist'; src: url('../assets/fonts/geist-latin-wght-normal.woff2') format('woff2-variations'); font-weight: 100 900; font-display: swap; }
+@font-face { font-family: 'Geist Mono'; src: url('../assets/fonts/geist-mono-latin-wght-normal.woff2') format('woff2-variations'); font-weight: 100 900; font-display: swap; }
+@font-face { font-family: 'Instrument Sans'; src: url('../assets/fonts/instrument-sans-latin-wght-normal.woff2') format('woff2-variations'); font-weight: 400 700; font-stretch: 75% 100%; font-display: swap; }
+@font-face { font-family: 'Instrument Serif'; src: url('../assets/fonts/instrument-serif-latin-400-italic.woff2') format('woff2'); font-weight: 400; font-style: italic; font-display: swap; }
+@font-face { font-family: 'Archivo'; src: url('../assets/fonts/archivo-latin-wdth-normal.woff2') format('woff2-variations'); font-weight: 100 900; font-stretch: 62% 125%; font-display: swap; }
+@font-face { font-family: 'Martian Mono'; src: url('../assets/fonts/martian-mono-latin-wdth-normal.woff2') format('woff2-variations'); font-weight: 100 800; font-stretch: 75% 112.5%; font-display: swap; }
+
+:root {
+  /* Superficies en capas: dan profundidad sin degradados ni vidrio. */
+  --s0: #07060a;
+  --s1: #0e0c14;
+  --s2: #16131f;
+  --s3: #201c2c;
+  --hair: rgba(233, 230, 242, 0.08);
+  --hair-2: rgba(233, 230, 242, 0.14);
+  --fg: #ece9f4;
+  --fg-2: #a7a1b8;
+  --fg-3: #6f6982;
+  --violet: #7a4bff;
+  --violet-2: #6236f0;
+  --violet-ink: #b9a4ff;
+  --blue: #4d8dff;
+  --blue-ink: #a9c6ff;
+  --bone: #ece9f2;
+  --wa: #25d366;
+
+  --sp-1: 8px; --sp-2: 16px; --sp-3: 24px; --sp-4: 32px; --sp-5: 48px; --sp-6: 64px; --sp-7: 96px;
+  --pad: 20px;
+  --maxw: 1240px;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  color-scheme: dark;
+}
+@media (min-width: 768px) { :root { --pad: 32px; } }
+@media (min-width: 1280px) { :root { --pad: 40px; } }
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+body { margin: 0; background: var(--s0); color: var(--fg); -webkit-font-smoothing: antialiased; overflow-x: clip; line-height: 1.5; }
+img, svg { display: block; max-width: 100%; }
+img { height: auto; }
+a { color: inherit; }
+button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+h1, h2, h3, p, ul, ol, figure, dl, dd { margin: 0; }
+ul, ol { list-style: none; padding: 0; }
+:focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; border-radius: 6px; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.skip { position: fixed; top: 8px; left: 8px; z-index: 200; padding: 10px 14px; background: var(--violet); color: #fff; transform: translateY(-200%); border-radius: 8px; }
+.skip:focus { transform: none; }
+.wrap { width: 100%; max-width: calc(var(--maxw) + var(--pad) * 2); margin-inline: auto; padding-inline: var(--pad); }
+
+/* Grano muy sutil para quitarle lo plano a las superficies oscuras (SVG, sin imagen externa). */
+.grain { position: relative; isolation: isolate; }
+.grain::after {
+  content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none; opacity: 0.06; mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.js:not(.rm) [data-reveal], .js:not(.rm) [data-hero-title] { visibility: hidden; }
+.motion-fallback [data-reveal], .motion-fallback [data-hero-title] { visibility: visible !important; }
+.js:not(.rm) [data-in] { opacity: 0; }
+.motion-fallback [data-in] { opacity: 1 !important; }
+
+/* Selector flotante entre maquetas (solo en /lab). */
+.lab-switch {
+  position: fixed; z-index: 300; right: 16px; bottom: 16px;
+  display: flex; gap: 4px; padding: 4px; border-radius: 999px;
+  background: #000; border: 1px solid var(--hair-2); font: 600 13px/1 'Geist Mono', monospace;
+}
+.lab-switch a { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 999px; text-decoration: none; color: var(--fg-2); }
+.lab-switch a[aria-current='page'] { background: var(--fg); color: #000; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; }
+}

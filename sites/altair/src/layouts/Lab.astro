@@ -1,0 +1,42 @@
+---
+/**
+ * Layout temporal para las maquetas del rediseño (/lab/a, /lab/b, /lab/c).
+ * No se indexa. Se elimina cuando se elija la dirección.
+ */
+import Seo from '@altair/core/Seo.astro';
+import { marca, seo } from '../../site.config';
+import '../styles/lab-base.css';
+
+interface Props {
+  titulo: string;
+  fuentes: string[];
+}
+const { titulo, fuentes } = Astro.props;
+---
+<!doctype html>
+<html lang="es-CO">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script is:inline>
+      (function () {
+        var d = document.documentElement;
+        d.classList.add('js');
+        if (matchMedia('(prefers-reduced-motion: reduce)').matches) d.classList.add('rm');
+        setTimeout(function () { d.classList.add('motion-fallback'); }, 3000);
+      })();
+    </script>
+    {fuentes.map((f) => <link rel="preload" href={f} as="font" type="font/woff2" crossorigin />)}
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <Seo titulo={`${titulo} — Laboratorio Altair`} descripcion={seo.descripcion} sitio={seo.url} ogImage={seo.ogImage} nombreSitio={marca.nombre} noindex themeColor="#07060a" />
+  </head>
+  <body>
+    <a class="skip" href="#contenido">Saltar al contenido</a>
+    <slot />
+    <nav class="lab-switch" aria-label="Cambiar de maqueta">
+      <a href="/lab/a" aria-current={Astro.url.pathname.startsWith('/lab/a') ? 'page' : undefined}>A</a>
+      <a href="/lab/b" aria-current={Astro.url.pathname.startsWith('/lab/b') ? 'page' : undefined}>B</a>
+      <a href="/lab/c" aria-current={Astro.url.pathname.startsWith('/lab/c') ? 'page' : undefined}>C</a>
+    </nav>
+  </body>
+</html>

@@ -13,7 +13,8 @@
     "./Consent.astro": "./src/consent/Consent.astro",
     "./motion": "./src/motion/init.ts",
     "./reveal": "./src/motion/reveal.ts",
-    "./types": "./src/types.ts"
+    "./types": "./src/types.ts",
+    "./pointer": "./src/motion/pointer.ts"
   },
   "peerDependencies": {
     "astro": "^7.4.0",

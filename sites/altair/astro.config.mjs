@@ -9,6 +9,6 @@ export default defineConfig({
   compressHTML: true,
   build: { format: 'file' },
   integrations: [
-    sitemap(),
+    sitemap({ filter: (page) => !page.includes('/lab') }),
   ],
 });
