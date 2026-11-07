@@ -1,0 +1,76 @@
+---
+import { Image } from 'astro:assets';
+import { cop } from '@altair/core/types';
+import picada from '../assets/fotos/picada.jpg';
+import carne from '../assets/fotos/carne.jpg';
+import empanadas from '../assets/fotos/empanadas.jpg';
+import arepas from '../assets/fotos/arepas-hogao.jpg';
+import { carta } from '../../site.config';
+
+const plato = (nombre: string) => carta.flatMap((c) => c.platos).find((p) => p.nombre === nombre)!;
+const destacados = [
+  { p: plato('Picada leñera'), img: picada, alt: 'Tabla de madera con carnes asadas, chorizos, patacones, yuca frita, papas y limones', giro: -2, clase: 'grande' },
+  { p: plato('Carne a la leña'), img: carne, alt: 'Plato con carne asada en tajadas, arroz blanco, rábanos y limón', giro: 2.5, clase: 'media' },
+  { p: plato('Empanadas'), img: empanadas, alt: 'Empanadas doradas en un plato blanco', giro: -3, clase: 'chica' },
+  { p: plato('Arepas con hogao'), img: arepas, alt: 'Arepas asadas en un plato junto a un recipiente con hogao', giro: 1.5, clase: 'chica' },
+];
+---
+<section class="dest" aria-labelledby="dest-t">
+  <div class="wrap">
+    <header class="dest-head">
+      <span class="etiqueta">Lo que más piden</span>
+      <h2 id="dest-t" class="letrero dest-h" data-reveal="words">Platos de la casa</h2>
+    </header>
+
+    <ul class="dest-grid">
+      {destacados.map((d, i) => (
+        <li class={`plato plato--${d.clase}`} style={`--giro:${d.giro}deg`} data-plato>
+          <article>
+            <div class="plato-foto">
+              <Image src={d.img} alt={d.alt} widths={[360, 600, 900]} sizes={d.clase === 'grande' ? '(min-width: 1200px) 50vw, 92vw' : '(min-width: 1200px) 25vw, (min-width: 768px) 45vw, 92vw'} quality={68} />
+            </div>
+            <div class="plato-info">
+              <span class="plato-n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+              <h3 class="letrero plato-t">{d.p.nombre}</h3>
+              <p class="plato-d">{d.p.detalle}</p>
+              <p class="plato-precio"><span class="sr-only">Precio: </span>{cop(d.p.precio)}</p>
+            </div>
+          </article>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .dest { padding-block: 72px 88px; }
+  .dest-head { display: grid; gap: 14px; justify-items: start; margin-bottom: 40px; }
+  .dest-h { font-size: clamp(2.5rem, 1.4rem + 5vw, 5.5rem); color: var(--aji); }
+
+  .dest-grid { display: grid; gap: 40px; }
+  .plato article {
+    background: var(--papel); border: var(--borde); box-shadow: var(--sombra);
+    transform: rotate(var(--giro));
+    transition: transform 0.35s var(--rebote);
+  }
+  .plato:hover article { transform: rotate(0deg) scale(1.015); }
+  .plato-foto { aspect-ratio: 4 / 3; overflow: hidden; border-bottom: var(--borde); }
+  .plato-foto :global(img) { width: 100%; height: 100%; object-fit: cover; }
+  .plato-info { position: relative; padding: 18px 18px 22px; display: grid; gap: 8px; }
+  .plato-n { position: absolute; top: -22px; right: 16px; width: 44px; height: 44px; display: grid; place-items: center; border-radius: 50%; background: var(--hoja); color: var(--papel); border: var(--borde); font-weight: 700; font-size: 0.9375rem; }
+  .plato-t { font-size: 1.75rem; line-height: 1; padding-right: 48px; }
+  .plato-d { color: var(--tinta-2); font-size: 0.9375rem; max-width: 40ch; }
+  .plato-precio { justify-self: start; margin-top: 6px; padding: 4px 12px; background: var(--aji); color: var(--papel); font-weight: 700; font-size: 1.125rem; transform: rotate(-2deg); }
+
+  @media (min-width: 768px) {
+    .dest { padding-block: 104px 120px; }
+    .dest-grid { grid-template-columns: repeat(6, 1fr); gap: 48px 32px; align-items: start; }
+    .plato--grande { grid-column: 1 / span 4; }
+    .plato--grande .plato-foto { aspect-ratio: 16 / 10; }
+    .plato--grande .plato-t { font-size: 2.5rem; }
+    .plato--media { grid-column: 5 / span 2; margin-top: 64px; }
+    .plato--media .plato-foto { aspect-ratio: 3 / 4; }
+    .plato--chica:nth-child(3) { grid-column: 2 / span 2; }
+    .plato--chica:nth-child(4) { grid-column: 4 / span 2; margin-top: 40px; }
+  }
+</style>

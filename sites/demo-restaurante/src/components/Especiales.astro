@@ -1,0 +1,31 @@
+---
+import { especiales } from '../../site.config';
+---
+<section class="esp" aria-label="Especiales del día">
+  <ul class="sr-only">
+    {especiales.map((e) => <li>{e}</li>)}
+  </ul>
+  <div class="esp-cinta" aria-hidden="true">
+    <div class="esp-track" data-marquee>
+      {[0, 1].map(() => (
+        <p class="esp-grupo">
+          {especiales.map((e) => (
+            <>
+              <span class="letrero">{e}</span>
+              <svg class="esp-estrella" viewBox="0 0 20 20"><path d="M10 0l2.4 7.6H20l-6.2 4.6 2.4 7.8L10 15.2 3.8 20l2.4-7.8L0 7.6h7.6z" /></svg>
+            </>
+          ))}
+        </p>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .esp { background: var(--maiz); border-bottom: var(--borde); overflow: hidden; }
+  .esp-cinta { padding-block: 14px; }
+  .esp-track { display: flex; width: max-content; }
+  .esp-grupo { display: flex; align-items: center; gap: 24px; padding-right: 24px; white-space: nowrap; }
+  .esp-grupo .letrero { font-size: clamp(1.25rem, 1rem + 1vw, 1.75rem); color: var(--tinta); }
+  .esp-estrella { width: 18px; height: 18px; fill: var(--aji); flex: none; }
+</style>

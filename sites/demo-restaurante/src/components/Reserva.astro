@@ -1,0 +1,110 @@
+---
+/**
+ * Reserva sin backend: arma el mensaje de WhatsApp con número de personas, día y hora.
+ * Sin JavaScript, el botón abre WhatsApp con un mensaje general.
+ */
+import { waLink } from '@altair/core/whatsapp';
+import { contacto, mensajes } from '../../site.config';
+
+const personas = ['2', '3', '4', '5', '6', '8+'];
+const dias = ['Hoy', 'Mañana', 'Este viernes', 'Este sábado', 'Este domingo'];
+const horas = ['12:00 m.', '1:00 p. m.', '2:00 p. m.', '7:00 p. m.', '8:00 p. m.'];
+---
+<section id="reserva" class="res" aria-labelledby="res-t">
+  <div class="wrap res-grid">
+    <header class="res-head">
+      <h2 id="res-t" class="letrero res-h" data-reveal="words">Separe su mesa</h2>
+      <p class="res-p">Escoja cuántos son y cuándo vienen. Le abrimos WhatsApp con el mensaje listo y le confirmamos en minutos.</p>
+    </header>
+
+    <form class="res-form" data-reserva data-tel={contacto.whatsapp} onsubmit="return false">
+      <fieldset class="grupo">
+        <legend class="letrero">¿Cuántos son?</legend>
+        <div class="chips">
+          {personas.map((p, i) => (
+            <label class="chip">
+              <input type="radio" name="personas" value={p === '8+' ? 'más de 8 personas' : `${p} personas`} checked={i === 0} />
+              <span>{p}</span>
+            </label>
+          ))}
+        </div>
+      </fieldset>
+      <fieldset class="grupo">
+        <legend class="letrero">¿Qué día?</legend>
+        <div class="chips">
+          {dias.map((d, i) => (
+            <label class="chip chip--ancho">
+              <input type="radio" name="dia" value={d.toLowerCase()} checked={i === 0} />
+              <span>{d}</span>
+            </label>
+          ))}
+        </div>
+      </fieldset>
+      <fieldset class="grupo">
+        <legend class="letrero">¿A qué hora?</legend>
+        <div class="chips">
+          {horas.map((h, i) => (
+            <label class="chip chip--ancho">
+              <input type="radio" name="hora" value={h} checked={i === 1} />
+              <span>{h}</span>
+            </label>
+          ))}
+        </div>
+      </fieldset>
+      <p class="res-vista" aria-live="polite" data-reserva-texto>{mensajes.reserva('2 personas', 'hoy', '1:00 p. m.')}</p>
+      <a class="boton boton--hoja res-btn" href={waLink(contacto.whatsapp, mensajes.general)} target="_blank" rel="noopener" data-reserva-link>
+        Enviar por WhatsApp <span aria-hidden="true">→</span>
+        <span class="sr-only">(abre WhatsApp en una pestaña nueva)</span>
+      </a>
+    </form>
+  </div>
+</section>
+
+<script>
+  import { waLink } from '@altair/core/whatsapp';
+  import { mensajes } from '../../site.config';
+
+  document.querySelectorAll<HTMLFormElement>('[data-reserva]').forEach((form) => {
+    const link = form.querySelector<HTMLAnchorElement>('[data-reserva-link]')!;
+    const texto = form.querySelector<HTMLElement>('[data-reserva-texto]')!;
+    const actualizar = () => {
+      const d = new FormData(form);
+      const msg = mensajes.reserva(String(d.get('personas')), String(d.get('dia') ?? ''), String(d.get('hora') ?? ''));
+      texto.textContent = msg;
+      link.href = waLink(form.dataset.tel!, msg);
+    };
+    form.addEventListener('change', actualizar);
+    actualizar();
+  });
+</script>
+
+<style>
+  .res { background: var(--maiz); border-bottom: var(--borde); padding-block: 72px 88px; }
+  .res-grid { display: grid; gap: 36px; }
+  .res-head { display: grid; gap: 16px; align-content: start; }
+  .res-h { font-size: clamp(3rem, 1.6rem + 6vw, 6.5rem); color: var(--tinta); }
+  .res-p { font-size: 1.125rem; font-weight: 500; max-width: 34ch; }
+
+  .res-form { display: grid; gap: 22px; padding: 22px 18px; background: var(--papel); border: var(--borde); box-shadow: 8px 8px 0 var(--tinta); }
+  .grupo { border: 0; padding: 0; margin: 0; display: grid; gap: 12px; min-width: 0; }
+  .grupo legend { font-size: 1.375rem; padding: 0; margin-bottom: 12px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip { position: relative; }
+  .chip input { position: absolute; opacity: 0; inset: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; }
+  .chip span {
+    display: inline-grid; place-items: center; min-width: 52px; min-height: 48px; padding: 0 14px;
+    border: var(--borde); background: var(--papel); font-weight: 700;
+    transition: transform 0.2s var(--rebote), background-color 0.15s;
+  }
+  .chip input:hover + span { transform: translateY(-2px); }
+  .chip input:checked + span { background: var(--aji); color: var(--papel); transform: rotate(-3deg); }
+  .chip input:focus-visible + span { outline: 3px solid var(--hoja); outline-offset: 3px; }
+  .res-vista { padding: 12px 14px; background: var(--papel-2); border-left: 6px solid var(--hoja); font-size: 0.9375rem; }
+  .res-btn { justify-self: stretch; }
+
+  @media (min-width: 900px) {
+    .res { padding-block: 104px 120px; }
+    .res-grid { grid-template-columns: 5fr 6fr; gap: 64px; align-items: start; }
+    .res-form { padding: 32px; }
+  }
+</style>

@@ -35,6 +35,12 @@ export function revealText(motion: Motion, el: Element, o: RevealOpciones = {}):
     autoSplit: true,
     aria: 'auto',
     onSplit(self) {
+      // La máscara recorta por la caja de línea: se agranda para no cortar tildes ni descendentes.
+      self.masks.forEach((m) => {
+        const e = (m as HTMLElement).style;
+        e.paddingBlock = '0.14em';
+        e.marginBlock = '-0.14em';
+      });
       const piezas = tipo === 'chars' ? self.chars : tipo === 'words' ? self.words : self.lines;
       const anim = gsap.from(piezas, {
         yPercent: 110,

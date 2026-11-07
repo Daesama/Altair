@@ -1,0 +1,101 @@
+---
+import { Image } from 'astro:assets';
+import WhatsAppLink from '@altair/core/WhatsAppLink.astro';
+import { cop } from '@altair/core/types';
+import sopas from '../assets/fotos/sopas-barro.jpg';
+import { carta, contacto, mensajes, negocio, ubicacion } from '../../site.config';
+
+const ajiaco = carta.find((c) => c.id === 'sopas')!.platos[0];
+
+/** Sello dentado de 20 puntas, como las etiquetas de precio pintadas a mano. */
+const sello = Array.from({ length: 40 }, (_, i) => {
+  const r = i % 2 ? 27 : 31.5;
+  const a = (Math.PI * i) / 20 - Math.PI / 2;
+  return `${(32 + r * Math.cos(a)).toFixed(2)} ${(32 + r * Math.sin(a)).toFixed(2)}`;
+}).join('L');
+---
+<section class="letrero-sec" aria-labelledby="hero-t">
+  <div class="wrap letrero-grid">
+    <div class="letrero-txt">
+      <p class="cinta letrero" data-in><span>{negocio.subtitulo}</span></p>
+      <h1 id="hero-t" class="letrero hero-h" data-hero-title>
+        <span class="hero-la">La</span> Leñera
+      </h1>
+      <p class="hero-lema" data-in>{negocio.lema}</p>
+      <div class="hero-cta" data-in>
+        <WhatsAppLink class="boton" telefono={contacto.whatsapp} mensaje={mensajes.general}>
+          Reservar mesa <span aria-hidden="true">→</span>
+        </WhatsAppLink>
+        <a class="boton boton--papel" href="#carta">Ver la carta</a>
+      </div>
+      <p class="hero-dir" data-in>
+        <span class="etiqueta">{ubicacion.barrio}</span> {ubicacion.direccion} · {ubicacion.ciudad}
+      </p>
+    </div>
+
+    <figure class="hero-foto" data-hero-foto>
+      <div class="hero-marco">
+        <Image
+          src={sopas}
+          alt="Dos cazuelas de barro con sopa caliente, cilantro y limón sobre la mesa"
+          widths={[400, 640, 900, 1200]}
+          sizes="(min-width: 1200px) 42vw, (min-width: 768px) 46vw, 92vw"
+          loading="eager"
+          fetchpriority="high"
+          quality={70}
+        />
+      </div>
+      <div class="hero-sello" data-sello aria-hidden="true">
+        <svg viewBox="0 0 64 64" class="sello-fondo"><path d={`M${sello}Z`} /></svg>
+        <span class="sello-txt"><span class="letrero">{ajiaco.nombre.split(' ')[0]}</span><b>{cop(ajiaco.precio)}</b></span>
+      </div>
+      <figcaption class="sr-only">Sopas del día. Ajiaco a {cop(ajiaco.precio)}.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<style>
+  .letrero-sec { background: var(--aji); color: var(--papel); border-bottom: var(--borde); padding-block: 36px 56px; overflow: hidden; }
+  .letrero-grid { display: grid; gap: 40px; align-items: center; }
+  .letrero-txt { display: grid; gap: 22px; justify-items: start; }
+
+  .cinta {
+    display: inline-block; padding: 8px 16px 6px;
+    background: var(--maiz); color: var(--tinta); border: var(--borde);
+    font-size: 1.125rem; transform: rotate(-3deg);
+  }
+  .hero-h {
+    font-size: clamp(4.25rem, 2rem + 13vw, 11rem);
+    line-height: 0.86;
+    color: var(--papel);
+    -webkit-text-stroke: 0;
+    text-shadow: 5px 5px 0 var(--tinta);
+  }
+  .hero-la { display: block; font-size: 0.42em; color: var(--maiz); line-height: 1; }
+  .hero-lema { font-size: clamp(1.25rem, 1rem + 1vw, 1.625rem); font-weight: 600; max-width: 24ch; line-height: 1.3; }
+  .hero-cta { display: flex; flex-wrap: wrap; gap: 16px; }
+  .hero-dir { font-size: 0.9375rem; font-weight: 500; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .hero-dir .etiqueta { background: var(--tinta); color: var(--maiz); }
+
+  .hero-foto { position: relative; justify-self: center; width: min(100%, 560px); }
+  .hero-marco {
+    border: 6px solid var(--tinta); box-shadow: 10px 10px 0 var(--tinta);
+    background: var(--tinta); transform: rotate(2deg); aspect-ratio: 4 / 5; overflow: hidden;
+  }
+  .hero-marco :global(img) { width: 100%; height: 100%; object-fit: cover; }
+  .hero-sello { position: absolute; left: -14px; bottom: -24px; width: 140px; height: 140px; display: grid; place-items: center; transform: rotate(-12deg); }
+  .sello-fondo { position: absolute; inset: 0; width: 100%; height: 100%; fill: var(--maiz); stroke: var(--tinta); stroke-width: 1.6; }
+  .sello-txt { position: relative; display: grid; justify-items: center; color: var(--tinta); line-height: 1; }
+  .sello-txt .letrero { font-size: 1.375rem; }
+  .sello-txt b { font-weight: 700; font-size: 1rem; margin-top: 4px; }
+
+  @media (min-width: 768px) {
+    .letrero-sec { padding-block: 56px 80px; }
+    .letrero-grid { grid-template-columns: 7fr 5fr; gap: 48px; }
+    .hero-sello { width: 170px; height: 170px; left: -48px; bottom: -36px; }
+    .sello-txt .letrero { font-size: 1.75rem; }
+  }
+  @media (min-width: 1200px) {
+    .letrero-grid { grid-template-columns: 7fr 5fr; gap: 72px; }
+  }
+</style>

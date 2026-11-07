@@ -1,0 +1,28 @@
+---
+import { creditos, demo, negocio } from '../../site.config';
+---
+<footer class="pie">
+  <div class="wrap pie-in">
+    <p class="letrero pie-marca" aria-hidden="true">La Leñera</p>
+    <p>
+      {negocio.nombre} es un <strong>restaurante ficticio</strong>. Esta página es una demostración del plan Esencial de
+      <a class="enlace" href={demo.url}>Altair Studio</a>: la carta, los precios, el horario y la dirección son de ejemplo.
+    </p>
+    <p class="creditos">
+      Fotos de Unsplash (licencia Unsplash):
+      {creditos.map((c, i) => (
+        <>
+          <a class="enlace" href={c.url} target="_blank" rel="noopener">{c.autor}</a>{i < creditos.length - 1 ? ', ' : '.'}
+        </>
+      ))}
+    </p>
+  </div>
+</footer>
+
+<style>
+  .pie { background: var(--tinta); color: var(--papel); padding-block: 56px 40px; }
+  .pie-in { display: grid; gap: 16px; font-size: 0.9375rem; max-width: var(--maxw); }
+  .pie-in > p:not(.pie-marca) { max-width: 80ch; color: rgba(251, 243, 228, 0.85); }
+  .pie-in strong { color: var(--maiz); }
+  .pie-marca { font-size: clamp(3.5rem, 1.5rem + 10vw, 10rem); color: var(--aji); line-height: 0.9; margin-bottom: 16px; }
+</style>

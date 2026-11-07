@@ -1,0 +1,72 @@
+---
+import MapEmbed from '@altair/core/MapEmbed.astro';
+import { igLink } from '@altair/core/whatsapp';
+import { contacto, horarios, negocio, ubicacion } from '../../site.config';
+
+const consulta = `${ubicacion.direccion}, ${ubicacion.barrio}, ${ubicacion.ciudad}`;
+---
+<section id="visita" class="vis" aria-labelledby="vis-t">
+  <div class="wrap vis-grid">
+    <div class="tablero">
+      <h2 id="vis-t" class="letrero tablero-h">Horario</h2>
+      <dl class="tablero-dl">
+        {horarios.map((h) => (
+          <div>
+            <dt>{h.dias}</dt>
+            <dd class="letrero">{h.horas}</dd>
+          </div>
+        ))}
+      </dl>
+      <p class="tablero-nota">La cocina cierra 30 minutos antes.</p>
+    </div>
+
+    <div class="vis-dir">
+      <span class="etiqueta">Dónde estamos</span>
+      <address>
+        <p class="letrero vis-calle">{ubicacion.direccion}</p>
+        <p class="vis-barrio">{ubicacion.barrio}, {ubicacion.ciudad}</p>
+      </address>
+      <p><a class="enlace" href={igLink(contacto.instagram)} target="_blank" rel="noopener">{contacto.instagram}</a> · <a class="enlace" href={`mailto:${contacto.email}`}>{contacto.email}</a></p>
+      <MapEmbed class="mapa" botonClass="mapa-btn" lat={ubicacion.lat} lng={ubicacion.lng} consulta={consulta} titulo={`Mapa de ${negocio.nombre}`}>
+        <span class="mapa-dibujo" aria-hidden="true">
+          <svg viewBox="0 0 400 260" preserveAspectRatio="xMidYMid slice">
+            <rect width="400" height="260" fill="#fbf3e4" />
+            <path d="M0 60h400M0 130h400M0 200h400M70 0v260M170 0v260M270 0v260M360 0v260" stroke="#1a1410" stroke-width="2" opacity="0.18" />
+            <path d="M0 130h400" stroke="#f4b41a" stroke-width="14" />
+            <path d="M170 0v260" stroke="#f4b41a" stroke-width="10" />
+            <circle cx="170" cy="130" r="16" fill="#d7261e" stroke="#1a1410" stroke-width="3" />
+          </svg>
+        </span>
+        <span class="mapa-txt letrero">Abrir el mapa →</span>
+      </MapEmbed>
+    </div>
+  </div>
+</section>
+
+<style>
+  .vis { padding-block: 72px 88px; }
+  .vis-grid { display: grid; gap: 40px; }
+
+  .tablero { background: var(--hoja); color: var(--papel); border: var(--borde); box-shadow: var(--sombra); padding: 26px 22px; transform: rotate(-1deg); }
+  .tablero-h { font-size: clamp(2.5rem, 1.6rem + 3.6vw, 4.5rem); color: var(--maiz); margin-bottom: 18px; }
+  .tablero-dl > div { display: grid; gap: 2px; padding-block: 14px; border-top: 2px dashed rgba(251, 243, 228, 0.4); }
+  .tablero-dl dt { font-weight: 700; font-size: 0.9375rem; letter-spacing: 0.04em; text-transform: uppercase; }
+  .tablero-dl dd { font-size: clamp(1.375rem, 1.1rem + 1vw, 1.875rem); }
+  .tablero-nota { margin-top: 12px; font-size: 0.9375rem; opacity: 0.85; }
+
+  .vis-dir { display: grid; gap: 14px; justify-items: start; align-content: start; }
+  .vis-dir address { font-style: normal; }
+  .vis-calle { font-size: clamp(2rem, 1.4rem + 2.4vw, 3.25rem); color: var(--aji); }
+  .vis-barrio { font-weight: 600; font-size: 1.125rem; }
+  .vis-dir :global(.mapa) { width: 100%; aspect-ratio: 16 / 10; border: var(--borde); box-shadow: var(--sombra); margin-top: 8px; background: var(--papel); }
+  .vis-dir :global(.mapa-btn) { position: relative; display: block; width: 100%; height: 100%; padding: 0; border: 0; background: none; cursor: pointer; }
+  .mapa-dibujo, .mapa-dibujo svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .mapa-txt { position: absolute; right: 14px; bottom: 14px; padding: 8px 14px; background: var(--tinta); color: var(--maiz); font-size: 1.125rem; transition: transform 0.2s var(--rebote); }
+  .vis-dir :global(.mapa-btn:hover) .mapa-txt { transform: rotate(-3deg) scale(1.05); }
+
+  @media (min-width: 900px) {
+    .vis { padding-block: 104px 120px; }
+    .vis-grid { grid-template-columns: 5fr 7fr; gap: 64px; align-items: start; }
+    .tablero { padding: 36px 32px; }
+  }
+</style>

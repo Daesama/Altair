@@ -1,0 +1,104 @@
+---
+import { cop } from '@altair/core/types';
+import { carta } from '../../site.config';
+
+const marcas = { casa: 'De la casa', picante: 'Con ají', compartir: 'Para compartir' } as const;
+---
+<section id="carta" class="carta" aria-labelledby="carta-t">
+  <div class="wrap">
+    <header class="carta-head">
+      <span class="etiqueta">La carta</span>
+      <h2 id="carta-t" class="letrero carta-h" data-reveal="words">¿Qué se le antoja?</h2>
+      <p class="carta-p">Precios en pesos colombianos, con impuestos incluidos. La propina es voluntaria.</p>
+    </header>
+
+    <div class="carta-cuerpo">
+      <nav class="tabs" aria-label="Categorías de la carta" data-tabs>
+        <ul>
+          {carta.map((c) => (
+            <li><a href={`#cat-${c.id}`} data-tab={c.id}>{c.categoria}</a></li>
+          ))}
+        </ul>
+      </nav>
+
+      <div class="cats">
+        {carta.map((c) => (
+          <section id={`cat-${c.id}`} class="cat" aria-labelledby={`cat-${c.id}-t`} data-cat={c.id}>
+            <header class="cat-head">
+              <h3 id={`cat-${c.id}-t`} class="letrero cat-t">{c.categoria}</h3>
+              {c.nota && <p class="cat-nota">{c.nota}</p>}
+            </header>
+            <ul class="platos">
+              {c.platos.map((p) => (
+                <li class="fila">
+                  <div class="fila-txt">
+                    <p class="fila-n">
+                      {p.nombre}
+                      {p.marca && <span class={`marca marca--${p.marca}`}>{marcas[p.marca]}</span>}
+                    </p>
+                    <p class="fila-d">{p.detalle}</p>
+                  </div>
+                  <p class="fila-p">{cop(p.precio)}</p>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .carta { background: var(--papel-2); border-block: var(--borde); padding-block: 72px 96px; }
+  .carta-head { display: grid; gap: 14px; justify-items: start; margin-bottom: 36px; }
+  .carta-h { font-size: clamp(2.5rem, 1.4rem + 5vw, 5.5rem); }
+  .carta-p { color: var(--tinta-2); max-width: 46ch; }
+
+  .tabs {
+    position: sticky; top: calc(var(--banda) + 64px); z-index: 20;
+    margin-inline: calc(var(--pad) * -1); padding: 10px var(--pad);
+    background: var(--papel-2); border-bottom: var(--borde);
+    overflow-x: auto; scrollbar-width: none;
+  }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tabs ul { display: flex; gap: 8px; width: max-content; }
+  .tabs a {
+    display: inline-flex; align-items: center; min-height: 44px; padding: 0 16px;
+    background: var(--papel); border: var(--borde);
+    font-weight: 700; text-decoration: none; white-space: nowrap;
+    transition: transform 0.2s var(--rebote), background-color 0.2s;
+  }
+  .tabs a:hover { transform: translateY(-2px); }
+  .tabs a[aria-current='true'] { background: var(--tinta); color: var(--maiz); }
+
+  .cats { display: grid; gap: 48px; padding-top: 32px; }
+  .cat { background: var(--papel); border: var(--borde); padding: 22px 18px 10px; }
+  .cat-head { display: grid; gap: 6px; padding-bottom: 14px; border-bottom: 3px double var(--tinta); }
+  .cat-t { font-size: 2.25rem; color: var(--hoja); }
+  .cat-nota { color: var(--tinta-2); font-size: 0.9375rem; }
+  .fila { display: grid; grid-template-columns: 1fr auto; gap: 6px 16px; padding-block: 16px; border-bottom: 1px dashed rgba(26, 20, 16, 0.35); }
+  .fila:last-child { border-bottom: 0; }
+  .fila-n { font-weight: 700; font-size: 1.1875rem; line-height: 1.25; display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; }
+  .fila-d { color: var(--tinta-2); font-size: 0.9375rem; margin-top: 2px; }
+  .fila-p { align-self: start; padding: 3px 10px; background: var(--aji); color: var(--papel); font-weight: 700; white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .marca { padding: 1px 8px; border: 2px solid var(--tinta); font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; transform: rotate(-2deg); }
+  .marca--casa { background: var(--maiz); }
+  .marca--picante { background: var(--papel); color: var(--aji-osc); border-color: var(--aji-osc); }
+  .marca--compartir { background: var(--hoja); color: var(--papel); border-color: var(--hoja); }
+
+  @media (min-width: 768px) {
+    .carta { padding-block: 104px 128px; }
+    .cat { padding: 28px 32px 14px; }
+    .cat-t { font-size: 2.75rem; }
+  }
+  @media (min-width: 1100px) {
+    .carta-cuerpo { display: grid; grid-template-columns: 220px 1fr; gap: 48px; align-items: start; }
+    .tabs { margin: 0; padding: 0; border: 0; background: none; top: calc(var(--banda) + 76px + 32px); overflow: visible; }
+    .tabs ul { flex-direction: column; width: auto; }
+    .tabs a { width: 100%; font-size: 1.0625rem; }
+    .cats { padding-top: 0; grid-template-columns: 1fr 1fr; align-items: start; gap: 32px; }
+    .cat:nth-child(2) { margin-top: 64px; }
+    .cat:nth-child(4) { margin-top: 32px; }
+  }
+</style>

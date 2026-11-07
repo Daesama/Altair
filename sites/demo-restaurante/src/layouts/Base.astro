@@ -1,0 +1,143 @@
+---
+import Seo from '@altair/core/Seo.astro';
+import Consent from '@altair/core/Consent.astro';
+import { localBusiness } from '@altair/core/schema';
+import WhatsAppLink from '@altair/core/WhatsAppLink.astro';
+import { carta, contacto, demo, horarios, mensajes, negocio, seo, ubicacion } from '../../site.config';
+import '../styles/global.css';
+import bagelUrl from '../assets/fonts/bagel-fat-one-latin-400-normal.woff2?url';
+import familjenUrl from '../assets/fonts/familjen-grotesk-latin-wght-normal.woff2?url';
+
+const precios = carta.flatMap((c) => c.platos.map((p) => p.precio));
+const jsonLd = localBusiness({
+  tipo: 'Restaurant',
+  nombre: negocio.nombre,
+  descripcion: seo.descripcion,
+  url: seo.url,
+  imagen: seo.ogImage,
+  contacto,
+  ubicacion,
+  horarios,
+  rangoPrecios: `COP ${Math.min(...precios)}–${Math.max(...precios)}`,
+  extra: {
+    servesCuisine: ['Colombiana', 'Cocina tradicional bogotana'],
+    acceptsReservations: 'True',
+    hasMenu: `${seo.url}/#carta`,
+  },
+});
+---
+<!doctype html>
+<html lang="es-CO">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script is:inline>
+      (function () {
+        var d = document.documentElement;
+        d.classList.add('js');
+        if (matchMedia('(prefers-reduced-motion: reduce)').matches) d.classList.add('rm');
+        setTimeout(function () { d.classList.add('motion-fallback'); }, 3000);
+      })();
+    </script>
+    <link rel="preload" href={bagelUrl} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={familjenUrl} as="font" type="font/woff2" crossorigin />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <Seo
+      titulo={seo.titulo}
+      descripcion={seo.descripcion}
+      sitio={seo.url}
+      ogImage={seo.ogImage}
+      nombreSitio={negocio.nombre}
+      themeColor="#d7261e"
+      jsonLd={jsonLd}
+    />
+  </head>
+  <body>
+    <a class="skip" href="#contenido">Saltar al contenido</a>
+
+    <aside class="demo" aria-label="Aviso de sitio de demostración">
+      <p>
+        <span class="demo-tag">Demo</span>
+        <span class="demo-largo">Restaurante ficticio · {demo.texto} · </span>
+        <a href={demo.url}>altair.lat</a>
+      </p>
+    </aside>
+
+    <header class="cab">
+      <div class="wrap cab-in">
+        <a href="/" class="cab-logo letrero" aria-label={`${negocio.nombre}, inicio`}>La Leñera</a>
+        <nav aria-label="Principal" class="cab-nav">
+          <ul>
+            <li><a href="#carta">Carta</a></li>
+            <li><a href="#visita">Horarios</a></li>
+          </ul>
+        </nav>
+        <WhatsAppLink class="cab-wa" telefono={contacto.whatsapp} mensaje={mensajes.general}>Reservar</WhatsAppLink>
+      </div>
+    </header>
+
+    <main id="contenido">
+      <slot />
+    </main>
+
+    <Consent class="aviso" aceptarClass="aviso-ok" etiquetaAceptar="Listo">
+      <p>Aquí no usamos cookies de rastreo. Si reserva por WhatsApp, su número solo se usa para confirmar la mesa.</p>
+    </Consent>
+
+    <script>
+      import { initMotion } from '@altair/core/motion';
+      import { revealAll } from '@altair/core/reveal';
+      import { runPage } from '../scripts/main';
+      const motion = initMotion();
+      revealAll(motion);
+      runPage(motion);
+    </script>
+  </body>
+</html>
+
+<style is:global>
+  .demo {
+    position: sticky; top: 0; z-index: 60; height: var(--banda);
+    display: flex; align-items: center; justify-content: center; padding-inline: 12px;
+    background: var(--hoja); color: var(--papel); font-size: 0.8125rem; font-weight: 600;
+  }
+  .demo p { display: flex; align-items: center; gap: 8px; white-space: nowrap; }
+  .demo-tag { padding: 1px 7px; background: var(--maiz); color: var(--tinta); font-size: 0.6875rem; letter-spacing: 0.08em; text-transform: uppercase; }
+  .demo-largo { display: none; }
+  .demo a { color: var(--maiz); text-underline-offset: 3px; }
+  @media (min-width: 640px) { .demo-largo { display: inline; } }
+
+  .cab { position: sticky; top: var(--banda); z-index: 50; background: var(--papel); border-bottom: var(--borde); }
+  .cab-in { display: flex; align-items: center; gap: 16px; height: 64px; }
+  .cab-logo { font-size: 1.625rem; color: var(--aji); text-decoration: none; }
+  .cab-nav { margin-left: auto; }
+  .cab-nav ul { display: flex; gap: 4px; }
+  .cab-nav a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 10px; font-weight: 700; text-decoration: none; }
+  .cab-nav a:hover { color: var(--aji); }
+  .cab-wa {
+    display: inline-flex; align-items: center; min-height: 44px; padding: 0 16px;
+    background: var(--aji); color: var(--papel); border: var(--borde);
+    font-family: var(--f-letrero); font-size: 1.0625rem; text-decoration: none;
+    transition: transform 0.18s ease-out;
+  }
+  .cab-wa:hover { transform: rotate(-2deg) scale(1.04); }
+  @media (max-width: 420px) { .cab-nav li:last-child { display: none; } }
+  @media (min-width: 768px) {
+    .cab-in { height: 76px; }
+    .cab-logo { font-size: 2rem; }
+    .cab-nav ul { gap: 12px; }
+  }
+
+  .aviso {
+    position: fixed; z-index: 70; left: 12px; right: 12px; bottom: 12px; max-width: 400px;
+    display: flex; gap: 14px; align-items: center; padding: 14px 16px;
+    background: var(--maiz); border: var(--borde); box-shadow: var(--sombra);
+    font-size: 0.875rem; font-weight: 500; line-height: 1.4;
+    transform: translateY(24px) rotate(1deg); opacity: 0;
+    transition: transform 0.4s var(--rebote), opacity 0.3s;
+  }
+  .aviso[data-open] { transform: rotate(-1deg); opacity: 1; }
+  .aviso-ok { flex: none; min-height: 44px; padding: 0 16px; background: var(--tinta); color: var(--papel); border: 0; font-weight: 700; cursor: pointer; }
+</style>
