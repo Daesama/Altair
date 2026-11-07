@@ -1,0 +1,111 @@
+---
+/**
+ * Reserva sin backend: arma el mensaje de WhatsApp con el servicio, el día y la hora
+ * que la persona elija. Sin JavaScript, el enlace abre WhatsApp con un mensaje general.
+ */
+import { waLink } from '@altair/core/whatsapp';
+import { contacto, horarios, mensajes, ritual, servicios } from '../../site.config';
+
+const opciones = [...servicios.flatMap((c) => c.items.map((i) => i.nombre)), ritual.nombre];
+const dias = horarios.filter((h) => h.schema).map((h) => h.dias);
+---
+<section id="reserva" class="reserva" aria-labelledby="reserva-t">
+  <div class="wrap reserva-grid">
+    <header class="reserva-head">
+      <p class="kicker">IV. Reservas</p>
+      <h2 id="reserva-t" class="serif reserva-h" data-reveal="lines">Reserve su silla en un mensaje.</h2>
+      <p class="reserva-p">
+        Elija el servicio y el momento. Le abrimos WhatsApp con el mensaje escrito; usted solo lo envía y le confirmamos
+        la hora en minutos.
+      </p>
+    </header>
+
+    <form class="reserva-form" data-reserva data-tel={contacto.whatsapp} onsubmit="return false">
+      <label class="campo">
+        <span class="kicker">Servicio</span>
+        <select name="servicio">
+          {opciones.map((o) => <option>{o}</option>)}
+        </select>
+      </label>
+      <label class="campo">
+        <span class="kicker">Día</span>
+        <select name="dia">
+          <option value="">El que tenga disponible</option>
+          {dias.map((d) => <option>{d}</option>)}
+        </select>
+      </label>
+      <label class="campo">
+        <span class="kicker">Franja</span>
+        <select name="hora">
+          <option value="">Cualquier hora</option>
+          <option>En la mañana</option>
+          <option>Al mediodía</option>
+          <option>En la tarde</option>
+          <option>En la noche</option>
+        </select>
+      </label>
+      <p class="reserva-vista" aria-live="polite">
+        <span class="kicker">Mensaje</span>
+        <span data-reserva-texto>{mensajes.reserva(opciones[0], '', '')}</span>
+      </p>
+      <a class="cta" href={waLink(contacto.whatsapp, mensajes.general)} target="_blank" rel="noopener" data-reserva-link>
+        Enviar por WhatsApp <span class="flecha" aria-hidden="true">→</span>
+        <span class="sr-only">(abre WhatsApp en una pestaña nueva)</span>
+      </a>
+    </form>
+  </div>
+</section>
+
+<script>
+  import { waLink } from '@altair/core/whatsapp';
+  import { mensajes } from '../../site.config';
+
+  document.querySelectorAll<HTMLFormElement>('[data-reserva]').forEach((form) => {
+    const link = form.querySelector<HTMLAnchorElement>('[data-reserva-link]')!;
+    const texto = form.querySelector<HTMLElement>('[data-reserva-texto]')!;
+    const actualizar = () => {
+      const d = new FormData(form);
+      const msg = mensajes.reserva(String(d.get('servicio')), String(d.get('dia') ?? ''), String(d.get('hora') ?? ''));
+      texto.textContent = msg;
+      link.href = waLink(form.dataset.tel!, msg);
+    };
+    form.addEventListener('change', actualizar);
+    actualizar();
+  });
+</script>
+
+<style>
+  .reserva { padding-block: 96px; border-top: 1px solid rgba(30, 20, 18, 0.2); }
+  .reserva-grid { display: grid; gap: 40px; }
+  .reserva-grid > * { min-width: 0; }
+  .reserva-head { display: grid; gap: 16px; align-content: start; }
+  .reserva-head .kicker { color: var(--vino); }
+  .reserva-h { font-size: clamp(2.25rem, 1.3rem + 3.8vw, 4.5rem); max-width: 13ch; }
+  .reserva-p { max-width: 40ch; color: var(--tinta-2); }
+
+  .reserva-form { display: grid; gap: 18px; padding: 20px; background: var(--crema-2); border: 1px solid rgba(30, 20, 18, 0.25); align-content: start; }
+  .campo { display: grid; gap: 8px; min-width: 0; }
+  .campo .kicker { color: var(--tinta-2); font-size: 0.6875rem; }
+  .campo select {
+    appearance: none; -webkit-appearance: none; width: 100%;
+    min-height: 52px; padding: 0 44px 0 14px;
+    background: var(--crema) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%235a1a1f' stroke-width='1.6'/%3E%3C/svg%3E") no-repeat right 16px center;
+    border: 1px solid rgba(30, 20, 18, 0.35); border-radius: 0;
+    font-family: var(--f-serif); font-size: 1.1875rem; color: var(--tinta);
+    cursor: pointer;
+  }
+  .campo select:hover { border-color: var(--vino); }
+  .reserva-vista { display: grid; gap: 6px; padding: 16px; border-left: 2px solid var(--laton); background: var(--crema); font-size: 0.9375rem; color: var(--tinta-2); }
+  .reserva-vista .kicker { font-size: 0.6875rem; }
+  .reserva-form .cta { justify-content: space-between; }
+
+  @media (min-width: 768px) {
+    .reserva { padding-block: 128px; }
+    .reserva-grid { grid-template-columns: 1fr 1fr; gap: 64px; }
+    .reserva-form { padding: 36px; grid-template-columns: 1fr 1fr; }
+    .campo:first-child, .reserva-vista, .reserva-form .cta { grid-column: 1 / -1; }
+  }
+  @media (min-width: 1200px) {
+    .reserva-grid { grid-template-columns: 5fr 6fr; gap: 120px; }
+  }
+</style>

@@ -1,0 +1,67 @@
+---
+import { Image } from 'astro:assets';
+import tijera from '../assets/fotos/tijera.jpg';
+---
+<section id="casa" class="casa" aria-labelledby="casa-t">
+  <div class="wrap casa-grid">
+    <header class="casa-head">
+      <p class="kicker">I. La casa</p>
+      <h2 id="casa-t" class="serif casa-h" data-reveal="lines">Tres sillas, una sala de spa y nada de afán.</h2>
+    </header>
+
+    <div class="casa-texto">
+      <p class="capitular">
+        Filo ocupa el primer piso de una casa de ladrillo en Chapinero Alto. Tenemos tres sillas de barbero, una sala
+        al fondo para el spa y una cafetera que siempre está prendida. Cada cita dura lo que tiene que durar: si reservó un
+        corte de 45 minutos, son 45 minutos solo para usted.
+      </p>
+      <p>
+        Trabajamos con tijera, máquina y navaja. La toalla caliente no es un extra: va con cada afeitado. Si no sabe qué
+        pedir, pida el corte clásico y converse con su barbero. Para eso estamos.
+      </p>
+      <blockquote class="cita">
+        <p class="serif">«Un buen corte se nota cuando nadie le pregunta si se cortó el pelo, sino si durmió bien».</p>
+        <footer class="kicker">— Lo que repetimos en la casa</footer>
+      </blockquote>
+    </div>
+
+    <figure class="casa-foto">
+      <div class="cortina" data-cortina>
+        <span class="velo" aria-hidden="true"></span>
+        <Image src={tijera} alt="Barbero cortando el cabello de un cliente con tijera y peine" widths={[360, 600, 800]} sizes="(min-width: 1200px) 26vw, (min-width: 768px) 44vw, 92vw" quality={70} />
+      </div>
+      <figcaption class="pie"><span>Fig. 2</span> Tijera y peine antes de la máquina.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<style>
+  .casa { padding-block: 88px 96px; }
+  .casa-grid { display: grid; gap: 36px; }
+  .casa-head { display: grid; gap: 16px; align-content: start; }
+  .casa-head .kicker { color: var(--vino); }
+  .casa-h { font-size: clamp(2rem, 1.2rem + 3.2vw, 3.75rem); max-width: 14ch; }
+  .casa-texto { display: grid; gap: 18px; max-width: 58ch; color: var(--tinta-2); align-content: start; }
+  .capitular::first-letter {
+    float: left; font-family: var(--f-serif); color: var(--vino);
+    font-size: 4.6em; line-height: 0.82; margin: 0.06em 0.1em 0 0;
+  }
+  .cita { margin-top: 18px; padding-top: 24px; border-top: 1px solid var(--laton); display: grid; gap: 12px; }
+  .cita p { font-size: clamp(1.375rem, 1rem + 1.4vw, 2rem); line-height: 1.2; color: var(--tinta); }
+  .cita .kicker { color: var(--tinta-2); font-size: 0.6875rem; }
+  .casa-foto { display: grid; gap: 12px; align-content: start; }
+  .casa-foto .cortina { aspect-ratio: 4 / 5; }
+  .casa-foto :global(img) { width: 100%; height: 100%; object-fit: cover; }
+  .pie { font-size: 0.8125rem; color: var(--tinta-2); }
+  .pie span { font-family: var(--f-serif); color: var(--vino); margin-right: 6px; }
+  @media (min-width: 768px) {
+    .casa { padding-block: 120px 128px; }
+    .casa-grid { grid-template-columns: 1fr 1fr; column-gap: 48px; row-gap: 48px; }
+    .casa-head { grid-column: 1 / -1; }
+  }
+  @media (min-width: 1200px) {
+    .casa-grid { grid-template-columns: 4fr 5fr 3fr; column-gap: 64px; }
+    .casa-head { grid-column: 1; position: sticky; top: calc(var(--banda) + 32px); align-self: start; }
+    .casa-foto { margin-top: 120px; }
+  }
+</style>

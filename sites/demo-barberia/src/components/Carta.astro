@@ -1,0 +1,93 @@
+---
+import { cop } from '@altair/core/types';
+import WhatsAppLink from '@altair/core/WhatsAppLink.astro';
+import { contacto, mensajes, ritual, servicios } from '../../site.config';
+---
+<section id="servicios" class="carta on-dark" aria-labelledby="carta-t">
+  <div class="wrap">
+    <header class="carta-head">
+      <p class="kicker">II. La carta</p>
+      <h2 id="carta-t" class="serif carta-h" data-reveal="lines">Servicios y precios</h2>
+      <p class="carta-nota">Precios en pesos colombianos. Se paga al terminar, en efectivo, tarjeta o transferencia.</p>
+    </header>
+
+    <div class="carta-cols">
+      {servicios.map((cat) => (
+        <section class="cat" aria-labelledby={`cat-${cat.categoria}`}>
+          <h3 id={`cat-${cat.categoria}`} class="serif cat-h">{cat.categoria}</h3>
+          <p class="cat-nota">{cat.nota}</p>
+          <ul class="lista">
+            {cat.items.map((s) => (
+              <li class="item" data-item>
+                <p class="item-linea">
+                  <span class="item-n">{s.nombre}</span>
+                  <span class="puntos" aria-hidden="true" />
+                  <span class="item-p">{cop(s.precio)}</span>
+                </p>
+                <p class="item-d">{s.detalle} · {s.minutos} min</p>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))}
+    </div>
+
+    <aside class="ritual" aria-labelledby="ritual-t" data-ritual>
+      <div>
+        <p class="kicker">La recomendación de la casa</p>
+        <h3 id="ritual-t" class="serif ritual-h">{ritual.nombre}</h3>
+        <p class="ritual-d">{ritual.detalle} {ritual.minutos} minutos.</p>
+      </div>
+      <div class="ritual-der">
+        <p class="serif ritual-p">{cop(ritual.precio)}</p>
+        <WhatsAppLink class="cta cta--claro" telefono={contacto.whatsapp} mensaje={mensajes.reserva(ritual.nombre, '', '')}>
+          Reservar el ritual <span class="flecha" aria-hidden="true">→</span>
+        </WhatsAppLink>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<style>
+  .carta { background: var(--vino); color: var(--crema); padding-block: 88px 96px; }
+  .carta-head { display: grid; gap: 14px; margin-bottom: 56px; }
+  .carta-head .kicker { color: var(--laton-claro); }
+  .carta-h { font-size: clamp(2.5rem, 1.4rem + 4.4vw, 5.5rem); }
+  .carta-nota { max-width: 44ch; color: rgba(243, 233, 215, 0.85); }
+
+  .carta-cols { display: grid; gap: 56px; }
+  .cat-h { font-size: 2rem; color: var(--laton-claro); }
+  .cat-nota { margin: 6px 0 20px; font-size: 0.9375rem; color: rgba(243, 233, 215, 0.82); }
+  .lista { border-top: 1px solid rgba(243, 233, 215, 0.28); }
+  .item { padding: 16px 0; border-bottom: 1px solid rgba(243, 233, 215, 0.18); }
+  .item-linea { display: flex; align-items: baseline; gap: 10px; }
+  .item-n { font-family: var(--f-serif); font-size: 1.3125rem; line-height: 1.2; }
+  .puntos { flex: 1; min-width: 24px; border-bottom: 1px dotted rgba(243, 233, 215, 0.5); transform: translateY(-4px); }
+  .item-p { font-variant-numeric: tabular-nums; font-weight: 600; white-space: nowrap; }
+  .item-d { font-size: 0.875rem; color: rgba(243, 233, 215, 0.82); margin-top: 2px; }
+
+  .ritual {
+    margin-top: 64px; padding: 28px 24px;
+    border: 1px solid var(--laton);
+    outline: 1px solid var(--laton); outline-offset: -8px;
+    display: grid; gap: 24px;
+  }
+  .ritual .kicker { color: var(--laton-claro); }
+  .ritual-h { font-size: clamp(2rem, 1.4rem + 2.4vw, 3.25rem); margin: 10px 0 8px; }
+  .ritual-d { max-width: 44ch; color: rgba(243, 233, 215, 0.88); }
+  .ritual-der { display: grid; gap: 16px; justify-items: start; }
+  .ritual-p { font-size: clamp(2.25rem, 1.6rem + 2.2vw, 3.5rem); color: var(--laton-claro); }
+
+  @media (min-width: 768px) {
+    .carta { padding-block: 120px 128px; }
+    .carta-head { grid-template-columns: 1fr 1fr; align-items: end; column-gap: 48px; }
+    .carta-head .kicker, .carta-h { grid-column: 1; }
+    .carta-nota { grid-column: 2; grid-row: 2; justify-self: end; text-align: right; }
+    .carta-cols { grid-template-columns: 1fr 1fr; column-gap: 64px; }
+    .ritual { grid-template-columns: 1fr auto; align-items: end; padding: 40px 44px; }
+    .ritual-der { justify-items: end; }
+  }
+  @media (min-width: 1200px) {
+    .carta-cols { column-gap: 120px; }
+  }
+</style>

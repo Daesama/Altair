@@ -1,0 +1,116 @@
+/* ───── Fuentes autoalojadas (latin) ───── */
+@font-face {
+  font-family: 'Gloock';
+  src: url('../assets/fonts/gloock-latin-400-normal.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Hanken Grotesk';
+  src: url('../assets/fonts/hanken-grotesk-latin-wght-normal.woff2') format('woff2-variations');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Gloock Fallback';
+  src: local('Georgia'), local('Times New Roman');
+  size-adjust: 112%;
+  ascent-override: 86%;
+}
+
+/* ───── Tokens ───── */
+:root {
+  --crema: #f3e9d7;
+  --crema-2: #eadcc4;
+  --vino: #5a1a1f;
+  --vino-2: #431317;
+  --laton: #b8893b;
+  --laton-claro: #d9b26a; /* latón legible sobre vino */
+  --tinta: #1e1412;
+  --tinta-2: #4b3a35;
+
+  --f-serif: 'Gloock', 'Gloock Fallback', Georgia, serif;
+  --f-sans: 'Hanken Grotesk', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  --pad: 20px;
+  --maxw: 1440px;
+  --banda: 34px;
+  --ease: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  color-scheme: light;
+}
+@media (min-width: 768px) { :root { --pad: 40px; } }
+@media (min-width: 1200px) { :root { --pad: 64px; } }
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; scroll-padding-top: calc(var(--banda) + 16px); }
+body {
+  margin: 0;
+  background: var(--crema);
+  color: var(--tinta);
+  font-family: var(--f-sans);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+}
+img { display: block; max-width: 100%; height: auto; }
+a { color: inherit; }
+button, input, select { font: inherit; color: inherit; }
+h1, h2, h3, h4, p, ul, ol, dl, dd, figure, blockquote { margin: 0; }
+ul, ol { padding: 0; list-style: none; }
+::selection { background: var(--vino); color: var(--crema); }
+:focus-visible { outline: 2px solid var(--vino); outline-offset: 3px; }
+.on-dark :focus-visible, .on-dark:focus-visible { outline-color: var(--laton-claro); }
+
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.skip { position: fixed; top: 8px; left: 8px; z-index: 100; padding: 10px 16px; background: var(--vino); color: var(--crema); transform: translateY(-200%); }
+.skip:focus { transform: none; }
+
+.wrap { width: 100%; max-width: var(--maxw); margin-inline: auto; padding-inline: var(--pad); }
+
+/* Tipografía editorial */
+.serif { font-family: var(--f-serif); font-weight: 400; letter-spacing: -0.01em; line-height: 1.02; }
+.kicker {
+  font-family: var(--f-sans); font-size: 0.75rem; font-weight: 600;
+  letter-spacing: 0.18em; text-transform: uppercase;
+}
+.rule { height: 1px; background: currentColor; opacity: 0.35; border: 0; margin: 0; }
+.rule--double { height: 4px; background: none; border-top: 1px solid currentColor; border-bottom: 1px solid currentColor; opacity: 0.5; }
+
+/* Botón principal: subrayado que crece + flecha */
+.cta {
+  display: inline-flex; align-items: center; gap: 14px;
+  min-height: 54px; padding: 0 26px;
+  background: var(--vino); color: var(--crema);
+  font-weight: 600; font-size: 1rem; letter-spacing: 0.02em; text-decoration: none;
+  border: 1px solid var(--vino);
+  transition: background-color 0.4s var(--ease), color 0.4s var(--ease);
+}
+.cta .flecha { display: inline-block; transition: transform 0.5s var(--ease-out); }
+.cta:hover, .cta:focus-visible { background: transparent; color: var(--vino); }
+.cta:hover .flecha, .cta:focus-visible .flecha { transform: translateX(6px); }
+.cta--claro { background: var(--crema); color: var(--vino); border-color: var(--crema); }
+.cta--claro:hover, .cta--claro:focus-visible { background: transparent; color: var(--crema); }
+
+.enlace { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px; transition: text-decoration-color 0.3s; }
+.enlace:hover { text-decoration-color: var(--laton); }
+
+/* Revelado tipo cortina: un panel tapa la foto y se recoge (solo transform). */
+.cortina { position: relative; overflow: hidden; }
+.cortina > .velo { display: none; position: absolute; inset: 0; background: var(--crema); transform-origin: top; z-index: 1; pointer-events: none; }
+.js:not(.rm) .cortina > .velo { display: block; }
+.on-dark .cortina > .velo, .cortina.sobre-vino > .velo { background: var(--vino); }
+.js:not(.rm) [data-reveal], .js:not(.rm) [data-hero-title] { visibility: hidden; }
+.motion-fallback [data-reveal], .motion-fallback [data-hero-title] { visibility: visible !important; }
+.js:not(.rm) [data-in] { opacity: 0; }
+.motion-fallback [data-in] { opacity: 1 !important; }
+.motion-fallback .cortina > .velo { transform: scaleY(0) !important; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+}

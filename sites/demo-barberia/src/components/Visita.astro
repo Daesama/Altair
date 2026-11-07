@@ -1,0 +1,92 @@
+---
+import MapEmbed from '@altair/core/MapEmbed.astro';
+import { igLink } from '@altair/core/whatsapp';
+import { contacto, horarios, negocio, ubicacion } from '../../site.config';
+
+const consulta = `${ubicacion.direccion}, ${ubicacion.barrio}, ${ubicacion.ciudad}`;
+---
+<section id="visita" class="visita" aria-labelledby="visita-t">
+  <div class="wrap visita-grid">
+    <header class="visita-head">
+      <p class="kicker">V. Visítenos</p>
+      <h2 id="visita-t" class="serif visita-h" data-reveal="lines">Horarios y dirección</h2>
+    </header>
+
+    <div class="visita-datos">
+      <table class="horas">
+        <caption class="sr-only">Horario de atención</caption>
+        <tbody>
+          {horarios.map((h) => (
+            <tr class={h.schema ? '' : 'cerrado'}>
+              <th scope="row">{h.dias}</th>
+              <td>{h.horas}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      <address class="dir">
+        <p class="serif dir-calle">{ubicacion.direccion}</p>
+        <p>{ubicacion.barrio}, {ubicacion.ciudad}</p>
+        <p class="dir-ig">
+          <a class="enlace" href={igLink(contacto.instagram)} target="_blank" rel="noopener">{contacto.instagram}</a>
+        </p>
+      </address>
+    </div>
+
+    <div class="visita-mapa">
+      <MapEmbed class="mapa" botonClass="mapa-btn" lat={ubicacion.lat} lng={ubicacion.lng} consulta={consulta} titulo={`Mapa de ${negocio.nombre}`}>
+        <span class="mapa-dibujo" aria-hidden="true">
+          <svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice">
+            <path d="M-10 70 410 40M-10 160 410 150M-10 250 410 270M60 -10 90 310M190 -10 200 310M310 -10 290 310" stroke="#b8893b" stroke-width="1" fill="none" opacity="0.55" />
+            <path d="M-10 115 410 95" stroke="#b8893b" stroke-width="5" fill="none" opacity="0.35" />
+            <circle cx="196" cy="152" r="9" fill="#5a1a1f" />
+            <circle cx="196" cy="152" r="20" fill="none" stroke="#5a1a1f" stroke-width="1" />
+          </svg>
+        </span>
+        <span class="mapa-txt">Ver en Google Maps <span aria-hidden="true">→</span></span>
+      </MapEmbed>
+    </div>
+  </div>
+</section>
+
+<style>
+  .visita { padding-block: 96px; background: var(--crema-2); }
+  .visita-grid { display: grid; gap: 36px; }
+  .visita-head { display: grid; gap: 14px; }
+  .visita-head .kicker { color: var(--vino); }
+  .visita-h { font-size: clamp(2.25rem, 1.3rem + 3.8vw, 4.5rem); }
+  .visita-datos { display: grid; gap: 36px; align-content: start; }
+  .horas { width: 100%; border-collapse: collapse; }
+  .horas th, .horas td { padding: 14px 0; border-bottom: 1px solid rgba(30, 20, 18, 0.2); text-align: left; font-weight: 400; vertical-align: baseline; }
+  .horas th { font-family: var(--f-serif); font-size: 1.25rem; padding-right: 16px; }
+  .horas td { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .horas .cerrado { color: var(--tinta-2); }
+  .dir { font-style: normal; display: grid; gap: 4px; }
+  .dir-calle { font-size: 1.75rem; color: var(--vino); }
+  .dir-ig { margin-top: 10px; }
+
+  .visita-mapa :global(.mapa) { aspect-ratio: 4 / 3; border: 1px solid var(--tinta); background: var(--crema); position: relative; }
+  .visita-mapa :global(.mapa-btn) {
+    position: relative; display: block; width: 100%; height: 100%; padding: 0; border: 0; cursor: pointer; background: var(--crema);
+  }
+  .mapa-dibujo, .mapa-dibujo svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .mapa-txt {
+    position: absolute; left: 16px; bottom: 16px;
+    display: inline-flex; gap: 10px; align-items: center; min-height: 48px; padding: 0 18px;
+    background: var(--vino); color: var(--crema); font-weight: 600;
+    transition: transform 0.4s var(--ease-out);
+  }
+  .visita-mapa :global(.mapa-btn:hover) .mapa-txt { transform: translateY(-4px); }
+
+  @media (min-width: 768px) {
+    .visita { padding-block: 128px; }
+    .visita-grid { grid-template-columns: 1fr 1fr; column-gap: 56px; }
+    .visita-head { grid-column: 1 / -1; }
+  }
+  @media (min-width: 1200px) {
+    .visita-grid { grid-template-columns: 3fr 4fr 5fr; column-gap: 64px; align-items: start; }
+    .visita-head { grid-column: 1; }
+    .visita-datos { padding-top: 12px; }
+  }
+</style>

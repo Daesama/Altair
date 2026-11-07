@@ -1,0 +1,73 @@
+---
+import { Image } from 'astro:assets';
+import afeitado from '../assets/fotos/afeitado.jpg';
+import salon from '../assets/fotos/salon.jpg';
+import sillas from '../assets/fotos/sillas-ladrillo.jpg';
+import barba from '../assets/fotos/barba.jpg';
+import silla from '../assets/fotos/silla-ventana.jpg';
+
+const fotos = [
+  { src: afeitado, alt: 'Cliente recostado en la silla mientras le afeitan la barba', pie: 'Afeitado con toalla caliente.', forma: 'ancha' },
+  { src: salon, alt: 'Salón largo con espejos, sillas de barbero y lámparas colgantes encendidas', pie: 'El salón a las siete de la noche.', forma: 'alta' },
+  { src: barba, alt: 'Barbero con guantes negros afeitando la barba de un cliente con navaja', pie: 'Navaja, espuma y pulso.', forma: 'ancha' },
+  { src: sillas, alt: 'Tres sillas de barbero de cuero negro frente a una pared de ladrillo', pie: 'Tres sillas, ninguna de sobra.', forma: 'media' },
+  { src: silla, alt: 'Silla de barbero antigua junto a una ventana con postigos de madera', pie: 'La silla del fondo.', forma: 'alta' },
+];
+---
+<section id="galeria" class="gal" aria-labelledby="gal-t" data-galeria>
+  <div class="gal-pin">
+    <header class="wrap gal-head">
+      <p class="kicker">III. Galería</p>
+      <h2 id="gal-t" class="serif gal-h">Así se ve una tarde en Filo.</h2>
+      <p class="gal-ayuda" aria-hidden="true">Deslice →</p>
+    </header>
+    <div class="gal-vista">
+      <ul class="gal-track" data-gal-track>
+        {fotos.map((f, i) => (
+          <li class={`gal-item gal-item--${f.forma}`}>
+            <figure>
+              <div class="gal-marco">
+                <Image src={f.src} alt={f.alt} widths={[400, 700, 1000]} sizes="(min-width: 1200px) 40vw, 80vw" quality={68} />
+              </div>
+              <figcaption class="pie"><span>Fig. {i + 3}</span> {f.pie}</figcaption>
+            </figure>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .gal { padding-block: 88px; overflow: hidden; }
+  .gal-head { display: grid; gap: 12px; margin-bottom: 36px; }
+  .gal-head .kicker { color: var(--vino); }
+  .gal-h { font-size: clamp(2rem, 1.2rem + 3.2vw, 3.75rem); max-width: 16ch; }
+  .gal-ayuda { font-size: 0.8125rem; color: var(--tinta-2); }
+
+  .gal-vista { overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: var(--pad); scrollbar-width: none; overscroll-behavior-x: contain; }
+  .gal-vista::-webkit-scrollbar { display: none; }
+  .gal-track { display: flex; align-items: flex-end; gap: 16px; padding-inline: var(--pad); width: max-content; }
+  .gal-item { scroll-snap-align: start; flex: none; }
+  .gal-item figure { display: grid; gap: 10px; }
+  .gal-marco { overflow: hidden; background: var(--crema-2); }
+  .gal-marco :global(img) { width: 100%; height: 100%; object-fit: cover; }
+  .gal-item--ancha .gal-marco { width: 82vw; aspect-ratio: 3 / 2; }
+  .gal-item--alta .gal-marco { width: 62vw; aspect-ratio: 2 / 3; }
+  .gal-item--media .gal-marco { width: 72vw; aspect-ratio: 1 / 1; }
+  .pie { font-size: 0.8125rem; color: var(--tinta-2); }
+  .pie span { font-family: var(--f-serif); color: var(--vino); margin-right: 6px; }
+
+  @media (min-width: 1024px) {
+    .gal { padding-block: 0; }
+    .gal-pin { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding-block: 72px; }
+    .gal-head { grid-template-columns: 1fr auto; align-items: end; }
+    .gal-head .kicker, .gal-h { grid-column: 1; }
+    .gal-ayuda { display: none; }
+    .gal-vista { overflow: visible; scroll-snap-type: none; }
+    .gal-track { gap: 40px; padding-inline: var(--pad) 20vw; }
+    .gal-item--ancha .gal-marco { width: auto; height: 52vh; }
+    .gal-item--alta .gal-marco { width: auto; height: 64vh; }
+    .gal-item--media .gal-marco { width: auto; height: 44vh; }
+  }
+</style>

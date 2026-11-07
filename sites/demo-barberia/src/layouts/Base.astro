@@ -1,0 +1,143 @@
+---
+import Seo from '@altair/core/Seo.astro';
+import Consent from '@altair/core/Consent.astro';
+import { localBusiness } from '@altair/core/schema';
+import WhatsAppLink from '@altair/core/WhatsAppLink.astro';
+import { contacto, demo, horarios, mensajes, negocio, seo, servicios, ubicacion } from '../../site.config';
+import '../styles/global.css';
+import gloockUrl from '../assets/fonts/gloock-latin-400-normal.woff2?url';
+import hankenUrl from '../assets/fonts/hanken-grotesk-latin-wght-normal.woff2?url';
+
+const precios = servicios.flatMap((c) => c.items.map((i) => i.precio));
+const jsonLd = localBusiness({
+  tipo: 'HairSalon',
+  nombre: negocio.nombre,
+  descripcion: seo.descripcion,
+  url: seo.url,
+  imagen: seo.ogImage,
+  contacto,
+  ubicacion,
+  horarios,
+  rangoPrecios: `COP ${Math.min(...precios)}–${Math.max(...precios)}`,
+});
+---
+<!doctype html>
+<html lang="es-CO">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script is:inline>
+      (function () {
+        var d = document.documentElement;
+        d.classList.add('js');
+        if (matchMedia('(prefers-reduced-motion: reduce)').matches) d.classList.add('rm');
+        setTimeout(function () { d.classList.add('motion-fallback'); }, 3000);
+      })();
+    </script>
+    <link rel="preload" href={gloockUrl} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={hankenUrl} as="font" type="font/woff2" crossorigin />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <Seo
+      titulo={seo.titulo}
+      descripcion={seo.descripcion}
+      sitio={seo.url}
+      ogImage={seo.ogImage}
+      nombreSitio={negocio.nombre}
+      themeColor="#5a1a1f"
+      jsonLd={jsonLd}
+    />
+  </head>
+  <body>
+    <a class="skip" href="#contenido">Saltar al contenido</a>
+
+    <aside class="banda" aria-label="Aviso de sitio de demostración">
+      <p>
+        <span class="banda-punto" aria-hidden="true"></span>
+        <span class="banda-largo">Negocio ficticio. {demo.texto} — </span><span class="banda-corto">Demo de Altair Studio — </span><a href={demo.url}>ver altair.lat</a>
+      </p>
+    </aside>
+
+    <header class="mast">
+      <div class="wrap mast-in">
+        <a href="/" class="mast-logo serif" aria-label={`${negocio.nombre}, inicio`}>Filo</a>
+        <nav aria-label="Principal">
+          <ul class="mast-nav">
+            <li><a href="#servicios">Servicios</a></li>
+            <li><a href="#galeria">Galería</a></li>
+            <li><a href="#visita">Horarios</a></li>
+          </ul>
+        </nav>
+        <WhatsAppLink class="mast-wa" telefono={contacto.whatsapp} mensaje={mensajes.general}>Reservar</WhatsAppLink>
+      </div>
+    </header>
+
+    <main id="contenido">
+      <slot />
+    </main>
+
+    <Consent class="aviso" aceptarClass="aviso-ok" etiquetaAceptar="De acuerdo">
+      <p>Este sitio no usa cookies de rastreo. Si reserva por WhatsApp, sus datos solo se usan para atender su cita.</p>
+    </Consent>
+
+    <script>
+      import { initMotion } from '@altair/core/motion';
+      import { revealAll } from '@altair/core/reveal';
+      import { runPage } from '../scripts/main';
+      const motion = initMotion({ lenis: { lerp: 0.08 } });
+      revealAll(motion);
+      runPage(motion);
+    </script>
+  </body>
+</html>
+
+<style is:global>
+  .banda {
+    position: sticky; top: 0; z-index: 60;
+    height: var(--banda);
+    display: flex; align-items: center; justify-content: center;
+    background: var(--tinta); color: var(--crema);
+    font-size: 0.75rem; letter-spacing: 0.04em; text-align: center;
+    padding-inline: 12px;
+  }
+  .banda p { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .banda a { color: var(--laton-claro); text-underline-offset: 3px; }
+  .banda-largo { display: none; }
+  @media (min-width: 640px) { .banda-largo { display: inline; } .banda-corto { display: none; } }
+  .banda-punto { display: inline-block; width: 6px; height: 6px; margin-right: 8px; border-radius: 50%; background: var(--laton-claro); vertical-align: middle; }
+
+  .mast { border-bottom: 1px solid rgba(30, 20, 18, 0.2); }
+  .mast-in { display: flex; align-items: center; gap: 24px; height: 72px; }
+  .mast-logo { font-size: 2.25rem; line-height: 1; text-decoration: none; color: var(--vino); }
+  .mast-nav { display: none; gap: 28px; }
+  .mast-nav a { position: relative; display: inline-block; text-decoration: none; font-size: 0.9375rem; font-weight: 500; padding-block: 12px; }
+  .mast-nav a::after { content: ''; position: absolute; left: 0; right: 0; bottom: 8px; height: 1px; background: var(--vino); transform: scaleX(0); transform-origin: left; transition: transform 0.5s var(--ease); }
+  .mast-nav a:hover::after, .mast-nav a:focus-visible::after { transform: scaleX(1); }
+  .mast-wa {
+    margin-left: auto;
+    display: inline-flex; align-items: center; min-height: 44px; padding: 0 20px;
+    border: 1px solid var(--vino); color: var(--vino);
+    font-weight: 600; font-size: 0.9375rem; text-decoration: none;
+    transition: background-color 0.3s, color 0.3s;
+  }
+  .mast-wa:hover { background: var(--vino); color: var(--crema); }
+  @media (min-width: 768px) {
+    .mast nav { margin-left: auto; }
+    .mast-nav { display: flex; }
+    .mast-wa { margin-left: 8px; }
+    .mast-in { height: 84px; }
+  }
+
+  .aviso {
+    position: fixed; z-index: 70; right: 16px; bottom: 16px; left: 16px; max-width: 420px;
+    display: grid; gap: 12px; padding: 18px 20px;
+    background: var(--crema); color: var(--tinta); border: 1px solid var(--tinta);
+    font-size: 0.875rem; line-height: 1.5;
+    transform: translateY(20px); opacity: 0;
+    transition: transform 0.6s var(--ease-out), opacity 0.6s var(--ease-out);
+  }
+  .aviso[data-open] { transform: none; opacity: 1; }
+  .aviso-ok { justify-self: start; min-height: 44px; padding: 0 18px; background: var(--tinta); color: var(--crema); border: 0; cursor: pointer; font-weight: 600; }
+  @media (min-width: 768px) { .aviso { left: auto; } }
+</style>
