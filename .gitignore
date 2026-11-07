@@ -6,3 +6,15 @@ dist/
 *.log
 .DS_Store
 .preview-*.log
+
+# Variables de entorno y secretos
+.env
+.env.*
+!.env.example
+.dev.vars
+*.pem
+*.key
+*.p12
+*.pfx
+secrets/
+.wrangler/
