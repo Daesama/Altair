@@ -1,26 +1,223 @@
 ---
+import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
-import Hero from '../components/Hero.astro';
-import Planes from '../components/Planes.astro';
-import Portafolio from '../components/Portafolio.astro';
-import { contacto, marca, seo } from '../../site.config';
-import { waNumber } from '@altair/core/whatsapp';
+import WhatsAppLink from '@altair/core/WhatsAppLink.astro';
+import { cop } from '@altair/core/types';
+import { contacto, lanzamiento, mensajes, planes, proceso, seo, marca } from '../../site.config';
+import filo from '../assets/portfolio/barberia-movil.png';
+import barberia from '../assets/portfolio/barberia.png';
 
+const esencial = planes[0];
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'ProfessionalService',
   name: marca.nombre,
   url: seo.url,
   description: seo.descripcion,
-  image: new URL(seo.ogImage, seo.url).href,
-  email: contacto.email,
-  telephone: '+' + waNumber(contacto.whatsapp),
   areaServed: { '@type': 'City', name: 'Bogotá' },
-  address: { '@type': 'PostalAddress', addressLocality: 'Bogotá', addressCountry: 'CO' },
+  email: contacto.email,
 };
+const flecha = 'M5 15 15 5m-8 0h8v8';
 ---
-<Base jsonLd={jsonLd}>
-  <Hero />
-  <Planes />
-  <Portafolio />
+<Base pagina="inicio" jsonLd={jsonLd}>
+  <section class="hero wrap" aria-labelledby="hero-t">
+    <div class="hero-txt">
+      <p class="chip" data-in><span class="dot" aria-hidden="true"></span>{lanzamiento.cuposRestantes} cupos con precio de lanzamiento</p>
+      <h1 id="hero-t" class="h1" data-hero-title>
+        Que lo encuentren en <span class="hl">Google</span>. Que le escriban por <span class="hl">WhatsApp</span>.
+      </h1>
+      <p class="lead" data-in>Diseñamos la página web de comercios en Bogotá: su cliente la abre en el celular, ve precios y horarios, y le escribe con un toque.</p>
+      <div class="ctas" data-in>
+        <WhatsAppLink class="btn" telefono={contacto.whatsapp} mensaje={mensajes.general} data-magnetic>
+          Escríbanos por WhatsApp
+          <svg class="ico" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11m-4-4 4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </WhatsAppLink>
+        <a class="btn btn--ghost" href="/planes">Ver planes</a>
+      </div>
+      <ul class="trust" data-in>
+        <li><b>{cop(esencial.precioLanzamiento!)}</b> pago único</li>
+        <li><b>Dominio</b> a su nombre</li>
+        <li><b>30 días</b> de garantía</li>
+      </ul>
+    </div>
+
+    <div class="stage" data-stage>
+      <div class="phone" data-phone>
+        <div class="screen" aria-hidden="true">
+          <div class="scr scr-g" data-scr>
+            <div class="g-bar"><svg viewBox="0 0 20 20"><circle cx="9" cy="9" r="5.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><span data-typed>barbería chapinero</span><i class="caret"></i></div>
+            <ul class="g-res">
+              <li class="g-card g-card--on" data-gcard>
+                <p class="g-t">Filo Barbería &amp; Spa</p>
+                <p class="g-m"><span class="stars">4,9 ★★★★★</span> · Barbería</p>
+                <p class="g-m"><span class="open">Abierto</span> · Cierra 8 p. m.</p>
+                <span class="g-btn" data-gbtn>Sitio web</span>
+              </li>
+              <li class="g-card" data-gcard><p class="g-t">Otra barbería</p><p class="g-m">Sin sitio web</p></li>
+              <li class="g-card" data-gcard><p class="g-t">Peluquería del barrio</p><p class="g-m">Sin horario publicado</p></li>
+            </ul>
+          </div>
+          <div class="scr scr-w" data-scr>
+            <Image src={filo} alt="" widths={[300, 600]} sizes="300px" class="w-img" data-wimg loading="eager" />
+          </div>
+          <div class="scr scr-wa" data-scr>
+            <div class="wa-top"><span class="wa-av">F</span><span><b>Filo Barbería</b><small>en línea</small></span></div>
+            <div class="wa-chat">
+              <p class="b b--out" data-b>Hola, quiero reservar un corte para mañana.</p>
+              <p class="b b--typing" data-b><i></i><i></i><i></i></p>
+              <p class="b b--in" data-b>¡Claro! ¿A las 10 a. m. le sirve?</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="float f1" data-depth="0.6" data-float aria-hidden="true"><span class="f-ico f-ico--g">G</span> Aparece en Google Maps</p>
+      <p class="float f2" data-depth="0.9" data-float aria-hidden="true"><span class="open">●</span> Abierto ahora</p>
+      <p class="float f3" data-depth="0.4" data-float aria-hidden="true"><span class="f-ico f-ico--wa">✓</span> Le escribieron por WhatsApp</p>
+
+      <ol class="steps" aria-label="Cómo llega un cliente (animación)">
+        <li><button type="button" data-step><span>01</span> Lo buscan<i data-prog></i></button></li>
+        <li><button type="button" data-step><span>02</span> Ven su página<i data-prog></i></button></li>
+        <li><button type="button" data-step><span>03</span> Le escriben<i data-prog></i></button></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="bento-sec wrap" aria-labelledby="bento-t">
+    <h2 id="bento-t" class="h2" data-reveal="lines">Todo lo que necesita, en su lugar.</h2>
+    <div class="bento">
+      <a class="tile t-plan" href="/planes" data-tilt="3" data-rise>
+        <span class="tag">Planes</span>
+        <p class="t-old"><s>{cop(esencial.precioOficial)}</s> <span class="sr-only">precio oficial, ahora</span></p>
+        <p class="t-price" data-count-from={esencial.precioOficial} data-count-to={esencial.precioLanzamiento}>{cop(esencial.precioLanzamiento!)}</p>
+        <p class="t-sub">Plan Esencial · pago único de lanzamiento</p>
+        <ul class="t-plans">
+          {planes.map((p) => <li>{p.nombre}<span>{p.desde ? 'desde ' : ''}{cop(p.precioLanzamiento ?? p.precioOficial)}</span></li>)}
+        </ul>
+        <span class="go">Comparar planes <svg viewBox="0 0 20 20" aria-hidden="true"><path d={flecha} fill="none" stroke="currentColor" stroke-width="1.8"/></svg></span>
+      </a>
+      <a class="tile t-port" href="/portafolio" data-tilt="3" data-rise>
+        <span class="tag">Portafolio</span>
+        <h3 class="h3">ARKE, Filo y La Leñera</h3>
+        <div class="t-shot"><Image src={barberia} alt="" widths={[480, 800]} sizes="(min-width: 1024px) 34vw, 90vw" /></div>
+        <span class="go">Ver casos <svg viewBox="0 0 20 20" aria-hidden="true"><path d={flecha} fill="none" stroke="currentColor" stroke-width="1.8"/></svg></span>
+      </a>
+      <a class="tile t-proc" href="/proceso" data-tilt="3" data-rise>
+        <span class="tag">Proceso</span>
+        <h3 class="h3">{proceso.length} pasos, de la primera charla a publicar.</h3>
+        <ol class="t-steps">{proceso.map((p) => <li>{p.titulo}</li>)}</ol>
+      </a>
+      <a class="tile t-cont" href="/contacto" data-tilt="3" data-rise>
+        <span class="tag">Contacto</span>
+        <p class="t-num">{contacto.whatsapp}</p>
+        <p class="t-sub">{contacto.email}</p>
+        <span class="go">Escribirnos <svg viewBox="0 0 20 20" aria-hidden="true"><path d={flecha} fill="none" stroke="currentColor" stroke-width="1.8"/></svg></span>
+      </a>
+    </div>
+  </section>
 </Base>
+
+<style>
+  /* Hero */
+  .hero { display: grid; gap: 48px; padding-block: 24px 72px; align-items: center; }
+  .h1 { margin: 22px 0 20px; }
+  .ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
+  .trust { display: flex; flex-wrap: wrap; gap: 8px 24px; margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--hair); font-size: 14px; color: var(--fg-3); }
+  .trust b { color: var(--fg); font-weight: 600; }
+
+  .stage { position: relative; display: grid; justify-items: center; gap: 28px; }
+  .phone {
+    width: min(250px, 68vw); aspect-ratio: 9 / 19; padding: 10px; border-radius: 46px;
+    background: var(--s2); border: 1px solid var(--hair-2);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 40px 80px -30px rgba(0, 0, 0, 0.9), 0 0 0 8px var(--s1);
+  }
+  .screen { position: relative; height: 100%; border-radius: 36px; overflow: hidden; background: #fff; color: #1f1f1f; }
+  .scr { position: absolute; inset: 0; }
+  .scr + .scr { visibility: hidden; }
+  .scr-g { padding: 46px 14px 14px; font-family: Arial, sans-serif; }
+  .g-bar { display: flex; align-items: center; gap: 8px; height: 40px; padding: 0 14px; border-radius: 999px; border: 1px solid #dfe1e5; font-size: 13px; color: #202124; }
+  .g-bar svg { width: 16px; flex: none; color: #5f6368; }
+  .caret { width: 1px; height: 14px; background: #202124; }
+  .g-res { display: grid; gap: 10px; margin-top: 16px; }
+  .g-card { padding: 12px; border-radius: 12px; border: 1px solid #ececec; font-size: 12px; color: #4d5156; }
+  .g-card--on { border-color: #c6b8ff; box-shadow: 0 6px 18px -8px rgba(98, 54, 240, 0.45); }
+  .g-t { font-size: 14px; color: #1a0dab; margin-bottom: 2px; }
+  .stars { color: #b0560f; }
+  .open { color: #188038; font-weight: 600; }
+  .g-btn { display: inline-block; margin-top: 8px; padding: 6px 12px; border-radius: 999px; background: #e8f0fe; color: #1a5fc7; font-weight: 600; }
+  .scr-w { background: #f3e9d7; overflow: hidden; }
+  .scr-w :global(.w-img) { width: 100%; height: auto; }
+  .scr-wa { display: flex; flex-direction: column; background: #efe7de; font-family: Arial, sans-serif; }
+  .wa-top { display: flex; align-items: center; gap: 10px; padding: 44px 14px 12px; background: #075e54; color: #fff; font-size: 13px; }
+  .wa-top small { display: block; font-size: 11px; opacity: 0.85; }
+  .wa-av { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: #5a1a1f; color: #f3e9d7; font-weight: 700; }
+  .wa-chat { display: grid; gap: 8px; padding: 16px 12px; align-content: start; }
+  .b { max-width: 82%; padding: 8px 10px; border-radius: 10px; font-size: 12.5px; line-height: 1.35; background: #fff; justify-self: start; }
+  .b--out { justify-self: end; background: #dcf8c6; }
+  .b--typing { display: flex; gap: 4px; padding: 10px 12px; }
+  .b--typing i { width: 6px; height: 6px; border-radius: 50%; background: #9aa0a6; }
+
+  .float {
+    position: absolute; display: none; align-items: center; gap: 10px; padding: 10px 14px 10px 10px; border-radius: 14px;
+    background: var(--s2); border: 1px solid var(--hair-2); font-size: 13px; color: var(--fg);
+    box-shadow: 0 20px 40px -20px rgba(0, 0, 0, 0.9); white-space: nowrap;
+  }
+  .float .open { color: #3ddc84; }
+  .f-ico { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 8px; font-weight: 700; font-size: 13px; }
+  .f-ico--g { background: #fff; color: #1a5fc7; }
+  .f-ico--wa { background: var(--wa); color: #06331b; }
+  .f1 { top: 10%; left: 0; }
+  .f2 { top: 34%; right: 0; }
+  .f3 { top: 60%; left: 2%; }
+  @media (min-width: 560px) { .float { display: inline-flex; } }
+
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; width: min(100%, 420px); }
+  .steps button {
+    position: relative; overflow: hidden; display: grid; gap: 2px; width: 100%; min-height: 56px; padding: 10px 12px;
+    border-radius: 12px; background: var(--s1); border: 1px solid var(--hair); text-align: left; font-size: 13px; color: var(--fg-2);
+  }
+  .steps button span { font: 500 11px/1 var(--f-mono); color: var(--fg-3); }
+  .steps button[aria-pressed='true'] { color: var(--fg); border-color: var(--hair-2); }
+  .steps i { position: absolute; left: 0; bottom: 0; height: 2px; width: 100%; background: var(--violet); transform: scaleX(0); transform-origin: left; }
+
+  @media (min-width: 1024px) {
+    .hero { grid-template-columns: 1.1fr 0.9fr; gap: 40px; min-height: calc(100svh - var(--header-h)); padding-block: 16px 48px; }
+    .phone { width: 290px; }
+  }
+
+  /* Bento */
+  .bento-sec { padding-block: 24px 96px; }
+  .bento-sec .h2 { margin-bottom: 28px; max-width: 20ch; }
+  .bento { display: grid; gap: 16px; grid-template-columns: 1fr; }
+  .bento .tile { min-height: 220px; }
+  .t-sub { color: var(--fg-2); font-size: 14px; }
+  .t-old { margin-top: auto; color: var(--fg-3); }
+  .t-old s { text-decoration-color: var(--violet); text-decoration-thickness: 2px; }
+  .t-price { font-size: clamp(2.75rem, 2rem + 3vw, 4.5rem); font-weight: 600; letter-spacing: -0.05em; line-height: 1; font-variant-numeric: tabular-nums; }
+  .t-plans { display: grid; gap: 6px; margin-top: 12px; }
+  .t-plans li { display: flex; justify-content: space-between; gap: 12px; padding: 10px 12px; border-radius: 12px; background: var(--s2); font-size: 14px; }
+  .t-plans span { font: 500 13px var(--f-mono); color: var(--fg-2); }
+  .t-plan .go { margin-top: 12px; }
+  .t-port { background: var(--violet); border-color: transparent; color: #fff; padding-bottom: 0; }
+  .t-port .tag { background: rgba(0, 0, 0, 0.2); border-color: rgba(255, 255, 255, 0.2); color: #fff; }
+  .t-shot { margin: 8px -24px 0 24px; flex: 1; min-height: 140px; border-radius: 14px 0 0 0; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.25); border-width: 1px 0 0 1px; box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.6); }
+  .t-shot :global(img) { width: 100%; transition: transform 1.2s var(--ease-out); }
+  .t-port:hover .t-shot :global(img) { transform: translateY(-10%); }
+  .t-port .go { position: absolute; left: 24px; bottom: 24px; padding: 8px 12px; border-radius: 10px; background: #fff; color: #1b1030; }
+  .t-steps { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 10px; margin-top: auto; }
+  .t-steps li { padding-top: 10px; border-top: 2px solid var(--s3); font-size: 12px; color: var(--fg-2); }
+  .t-steps li:first-child { border-color: var(--blue); color: var(--fg); }
+  .t-cont { background: var(--bone); color: #120f1a; }
+  .t-cont .tag { background: #fff; border-color: rgba(0, 0, 0, 0.08); color: var(--bone-ink); }
+  .t-num { margin-top: auto; font-size: clamp(1.2rem, 0.6rem + 1.1vw, 1.5rem); font-weight: 600; letter-spacing: -0.02em; white-space: nowrap; }
+  .t-cont .t-sub { color: var(--bone-ink); }
+
+  @media (min-width: 720px) {
+    .bento { grid-template-columns: repeat(2, 1fr); }
+    .t-plan { grid-row: span 2; }
+  }
+  @media (min-width: 1024px) {
+    .bento { grid-template-columns: repeat(4, 1fr); grid-auto-rows: 250px; }
+    .t-plan { grid-column: span 2; grid-row: span 2; padding: 32px; }
+    .t-port { grid-column: span 2; }
+  }
+</style>

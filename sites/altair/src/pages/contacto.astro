@@ -1,0 +1,103 @@
+---
+import Base from '../layouts/Base.astro';
+import Logo from '../brand/Logo.astro';
+import { waLink, igLink, mailLink } from '@altair/core/whatsapp';
+import { contacto, mensajes, planes } from '../../site.config';
+
+const href = waLink(contacto.whatsapp, mensajes.general);
+const flecha = 'M5 15 15 5m-8 0h8v8';
+---
+<Base
+  pagina="contacto"
+  titulo="Contacto — Altair Studio"
+  descripcion="Escríbanos por WhatsApp para empezar la página web de su negocio en Bogotá. También por correo o Instagram."
+>
+  <div class="page wrap contacto">
+    <div class="col">
+      <span class="tag" data-in>Contacto</span>
+      <h1 class="h1" data-reveal="lines">Hablemos de su negocio.</h1>
+      <p class="lead" data-in>Cuéntenos qué vende y dónde está. Le respondemos por WhatsApp con el plan que le sirve y el precio exacto.</p>
+
+      <fieldset class="elegir" data-in>
+        <legend>¿Qué le interesa?</legend>
+        <div class="chips">
+          <label class="op"><input type="radio" name="plan" value="" data-opcion checked /><span>Aún no sé</span></label>
+          {planes.map((p) => (
+            <label class="op"><input type="radio" name="plan" value={p.nombre} data-opcion /><span>Plan {p.nombre}</span></label>
+          ))}
+        </div>
+      </fieldset>
+
+      <a class="btn btn--wa grande" href={href} target="_blank" rel="noopener" data-msg-link data-magnetic data-in>
+        Enviar por WhatsApp <span class="sr-only">(se abre WhatsApp)</span>
+        <svg class="ico" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11m-4-4 4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" /></svg>
+      </a>
+
+      <ul class="canales" data-in>
+        <li><a href={mailLink(contacto.email)}><span class="mono">Correo</span>{contacto.email}<svg viewBox="0 0 20 20" aria-hidden="true"><path d={flecha} fill="none" stroke="currentColor" stroke-width="1.8" /></svg></a></li>
+        <li><a href={igLink(contacto.instagram)} target="_blank" rel="noopener"><span class="mono">Instagram</span>{contacto.instagram}<svg viewBox="0 0 20 20" aria-hidden="true"><path d={flecha} fill="none" stroke="currentColor" stroke-width="1.8" /></svg></a></li>
+        <li><p><span class="mono">Ciudad</span>{contacto.ciudad}</p></li>
+      </ul>
+    </div>
+
+    <div class="chat-zona" aria-hidden="true">
+      <div class="chat" data-tilt="5">
+        <div class="chat-top">
+          <span class="chat-av"><Logo variante="simbolo" etiqueta="" /></span>
+          <span><b>Altair Studio</b><small>{contacto.whatsapp}</small></span>
+        </div>
+        <div class="chat-body">
+          <p class="fecha mono">Hoy</p>
+          <p class="b b--in">Hola. Somos Altair: hacemos la página web de su negocio. ¿En qué le ayudamos?</p>
+          <p class="b b--out" data-msg>{mensajes.general}</p>
+        </div>
+        <div class="chat-input"><span>Mensaje</span><i></i></div>
+      </div>
+    </div>
+  </div>
+</Base>
+
+<style>
+  .contacto { display: grid; gap: 48px; }
+  .col { display: grid; gap: 20px; justify-items: start; align-content: start; }
+  .col .h1 { max-width: 12ch; }
+
+  .elegir { margin: 8px 0 0; padding: 0; border: 0; min-width: 0; }
+  .elegir legend { margin-bottom: 12px; padding: 0; font-size: 14px; color: var(--fg-2); }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .op { position: relative; }
+  .op input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+  .op span { display: inline-flex; align-items: center; min-height: 44px; padding: 0 16px; border-radius: 12px; background: var(--s1); border: 1px solid var(--hair-2); font-size: 14px; transition: background-color 0.2s, border-color 0.2s; }
+  .op input:hover + span { background: var(--s2); }
+  .op input:checked + span { background: var(--fg); border-color: var(--fg); color: #0b0a10; font-weight: 600; }
+  .op input:focus-visible + span { outline: 2px solid var(--blue); outline-offset: 3px; }
+  .grande { min-height: 58px; padding: 0 26px; font-size: 16px; margin-top: 4px; }
+
+  .canales { display: grid; width: 100%; max-width: 520px; margin-top: 12px; border-top: 1px solid var(--hair); }
+  .canales a, .canales p { display: grid; grid-template-columns: 96px 1fr auto; align-items: center; gap: 12px; min-height: 56px; border-bottom: 1px solid var(--hair); text-decoration: none; font-size: 15px; overflow-wrap: anywhere; }
+  .canales p { grid-template-columns: 96px 1fr; }
+  .canales .mono { font-size: 12px; color: var(--fg-3); }
+  .canales svg { width: 16px; color: var(--fg-3); transition: transform 0.4s var(--ease-out), color 0.3s; }
+  .canales a:hover svg { transform: translate(3px, -3px); color: var(--fg); }
+
+  .chat-zona { display: grid; place-items: center; padding: 8px 0; }
+  .chat {
+    width: min(100%, 400px); border-radius: 28px; overflow: hidden; background: #efe7de; color: #111;
+    border: 8px solid var(--s2); box-shadow: 0 0 0 1px var(--hair-2), 0 50px 90px -40px #000;
+    font-family: Arial, sans-serif;
+  }
+  .chat-top { display: flex; align-items: center; gap: 12px; padding: 16px; background: #075e54; color: #fff; font-size: 14px; }
+  .chat-top small { display: block; font-size: 12px; opacity: 0.85; }
+  .chat-av { display: grid; place-items: center; width: 38px; height: 38px; border-radius: 50%; background: #07060a; color: #fff; }
+  .chat-av :global(.logo) { height: 18px; --logo-accent: var(--violet); }
+  .chat-body { display: grid; gap: 10px; align-content: start; min-height: 300px; padding: 16px 14px; }
+  .fecha { justify-self: center; padding: 4px 10px; border-radius: 8px; background: #fff; font-size: 11px; color: #555; }
+  .b { max-width: 84%; padding: 10px 12px; border-radius: 12px; font-size: 14px; line-height: 1.4; background: #fff; justify-self: start; box-shadow: 0 1px 0 rgba(0, 0, 0, 0.08); }
+  .b--out { justify-self: end; background: #dcf8c6; min-height: 2.8em; transform-origin: right bottom; }
+  .chat-input { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 0 10px 12px; padding: 0 6px 0 16px; height: 46px; border-radius: 999px; background: #fff; color: #888; font-size: 14px; }
+  .chat-input i { width: 34px; height: 34px; border-radius: 50%; background: #075e54; }
+
+  @media (min-width: 1024px) {
+    .contacto { grid-template-columns: 6fr 5fr; align-items: center; min-height: calc(100svh - var(--header-h) - 160px); }
+  }
+</style>

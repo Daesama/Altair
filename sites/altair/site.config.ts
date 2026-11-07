@@ -130,6 +130,8 @@ export interface Caso {
   url: string;
   /** Archivo en src/assets/portfolio/ generado con `pnpm shots:portfolio`. */
   captura: string;
+  /** Captura de celular (375 px de ancho, 2x) del mismo script. */
+  capturaMovil: string;
   real: boolean;
 }
 
@@ -140,6 +142,7 @@ export const portafolio: Caso[] = [
     descripcion: 'Tienda de camisetas con catálogo, carrito y pagos integrados.',
     url: 'https://arkei.co',
     captura: 'arke.png',
+    capturaMovil: 'arke-movil.png',
     real: true,
   },
   {
@@ -148,6 +151,7 @@ export const portafolio: Caso[] = [
     descripcion: 'Servicios con precios, galería, reservas por WhatsApp y ubicación.',
     url: 'https://barberia.altair.lat',
     captura: 'barberia.png',
+    capturaMovil: 'barberia-movil.png',
     real: false,
   },
   {
@@ -156,6 +160,7 @@ export const portafolio: Caso[] = [
     descripcion: 'Carta por categorías, platos destacados y reservas por WhatsApp.',
     url: 'https://restaurante.altair.lat',
     captura: 'restaurante.png',
+    capturaMovil: 'restaurante-movil.png',
     real: false,
   },
 ];
@@ -172,6 +177,61 @@ export const legal = {
   garantiaDias: 30,
   valorHoraAdicional: 60_000, // PLACEHOLDER
 };
+
+/** Cómo trabajamos (página /proceso y bloque del inicio). */
+export const proceso = [
+  {
+    titulo: 'Hablamos',
+    texto: 'Nos cuenta de su negocio por WhatsApp o en una llamada. Elegimos juntos el plan y le enviamos el alcance por escrito.',
+    detalle: 'Paga el 50 % para reservar el cupo',
+  },
+  {
+    titulo: 'Diseñamos',
+    texto: 'Con sus textos, fotos, precios y horarios armamos la página, pensada primero para el celular.',
+    detalle: 'Si no tiene textos, le proponemos unos',
+  },
+  {
+    titulo: 'Revisa',
+    texto: 'Le enviamos un enlace de prueba para que la vea en su celular y nos diga qué cambiar.',
+    detalle: `${legal.revisionesIncluidas} rondas de cambios incluidas`,
+  },
+  {
+    titulo: 'Publicamos',
+    texto: 'La ponemos en su dominio, la conectamos con Google y le entregamos los accesos a su nombre.',
+    detalle: `Paga el 50 % restante · ${legal.garantiaDias} días de garantía`,
+  },
+];
+
+export const preguntas = [
+  {
+    p: '¿Necesito saber de tecnología?',
+    r: 'No. Usted nos envía la información de su negocio y nosotros nos encargamos del diseño, el dominio y la publicación. Le explicamos todo por WhatsApp.',
+  },
+  {
+    p: '¿Cuánto se demora?',
+    r: 'Depende del plan y de qué tan rápido tengamos sus textos y fotos. Al empezar le damos una fecha de entrega por escrito.',
+  },
+  {
+    p: '¿Cómo se paga?',
+    r: 'El 50 % al iniciar, para reservar el cupo, y el otro 50 % cuando aprueba la página, antes de publicarla en su dominio.',
+  },
+  {
+    p: '¿Cuántos cambios puedo pedir?',
+    r: `El precio incluye ${legal.revisionesIncluidas} rondas de cambios. Lo que se pida después o fuera del plan se cobra por hora, con valor acordado antes.`,
+  },
+  {
+    p: '¿El dominio y las cuentas quedan a mi nombre?',
+    r: costosTerceros,
+  },
+  {
+    p: '¿Necesito base de datos o pasarela de pagos?',
+    r: 'Con el plan Esencial no: la página es estática y los clientes le escriben por WhatsApp. El plan Negocio incluye un panel para editar y recibir reservas, y el plan Total suma pagos en línea con una pasarela a su nombre.',
+  },
+  {
+    p: '¿Qué pasa si algo falla después de publicar?',
+    r: `Tiene ${legal.garantiaDias} días de garantía para corregir errores sin costo. En los planes Negocio y Total la mensualidad cubre monitoreo, arreglos y soporte por WhatsApp.`,
+  },
+];
 
 /** Mensajes precargados de WhatsApp. */
 export const mensajes = {

@@ -1,0 +1,95 @@
+---
+import Base from '../layouts/Base.astro';
+import WhatsAppLink from '@altair/core/WhatsAppLink.astro';
+import { contacto, mensajes, preguntas, proceso } from '../../site.config';
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: preguntas.map((q) => ({ '@type': 'Question', name: q.p, acceptedAnswer: { '@type': 'Answer', text: q.r } })),
+};
+---
+<Base
+  pagina="proceso"
+  titulo="Cómo trabajamos — Altair Studio"
+  descripcion="Los cuatro pasos para tener la página web de su negocio: hablamos, diseñamos, revisa y publicamos. Más las preguntas frecuentes sobre pagos, cambios y dominio."
+  jsonLd={jsonLd}
+>
+  <div class="page wrap">
+    <header class="page-head">
+      <span class="tag" data-in>Proceso</span>
+      <h1 class="h1" data-reveal="lines">De la primera charla a su página publicada.</h1>
+      <p class="lead" data-in>Usted se encarga de su negocio; nosotros, de la página. Así avanzamos, sin sorpresas en el precio.</p>
+    </header>
+
+    <ol class="pasos">
+      {proceso.map((p, i) => (
+        <li class="tile paso" data-rise>
+          <div class="paso-top">
+            <span class="paso-n mono" data-paso-n>{String(i + 1).padStart(2, '0')}</span>
+            <span class="linea" aria-hidden="true" data-linea></span>
+          </div>
+          <h2 class="h3">{p.titulo}</h2>
+          <p class="paso-t">{p.texto}</p>
+          <p class="paso-d mono">{p.detalle}</p>
+        </li>
+      ))}
+    </ol>
+
+    <section class="faq" aria-labelledby="faq-t">
+      <div class="faq-head">
+        <h2 id="faq-t" class="h2" data-reveal="lines">Preguntas frecuentes</h2>
+        <p class="lead">¿Le queda otra duda? Escríbanos y le respondemos por WhatsApp.</p>
+        <WhatsAppLink class="btn btn--ghost" telefono={contacto.whatsapp} mensaje={mensajes.general}>Hacer una pregunta</WhatsAppLink>
+      </div>
+      <div class="faq-list">
+        {preguntas.map((q) => (
+          <details class="q" data-faq>
+            <summary><span>{q.p}</span><i aria-hidden="true"></i></summary>
+            <p data-faq-r>{q.r}</p>
+          </details>
+        ))}
+      </div>
+    </section>
+  </div>
+</Base>
+
+<style>
+  .pasos { display: grid; gap: 16px; }
+  .paso-top { display: flex; align-items: center; gap: 12px; }
+  /* Cada paso dibuja su tramo de línea hacia el siguiente. */
+  .linea { flex: 1; height: 1px; background: var(--hair-2); transform-origin: left; }
+  .paso:first-of-type .linea { background: var(--violet); }
+  .paso { gap: 12px; min-height: 0; padding: 24px; }
+  .paso-n {
+    display: grid; place-items: center; width: 44px; height: 44px; border-radius: 14px;
+    background: var(--s3); border: 1px solid var(--hair-2); font-size: 14px; color: var(--fg);
+  }
+  .paso:first-of-type .paso-n { background: var(--violet); border-color: transparent; color: #fff; }
+  .paso-t { color: var(--fg-2); font-size: 15px; }
+  .paso-d { margin-top: auto; padding-top: 14px; border-top: 1px solid var(--hair); font-size: 12px; color: var(--blue-ink); }
+
+  @media (min-width: 720px) { .pasos { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 1024px) {
+    .pasos { grid-template-columns: repeat(4, 1fr); }
+  }
+
+  .faq { display: grid; gap: 32px; margin-top: clamp(56px, 3rem + 3vw, 96px); }
+  .faq-head { display: grid; gap: 16px; align-content: start; justify-items: start; }
+  .faq-list { display: grid; gap: 8px; }
+  .q { border-radius: var(--r-md); background: var(--s1); border: 1px solid var(--hair); transition: border-color 0.3s, background-color 0.3s; }
+  .q[open] { background: var(--s2); border-color: var(--hair-2); }
+  .q summary { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 60px; padding: 14px 20px; cursor: pointer; list-style: none; font-weight: 500; font-size: 16px; }
+  .q summary::-webkit-details-marker { display: none; }
+  .q summary:focus-visible { border-radius: var(--r-md); }
+  .q i { position: relative; flex: none; width: 28px; height: 28px; border-radius: 50%; background: var(--s3); }
+  .q i::before, .q i::after { content: ''; position: absolute; top: 50%; left: 50%; width: 11px; height: 1.5px; margin: -0.75px 0 0 -5.5px; background: var(--fg); transition: transform 0.35s var(--ease-out); }
+  .q i::after { transform: rotate(90deg); }
+  .q[open] i::after { transform: rotate(0deg); }
+  .q p { padding: 0 20px 20px; color: var(--fg-2); font-size: 15px; max-width: 64ch; }
+
+  @media (min-width: 1024px) {
+    .faq { grid-template-columns: 5fr 7fr; gap: 48px; }
+    .faq-head { position: sticky; top: calc(var(--header-h) + 32px); align-self: start; }
+  }
+</style>

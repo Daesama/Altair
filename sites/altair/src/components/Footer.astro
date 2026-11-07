@@ -1,0 +1,45 @@
+---
+import Logo from '../brand/Logo.astro';
+import { contacto, estrella, marca } from '../../site.config';
+import { navegacion } from '../nav';
+import { igLink, mailLink } from '@altair/core/whatsapp';
+---
+<footer class="foot">
+  <div class="foot-in wrap">
+    <div class="foot-marca">
+      <a href="/" aria-label="Altair Studio, inicio"><Logo etiqueta="" /></a>
+      <p>Páginas web para comercios en {contacto.ciudad.split(',')[0]}.</p>
+    </div>
+    <nav class="foot-nav" aria-label="Pie de página">
+      <ul>{navegacion.map((n) => <li><a href={n.href}>{n.nombre}</a></li>)}</ul>
+      <ul>
+        <li><a href={mailLink(contacto.email)}>{contacto.email}</a></li>
+        <li><a href={igLink(contacto.instagram)} rel="noopener" target="_blank">Instagram</a></li>
+        <li><a href="/terminos">Términos</a></li>
+        <li><a href="/privacidad">Datos personales</a></li>
+      </ul>
+    </nav>
+    <p class="foot-base mono">
+      <span>© {new Date().getFullYear()} {marca.nombre}</span>
+      <span title="La estrella que nos da el nombre">{estrella.designacion} · {estrella.distanciaAl} años luz</span>
+    </p>
+  </div>
+</footer>
+
+<style>
+  .foot { border-top: 1px solid var(--hair); background: var(--s0); font-size: 14px; color: var(--fg-2); }
+  .foot-in { display: grid; gap: 32px; padding-block: 40px 28px; }
+  .foot-marca { display: grid; gap: 12px; }
+  .foot-marca a { color: var(--fg); justify-self: start; padding-block: 6px; }
+  .foot-marca :global(.logo) { height: 18px; --logo-accent: var(--violet); }
+  .foot-nav { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .foot-nav ul { display: grid; gap: 4px; align-content: start; }
+  .foot-nav a { display: inline-block; padding-block: 6px; text-decoration: none; overflow-wrap: anywhere; }
+  .foot-nav a:hover { color: var(--fg); }
+  .foot-base { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; padding-top: 20px; border-top: 1px solid var(--hair); font-size: 12px; color: var(--fg-3); }
+  @media (min-width: 900px) {
+    .foot-in { grid-template-columns: 1fr auto; align-items: start; }
+    .foot-nav { grid-template-columns: repeat(2, minmax(160px, auto)); gap: 48px; }
+    .foot-base { grid-column: 1 / -1; }
+  }
+</style>

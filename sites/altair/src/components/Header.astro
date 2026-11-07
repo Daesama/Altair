@@ -1,0 +1,174 @@
+---
+/**
+ * Cabecera persistente entre páginas (transition:persist):
+ * el indicador de la píldora se desliza a la página nueva en vez de recargarse.
+ */
+import Logo from '../brand/Logo.astro';
+import WhatsAppLink from '@altair/core/WhatsAppLink.astro';
+import { contacto, mensajes } from '../../site.config';
+import { navegacion } from '../nav';
+
+const actual = Astro.url.pathname.replace(/\.html$/, '').replace(/\/$/, '') || '/';
+---
+<header class="hdr" data-hdr transition:persist="cabecera">
+  <div class="hdr-in wrap">
+    <a href="/" class="hdr-logo" aria-label="Altair Studio, inicio"><Logo etiqueta="" /></a>
+    <nav class="pill" aria-label="Principal">
+      <span class="pill-ind" aria-hidden="true" data-pill-ind></span>
+      {navegacion.map((n) => <a href={n.href} aria-current={n.href === actual ? 'page' : undefined} data-nav>{n.nombre}</a>)}
+    </nav>
+    <div class="hdr-acc">
+      <WhatsAppLink class="btn btn--sm hdr-cta" telefono={contacto.whatsapp} mensaje={mensajes.general} data-magnetic>Escríbanos</WhatsAppLink>
+      <button type="button" class="menu-btn" aria-expanded="false" aria-controls="menu" data-menu-btn>
+        <span class="sr-only" data-menu-label>Abrir menú</span>
+        <i aria-hidden="true"></i><i aria-hidden="true"></i>
+      </button>
+    </div>
+  </div>
+
+  <div class="menu" id="menu" hidden data-menu>
+    <nav class="menu-in wrap" aria-label="Menú">
+      <ol class="menu-list">
+        {navegacion.map((n, i) => (
+          <li data-menu-item>
+            <a href={n.href} aria-current={n.href === actual ? 'page' : undefined} data-nav>
+              <span class="mono">{String(i + 1).padStart(2, '0')}</span>{n.nombre}
+            </a>
+          </li>
+        ))}
+      </ol>
+      <div class="menu-pie" data-menu-item>
+        <WhatsAppLink class="btn btn--wa" telefono={contacto.whatsapp} mensaje={mensajes.general}>Escribir por WhatsApp</WhatsAppLink>
+        <p class="mono">{contacto.email} · {contacto.ciudad}</p>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .hdr { position: sticky; top: 0; z-index: 50; border-bottom: 1px solid transparent; transition: border-color 0.3s; }
+  /* El fondo va en un pseudoelemento: backdrop-filter en .hdr encerraría al menú fijo. */
+  .hdr::before { content: ''; position: absolute; inset: 0; z-index: 0; background: rgba(7, 6, 10, 0.88); backdrop-filter: blur(14px) saturate(1.2); }
+  .hdr[data-scrolled] { border-color: var(--hair); }
+  .hdr-in { position: relative; z-index: 2; display: flex; align-items: center; justify-content: space-between; gap: 16px; height: var(--header-h); }
+  .hdr-logo { display: inline-flex; padding: 8px 0; color: var(--fg); }
+  .hdr-logo :global(.logo) { height: 20px; --logo-accent: var(--violet); }
+  .hdr-acc { display: flex; align-items: center; gap: 8px; }
+
+  .pill { position: absolute; left: 50%; transform: translateX(-50%); display: none; padding: 4px; border-radius: 999px; background: var(--s1); border: 1px solid var(--hair); }
+  .pill a { position: relative; z-index: 1; display: inline-flex; align-items: center; height: 36px; padding: 0 16px; border-radius: 999px; font-size: 14px; color: var(--fg-2); text-decoration: none; transition: color 0.25s; }
+  .pill a:hover, .pill a[aria-current='page'] { color: var(--fg); }
+  .pill-ind { position: absolute; top: 3px; left: 0; height: 38px; width: 0; border-radius: 999px; background: var(--s3); border: 1px solid var(--hair-2); opacity: 0; }
+
+  .menu-btn { position: relative; width: 44px; height: 44px; border-radius: 12px; background: var(--s1); border: 1px solid var(--hair-2); }
+  .menu-btn i { position: absolute; left: 13px; width: 18px; height: 1.5px; border-radius: 2px; background: var(--fg); transition: transform 0.35s var(--ease-out); }
+  .menu-btn i:first-of-type { top: 17px; }
+  .menu-btn i:last-of-type { top: 25px; }
+  .menu-btn[aria-expanded='true'] i:first-of-type { transform: translateY(4px) rotate(45deg); }
+  .menu-btn[aria-expanded='true'] i:last-of-type { transform: translateY(-4px) rotate(-45deg); }
+
+  .hdr-cta { display: none; }
+  @media (min-width: 560px) { .hdr-cta { display: inline-flex; } }
+  @media (min-width: 960px) {
+    .pill { display: flex; }
+    .menu-btn, .menu { display: none !important; }
+  }
+
+  /* Menú móvil a pantalla completa */
+  .menu { position: fixed; inset: 0; z-index: 1; padding-top: var(--header-h); background: var(--s0); overflow-y: auto; }
+  .menu-in { display: flex; flex-direction: column; justify-content: space-between; gap: 40px; min-height: 100%; padding-block: 24px 32px; }
+  .menu-list { display: grid; }
+  .menu-list a {
+    display: flex; align-items: baseline; gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--hair);
+    font-size: clamp(2rem, 1.2rem + 5vw, 3rem); font-weight: 600; letter-spacing: -0.04em; line-height: 1.1; text-decoration: none;
+  }
+  .menu-list .mono { font-size: 13px; font-weight: 500; letter-spacing: 0; color: var(--fg-3); }
+  .menu-list a[aria-current='page'] { color: var(--violet-ink); }
+  .menu-pie { display: grid; gap: 16px; }
+  .menu-pie .btn { width: 100%; }
+  .menu-pie p { font-size: 13px; color: var(--fg-3); }
+</style>
+
+<script>
+  import { initMotion, setScrollLock } from '@altair/core/motion';
+  import { magnetic } from '@altair/core/pointer';
+
+  // La cabecera persiste entre páginas: este script corre una sola vez.
+  const m = initMotion();
+  const { gsap } = m;
+  const hdr = document.querySelector<HTMLElement>('[data-hdr]')!;
+  const ind = hdr.querySelector<HTMLElement>('[data-pill-ind]');
+  const pill = ind?.parentElement;
+  const enlaces = [...hdr.querySelectorAll<HTMLAnchorElement>('[data-nav]')];
+  const ruta = () => location.pathname.replace(/\.html$/, '').replace(/\/$/, '') || '/';
+
+  const mover = (a: HTMLElement | undefined, inst = false) => {
+    if (!ind || !pill || !a) { if (ind) gsap.to(ind, { opacity: 0, duration: 0.2 }); return; }
+    const p = pill.getBoundingClientRect();
+    const r = a.getBoundingClientRect();
+    gsap.to(ind, { x: r.left - p.left - 1, width: r.width + 2, opacity: 1, duration: inst || m.reduced ? 0 : 0.5, ease: 'power3.out' });
+  };
+  const activo = () => enlaces.find((a) => pill?.contains(a) && a.getAttribute('aria-current') === 'page');
+
+  const marcar = (inst = false) => {
+    const r = ruta();
+    enlaces.forEach((a) => (a.getAttribute('href') === r ? a.setAttribute('aria-current', 'page') : a.removeAttribute('aria-current')));
+    mover(activo(), inst);
+  };
+  enlaces.filter((a) => pill?.contains(a)).forEach((a) => a.addEventListener('pointerenter', () => mover(a)));
+  pill?.addEventListener('pointerleave', () => mover(activo()));
+  document.fonts?.ready.then(() => mover(activo(), true));
+  addEventListener('resize', () => mover(activo(), true));
+
+  // Borde inferior solo cuando hay contenido detrás.
+  const borde = () => hdr.toggleAttribute('data-scrolled', scrollY > 8);
+  addEventListener('scroll', borde, { passive: true });
+
+  const cta = hdr.querySelector<HTMLElement>('[data-magnetic]');
+  if (cta) magnetic(m, cta, 0.25);
+
+  // Menú móvil: botón con aria-expanded, Esc para cerrar, foco atrapado y scroll bloqueado.
+  const btn = hdr.querySelector<HTMLButtonElement>('[data-menu-btn]')!;
+  const label = hdr.querySelector<HTMLElement>('[data-menu-label]')!;
+  const menu = hdr.querySelector<HTMLElement>('[data-menu]')!;
+  const items = [...menu.querySelectorAll<HTMLElement>('[data-menu-item]')];
+  let abierto = false;
+
+  const enfocables = () => [btn, ...menu.querySelectorAll<HTMLElement>('a[href], button')];
+  const atrapar = (e: KeyboardEvent) => {
+    if (e.key === 'Escape') { cerrar(); btn.focus(); return; }
+    if (e.key !== 'Tab') return;
+    const f = enfocables();
+    const i = f.indexOf(document.activeElement as HTMLElement);
+    if (e.shiftKey && i <= 0) { e.preventDefault(); f[f.length - 1].focus(); }
+    else if (!e.shiftKey && i === f.length - 1) { e.preventDefault(); f[0].focus(); }
+  };
+
+  function abrir() {
+    abierto = true;
+    menu.hidden = false;
+    btn.setAttribute('aria-expanded', 'true');
+    label.textContent = 'Cerrar menú';
+    setScrollLock(true);
+    document.addEventListener('keydown', atrapar);
+    if (!m.reduced) {
+      gsap.fromTo(menu, { opacity: 0 }, { opacity: 1, duration: 0.3 });
+      gsap.fromTo(items, { y: 28, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6, stagger: 0.05, ease: 'power3.out', delay: 0.05 });
+    }
+  }
+  function cerrar() {
+    if (!abierto) return;
+    abierto = false;
+    menu.hidden = true;
+    btn.setAttribute('aria-expanded', 'false');
+    label.textContent = 'Abrir menú';
+    setScrollLock(false);
+    document.removeEventListener('keydown', atrapar);
+  }
+  btn.addEventListener('click', () => (abierto ? cerrar() : abrir()));
+  matchMedia('(min-width: 960px)').addEventListener('change', (e) => e.matches && cerrar());
+
+  document.addEventListener('astro:before-preparation', cerrar);
+  let primera = true;
+  document.addEventListener('astro:page-load', () => { marcar(primera); primera = false; borde(); });
+</script>

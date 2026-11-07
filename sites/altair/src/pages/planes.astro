@@ -1,0 +1,136 @@
+---
+import Base from '../layouts/Base.astro';
+import WhatsAppLink from '@altair/core/WhatsAppLink.astro';
+import { cop } from '@altair/core/types';
+import { contacto, costosTerceros, lanzamiento, mensajes, mensualidadCubre, planes } from '../../site.config';
+
+const check = 'M4 10.5 8 14l8-8';
+---
+<Base
+  pagina="planes"
+  titulo="Planes y precios — Altair Studio"
+  descripcion="Tres planes de página web para comercios en Bogotá: Esencial, Negocio y Total. Precios de lanzamiento, qué incluye cada uno y qué cubre la mensualidad."
+>
+  <div class="page wrap">
+    <header class="page-head">
+      <span class="tag" data-in>Planes</span>
+      <h1 class="h1" data-reveal="lines">Un precio claro para cada etapa de su negocio.</h1>
+      <div class="cupos" data-in>
+        <p><b>{lanzamiento.cuposRestantes} de {lanzamiento.cuposTotales}</b> cupos con precio de lanzamiento</p>
+        <ol class="cupos-dots" aria-hidden="true">
+          {Array.from({ length: lanzamiento.cuposTotales }, (_, i) => (
+            <li class:list={['cupo', { 'cupo--libre': i >= lanzamiento.cuposTotales - lanzamiento.cuposRestantes }]} data-cupo />
+          ))}
+        </ol>
+      </div>
+    </header>
+
+    <ul class="planes">
+      {planes.map((p, i) => (
+        <li class:list={['tile', 'plan', { 'plan--dest': i === 1 }]} data-tilt="2" data-rise>
+          <div class="plan-top">
+            <h2 class="plan-n">{p.nombre}</h2>
+            {i === 1 && <span class="tag tag--dest">Con panel propio</span>}
+          </div>
+          <p class="plan-tipo mono">{p.tipo}</p>
+          <p class="plan-res">{p.resumen}</p>
+
+          <div class="precio">
+            {p.precioLanzamiento ? (
+              <>
+                <p class="precio-of"><s>{cop(p.precioOficial)}</s><span class="sr-only"> precio oficial; precio de lanzamiento:</span></p>
+                <p class="precio-v" data-count-from={p.precioOficial} data-count-to={p.precioLanzamiento}>{cop(p.precioLanzamiento)}</p>
+              </>
+            ) : (
+              <>
+                <p class="precio-of">Precio oficial</p>
+                <p class="precio-v">{p.desde && <small>desde </small>}{cop(p.precioOficial)}</p>
+              </>
+            )}
+            <p class="precio-m">
+              {p.mensualidad.lanzamiento ? (
+                <><b>+ {cop(p.mensualidad.lanzamiento)}/mes</b> <s>{cop(p.mensualidad.oficial!)}</s> · {p.mensualidad.nota}</>
+              ) : p.mensualidad.oficial ? (
+                <><b>+ {cop(p.mensualidad.oficial)}/mes</b> · {p.mensualidad.nota}</>
+              ) : (
+                <b>{p.mensualidad.nota}</b>
+              )}
+            </p>
+          </div>
+
+          <ul class="incluye">
+            {p.incluye.map((x) => (
+              <li><svg viewBox="0 0 20 20" aria-hidden="true"><path d={check} fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>{x}</li>
+            ))}
+          </ul>
+
+          <WhatsAppLink class:list={['btn', { 'btn--ghost': i !== 1 }]} telefono={contacto.whatsapp} mensaje={mensajes.plan(p.nombre)}>
+            Quiero el plan {p.nombre}
+          </WhatsAppLink>
+        </li>
+      ))}
+    </ul>
+
+    <div class="extra">
+      <section class="tile" aria-labelledby="mens-t" data-rise>
+        <span class="tag">Negocio y Total</span>
+        <h2 id="mens-t" class="h3">Qué cubre la mensualidad</h2>
+        <ul class="cubre">{mensualidadCubre.map((x) => <li>{x}</li>)}</ul>
+      </section>
+      <section class="tile extra-b" aria-labelledby="terc-t" data-rise>
+        <span class="tag">Todos los planes</span>
+        <h2 id="terc-t" class="h3">Todo queda a su nombre</h2>
+        <p>{costosTerceros}</p>
+        <p class="pago mono"><span>50 % al iniciar</span><span>50 % al entregar</span></p>
+      </section>
+    </div>
+  </div>
+</Base>
+
+<style>
+  .cupos { display: grid; gap: 12px; justify-self: start; font-size: 14px; color: var(--fg-2); }
+  .cupos b { color: var(--fg); }
+  .cupos-dots { display: flex; gap: 6px; }
+  .cupo { width: 14px; height: 14px; border-radius: 50%; background: var(--s3); border: 1px solid var(--hair-2); }
+  .cupo--libre { background: var(--blue); border-color: transparent; box-shadow: 0 0 0 3px rgba(77, 141, 255, 0.18); }
+  @media (min-width: 1024px) { .cupos { justify-self: end; } }
+
+  .planes { display: grid; gap: 16px; }
+  .plan { gap: 0; padding: 28px 24px 24px; }
+  .plan--dest { background: var(--s2); border-color: rgba(122, 75, 255, 0.55); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 30px 60px -30px rgba(122, 75, 255, 0.45); }
+  .plan-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .plan-n { font-size: 1.75rem; font-weight: 600; letter-spacing: -0.03em; }
+  .tag--dest { align-self: center; background: var(--violet); border-color: transparent; color: #fff; }
+  .plan-tipo { margin-top: 4px; font-size: 12px; color: var(--violet-ink); }
+  .plan-res { margin-top: 14px; color: var(--fg-2); font-size: 15px; min-height: 3em; }
+
+  .precio { margin-top: 24px; padding-block: 20px; border-block: 1px solid var(--hair); }
+  .precio-of { font-size: 14px; color: var(--fg-3); }
+  .precio-of s { text-decoration-color: var(--violet); text-decoration-thickness: 2px; }
+  .precio-v { margin-top: 2px; font-size: clamp(2.25rem, 1.8rem + 1.6vw, 3rem); font-weight: 600; letter-spacing: -0.045em; line-height: 1.05; font-variant-numeric: tabular-nums; }
+  .precio-v small { font-size: 0.45em; font-weight: 500; letter-spacing: 0; color: var(--fg-2); }
+  .precio-m { margin-top: 8px; font-size: 13px; color: var(--fg-3); }
+  .precio-m b { color: var(--fg); font-weight: 600; }
+
+  .incluye { display: grid; gap: 10px; margin-block: 20px 28px; font-size: 14px; }
+  .incluye li { display: flex; gap: 10px; align-items: flex-start; }
+  .incluye svg { width: 18px; flex: none; margin-top: 1px; color: var(--blue); }
+  .plan .btn { margin-top: auto; width: 100%; }
+
+  .extra { display: grid; gap: 16px; margin-top: 16px; }
+  .cubre { display: grid; gap: 8px; margin-top: 8px; font-size: 14px; color: var(--fg-2); }
+  .cubre li { padding: 10px 12px; border-radius: 12px; background: var(--s2); }
+  .extra-b p { color: var(--fg-2); font-size: 15px; max-width: 52ch; }
+  .pago { display: flex; flex-wrap: wrap; gap: 8px; margin-top: auto; padding-top: 8px; }
+  .pago span { padding: 8px 12px; border-radius: 10px; background: var(--s2); border: 1px solid var(--hair); font-size: 13px; color: var(--fg); }
+
+  @media (min-width: 768px) {
+    .cubre { grid-template-columns: 1fr 1fr; }
+  }
+  @media (min-width: 1024px) {
+    .planes { grid-template-columns: repeat(3, 1fr); align-items: stretch; }
+    .plan { padding: 32px 28px 28px; }
+    .extra { grid-template-columns: 7fr 5fr; }
+    .extra .tile { padding: 28px; }
+  }
+</style>

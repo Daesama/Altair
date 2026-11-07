@@ -1,0 +1,89 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import Base from '../layouts/Base.astro';
+import { portafolio } from '../../site.config';
+
+const imgs = import.meta.glob<{ default: ImageMetadata }>('../assets/portfolio/*.png', { eager: true });
+const img = (archivo: string) => imgs[`../assets/portfolio/${archivo}`].default;
+const flecha = 'M5 15 15 5m-8 0h8v8';
+const dominio = (url: string) => url.replace(/^https?:\/\//, '');
+---
+<Base
+  pagina="portafolio"
+  titulo="Portafolio — Altair Studio"
+  descripcion="ARKE, tienda en línea real, y dos demos de comercios en Bogotá: Filo Barbería & Spa y La Leñera. Vea cómo quedan en el celular y en el computador."
+>
+  <div class="page wrap">
+    <header class="page-head">
+      <span class="tag" data-in>Portafolio</span>
+      <h1 class="h1" data-reveal="lines">Un caso real y dos demos, para que vea cómo queda.</h1>
+      <p class="lead" data-in>La versión de celular de cada caso se recorre al pasar el mouse, o sola al bajar por la página. Todas están publicadas: puede abrirlas y probarlas.</p>
+    </header>
+
+    <ul class="casos">
+      {portafolio.map((c, i) => (
+        <li class:list={['caso', { 'caso--grande': i === 0 }]} data-caso data-rise>
+          <div class="escena" data-escena>
+            <div class="nav">
+              <div class="nav-bar" aria-hidden="true"><i></i><i></i><i></i><span class="mono">{dominio(c.url)}</span></div>
+              <Image src={img(c.captura)} alt={`Página de ${c.nombre} en computador`} widths={[640, 960, 1440]} sizes={i === 0 ? '(min-width: 1024px) 60vw, 92vw' : '(min-width: 1024px) 44vw, 92vw'} />
+            </div>
+            <div class="cel" data-depth="0.6">
+              <div class="cel-pantalla" data-pantalla>
+                <Image src={img(c.capturaMovil)} alt={`Página de ${c.nombre} en celular`} widths={[220, 440]} sizes="(min-width: 1024px) 180px, 130px" />
+              </div>
+            </div>
+          </div>
+          <div class="info">
+            <p class="tipo mono">{c.real ? <span class="real">Cliente real</span> : <span class="demo">Demo</span>} {c.tipo.replace(/^Demo · /, '')}</p>
+            <h2 class="h3">{c.nombre}</h2>
+            <p class="desc">{c.descripcion}</p>
+            <a class="go" href={c.url} target="_blank" rel="noopener">
+              Abrir {dominio(c.url)} <span class="sr-only">(se abre en otra pestaña)</span>
+              <svg viewBox="0 0 20 20" aria-hidden="true"><path d={flecha} fill="none" stroke="currentColor" stroke-width="1.8" /></svg>
+            </a>
+          </div>
+        </li>
+      ))}
+    </ul>
+  </div>
+</Base>
+
+<style>
+  .casos { display: grid; gap: 16px; }
+  .caso { display: grid; gap: 0; overflow: hidden; border-radius: var(--r-lg); background: var(--s1); border: 1px solid var(--hair); transition: border-color 0.3s; }
+  .caso:hover { border-color: var(--hair-2); }
+
+  .escena { position: relative; padding: 24px 24px 0; background: var(--s2); border-bottom: 1px solid var(--hair); }
+  .caso--grande .escena { background: var(--violet); }
+  .nav { width: 86%; border-radius: 12px 12px 0 0; overflow: hidden; border: 1px solid var(--hair-2); border-bottom: 0; background: #111; box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.8); }
+  .nav-bar { display: flex; align-items: center; gap: 6px; height: 28px; padding: 0 12px; background: var(--s3); }
+  .nav-bar i { width: 8px; height: 8px; border-radius: 50%; background: var(--hair-2); }
+  .nav-bar span { margin-left: 8px; font-size: 11px; color: var(--fg-2); }
+  .nav :global(img) { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; object-position: top; }
+
+  .cel { position: absolute; right: 20px; bottom: 16px; width: 24%; max-width: 150px; padding: 6px; border-radius: 26px; background: #0b0a10; border: 1px solid var(--hair-2); box-shadow: 0 30px 50px -20px rgba(0, 0, 0, 0.9); }
+  .cel-pantalla { aspect-ratio: 9 / 18.5; border-radius: 20px; overflow: hidden; background: #fff; }
+  .cel-pantalla :global(img) { width: 100%; height: auto; }
+
+  .info { display: grid; gap: 8px; align-content: start; padding: 24px; }
+  .tipo { font-size: 12px; color: var(--fg-2); }
+  .tipo span { display: inline-block; margin-right: 6px; padding: 2px 8px; border-radius: 999px; font-weight: 500; }
+  .real { background: var(--blue); color: #04122e; }
+  .demo { background: var(--s3); color: var(--fg); }
+  .desc { color: var(--fg-2); font-size: 15px; max-width: 46ch; }
+  .info .go { justify-self: start; margin-top: 8px; padding-block: 8px; text-decoration: none; color: var(--fg); }
+
+  @media (min-width: 768px) {
+    .casos { grid-template-columns: 1fr 1fr; }
+    .caso--grande { grid-column: 1 / -1; }
+  }
+  @media (min-width: 1024px) {
+    .caso--grande .escena { order: 2; padding: 40px 40px 0; border-bottom: 0; border-left: 1px solid var(--hair); }
+    .caso--grande .info { align-content: end; padding: 36px; }
+    .caso--grande .h3 { font-size: 2.25rem; letter-spacing: -0.035em; }
+    .caso--grande .cel { right: 32px; bottom: 24px; width: 26%; max-width: 190px; }
+    .caso--grande { grid-template-columns: 4fr 8fr; }
+  }
+</style>
