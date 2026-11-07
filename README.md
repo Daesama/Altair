@@ -29,6 +29,19 @@ pnpm build             # construye los tres sitios en sites/*/dist
 
 Para ver la versión final ya construida de un sitio: `pnpm --filter altair preview`.
 
+## Páginas de altair.lat
+
+| Ruta | Contenido |
+|---|---|
+| `/` | Hero con el recorrido del cliente en un celular (Google → página → WhatsApp) y bloques que llevan a cada página |
+| `/planes` | Los tres planes, cupos de lanzamiento, qué cubre la mensualidad |
+| `/portafolio` | ARKE y las dos demos, en computador y celular |
+| `/proceso` | Los cuatro pasos y las preguntas frecuentes |
+| `/contacto` | WhatsApp con mensaje según el plan elegido, correo e Instagram |
+| `/terminos`, `/privacidad` | Borradores legales |
+
+El menú está en `sites/altair/src/nav.ts`. Las páginas cambian con View Transitions (`<ClientRouter />` de Astro): la cabecera se queda fija y solo el contenido entra y sale.
+
 ## Editar datos (`site.config.ts`)
 
 Todo lo que se puede editar está en el archivo `site.config.ts` de cada sitio. Ningún componente tiene datos escritos a mano.
@@ -39,6 +52,7 @@ Todo lo que se puede editar está en el archivo `site.config.ts` de cada sitio. 
   - Cupos de lanzamiento: `lanzamiento.cuposRestantes`.
   - Qué cubre la mensualidad.
   - Casos del portafolio.
+  - Pasos del proceso (`proceso`) y preguntas frecuentes (`preguntas`).
   - Datos legales del responsable.
   - Mensajes precargados de WhatsApp.
 - **Demos**: nombre, contacto, dirección y coordenadas, horarios, servicios o carta con precios, especiales, mensajes de reserva y créditos de fotos.
@@ -91,6 +105,8 @@ node tools/lighthouse.mjs http://localhost:4321/ http://localhost:4322/ http://l
 
 - `@altair/core/motion` inicializa Lenis sincronizado con ScrollTrigger. Con `prefers-reduced-motion: reduce` no se crea Lenis y cada sitio omite sus animaciones.
 - `@altair/core/reveal` revela titulares por líneas, palabras o letras. Basta con poner `data-reveal="lines|words|chars"` en el elemento.
+- `enCadaPagina(montar)` (en `@altair/core/motion`) es para sitios con View Transitions: corre las animaciones de cada página y las limpia antes de cambiar. altair.lat lo usa en `src/scripts/app.ts`; lo propio de cada página está en `src/scripts/paginas/`.
+- `@altair/core/pointer` tiene los efectos de mouse (`magnetic`, `tilt`, `parallaxPointer`). Solo se activan con mouse real y sin movimiento reducido. En altair.lat basta con `data-tilt="4"` o `data-magnetic` en el elemento.
 - Solo se animan `transform` y `opacity`. Sin WebGL.
 
 ## Desplegar
