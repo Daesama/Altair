@@ -116,3 +116,10 @@ Vea [DEPLOY.md](DEPLOY.md): tres proyectos de Cloudflare Pages, dominios y DNS.
 ## Legal
 
 `/terminos` y `/privacidad` de altair.lat son **borradores** y llevan un comentario `<!-- BORRADOR: revisar con abogado antes de publicar -->`. Haga que un abogado los revise antes de publicar.
+
+## Pendientes antes de publicar
+
+- [ ] Reemplazar los datos marcados con `// PLACEHOLDER` en los `site.config.ts` (WhatsApp, correo, Instagram, cupos, datos legales).
+- [ ] Revisión de `/terminos` y `/privacidad` por un abogado.
+- [ ] Confirmar que las fotos de Unsplash de las demos no sean de Unsplash+.
+- [ ] Verificar `PNPM_VERSION` en Cloudflare Pages (ver DEPLOY.md).
