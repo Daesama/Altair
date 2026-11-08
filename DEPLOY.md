@@ -8,7 +8,7 @@ Todo se publica como **un solo proyecto de Cloudflare Pages** conectado al repos
 | Demo barbería | `https://altair.lat/demos/barberia/` |
 | Demo restaurante | `https://altair.lat/demos/restaurante/` |
 
-El comando `pnpm build:web` (`tools/build-web.mjs`) construye los tres sitios y copia cada demo en `sites/altair/dist/demos/<nombre>/`. Esa carpeta es la que se publica.
+El build de altair (`pnpm --filter altair build`) termina corriendo `tools/build-web.mjs`, que construye las demos y copia cada demo en `sites/altair/dist/demos/<nombre>/`. Esa carpeta es la que se publica.
 
 ---
 
@@ -33,7 +33,7 @@ Esto se hace una sola vez y es lo que más tarda, porque el cambio de nameserver
    - **Project name:** `altair`
    - **Production branch:** `main`
    - **Framework preset:** `None`
-   - **Build command:** `pnpm build:web`
+   - **Build command:** `pnpm --filter altair build` (o `pnpm build:web`, que es lo mismo; los dos arman también las demos)
    - **Build output directory:** `sites/altair/dist`
    - **Root directory:** vacío (la raíz del repositorio)
 4. En **Environment variables (Production y Preview)** agregue:
@@ -42,7 +42,7 @@ Esto se hace una sola vez y es lo que más tarda, porque el cambio de nameserver
 5. Pulse **Save and Deploy**. Al terminar, el sitio queda en `https://altair.pages.dev` (o el nombre que Cloudflare asigne). Abra también `/demos/barberia/` y `/demos/restaurante/`.
 
 > Si el build falla porque no encuentra pnpm, cambie el comando de build a
-> `npx pnpm@10.34.9 install --frozen-lockfile && npx pnpm@10.34.9 build:web`.
+> `npx pnpm@10.34.9 install --frozen-lockfile && npx pnpm@10.34.9 --filter altair build`.
 
 > Si antes había creado los proyectos `altair-barberia` y `altair-restaurante`, ya no hacen falta: puede borrarlos, junto con los subdominios `barberia` y `restaurante` en DNS.
 

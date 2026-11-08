@@ -10,8 +10,8 @@
     "dev:altair": "pnpm --filter altair dev",
     "dev:barberia": "pnpm --filter demo-barberia dev",
     "dev:restaurante": "pnpm --filter demo-restaurante dev",
-    "build": "pnpm -r --filter ./sites/* build",
-    "build:web": "node tools/build-web.mjs",
+    "build": "pnpm --filter altair build",
+    "build:web": "pnpm --filter altair build",
     "shots": "node tools/shots.mjs",
     "lh": "node tools/lighthouse.mjs"
   },
