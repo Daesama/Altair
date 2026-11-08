@@ -105,8 +105,12 @@ export const planes: Plan[] = [
     ],
     precioOficial: 4_500_000,
     desde: true,
-    precioLanzamiento: null,
-    mensualidad: { oficial: 250_000, lanzamiento: null, nota: 'Sin precio de lanzamiento' },
+    precioLanzamiento: 2_900_000,
+    mensualidad: {
+      oficial: 250_000,
+      lanzamiento: 180_000,
+      nota: 'Mensualidad de lanzamiento fija por 6 meses',
+    },
   },
 ];
 

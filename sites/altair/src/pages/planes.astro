@@ -38,7 +38,7 @@ const check = 'M4 10.5 8 14l8-8';
           <div class="precio">
             {p.precioLanzamiento ? (
               <>
-                <p class="precio-of"><s>{cop(p.precioOficial)}</s><span class="sr-only"> precio oficial; precio de lanzamiento:</span></p>
+                <p class="precio-of"><s>{cop(p.precioOficial)}</s><span class="sr-only"> precio oficial; precio de lanzamiento:</span>{p.desde && ' · precio desde'}</p>
                 <p class="precio-v" data-count-from={p.precioOficial} data-count-to={p.precioLanzamiento}>{cop(p.precioLanzamiento)}</p>
               </>
             ) : (
