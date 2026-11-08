@@ -1,0 +1,110 @@
+---
+import Seo from '@altair/core/Seo.astro';
+import { demo, persona, seo } from '../../site.config';
+import '../styles/global.css';
+import lexendUrl from '../assets/fonts/lexend-mega-latin-wght-normal.woff2?url';
+import publicUrl from '../assets/fonts/public-sans-latin-wght-normal.woff2?url';
+
+interface Props { titulo?: string }
+const { titulo = seo.titulo } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+const jsonLd = {
+  '@context': 'https://schema.org', '@type': 'Person', name: persona.nombre, jobTitle: persona.oficio, url: seo.url,
+  address: { '@type': 'PostalAddress', addressLocality: persona.ciudad, addressCountry: 'CO' },
+};
+---
+<!doctype html>
+<html lang="es-CO">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script is:inline>
+      (function () {
+        var d = document.documentElement; d.classList.add('js');
+        if (matchMedia('(prefers-reduced-motion: reduce)').matches) d.classList.add('rm');
+        setTimeout(function () { d.classList.add('motion-fallback'); }, 3000);
+      })();
+    </script>
+    <link rel="preload" href={lexendUrl} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={publicUrl} as="font" type="font/woff2" crossorigin />
+    <link rel="icon" href={`${base}favicon.ico`} sizes="32x32" />
+    <link rel="icon" href={`${base}favicon.svg`} type="image/svg+xml" />
+    <link rel="apple-touch-icon" href={`${base}apple-touch-icon.png`} />
+    <Seo titulo={titulo} descripcion={seo.descripcion} sitio={seo.url} ogImage={seo.ogImage} nombreSitio={persona.nombre} themeColor="#f3ede2" jsonLd={jsonLd} />
+  </head>
+  <body>
+    <a class="skip" href="#contenido">Saltar al contenido</a>
+    <aside class="banda" aria-label="Aviso de sitio de demostración">
+      <p>{demo.texto} — <a href={demo.url}>ver altair.lat</a></p>
+    </aside>
+
+    <header class="cab" data-cab>
+      <div class="wrap cab-in">
+      <a href={base} class="cab-logo" aria-label={`${persona.nombre}, inicio`} data-jitter>
+        <span class="disp">LU</span><span class="mano">fanzine nº 1</span>
+      </a>
+      <nav aria-label="Principal">
+        <ul class="cab-nav">
+          <li style="--r:-3deg"><a href="#carta" class="ch ch--amarillo">quién soy</a></li>
+          <li style="--r:2deg"><a href="#boletas" class="ch ch--rosa">mi cv</a></li>
+          <li style="--r:-1deg"><a href="#mesa" class="ch ch--azul">hobbies</a></li>
+          <li style="--r:3deg"><a href="#lista" class="ch">metas</a></li>
+        </ul>
+      </nav>
+      </div>
+    </header>
+
+    <main id="contenido"><slot /></main>
+
+    <script>
+      import { anclas, initMotion } from '@altair/core/motion';
+      import { runPage } from '../scripts/main';
+      const motion = initMotion({ lenis: { lerp: 0.12, anchors: false } });
+      anclas(motion);
+      runPage(motion);
+
+      // Marca en el menú la sección que se está leyendo
+      const links = [...document.querySelectorAll<HTMLAnchorElement>('.cab-nav a')];
+      const io = new IntersectionObserver((entradas) => entradas.forEach((e) => {
+        if (!e.isIntersecting) return;
+        links.forEach((l) => l.toggleAttribute('aria-current', l.hash === '#' + e.target.id));
+      }), { rootMargin: '-45% 0px -50% 0px' });
+      links.forEach((l) => { const s = document.querySelector(l.hash); if (s) io.observe(s); });
+    </script>
+  </body>
+</html>
+
+<style is:global>
+  .banda { background: var(--tinta); color: var(--papel); font-size: 0.75rem; text-align: center; padding: 8px 12px; }
+  .banda a { color: var(--amarillo); }
+
+  /* La cabecera acompaña el scroll: queda pegada arriba como una tira de papel */
+  .cab { position: sticky; top: 0; z-index: 60; background: var(--papel); border-bottom: 2.5px solid var(--tinta); box-shadow: 0 4px 0 rgba(20, 20, 20, 0.12); }
+  .cab-in { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 10px; }
+  .cab-logo { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; }
+  .cab-logo .disp { display: grid; place-items: center; width: 54px; height: 54px; border-radius: 50%; background: var(--rosa); border: 2.5px solid var(--tinta); font-size: 1.125rem; transform: rotate(-8deg); }
+  .cab-logo .mano { font-size: 1.375rem; }
+  .cab-nav { display: flex; flex-wrap: wrap; gap: 8px; }
+  .cab-nav li { transform: rotate(var(--r)); }
+  .ch {
+    display: inline-flex; align-items: center; min-height: 44px; padding: 0 14px;
+    background: #fffdf8; border: 2px solid var(--tinta); box-shadow: 3px 3px 0 var(--tinta);
+    font-weight: 800; font-size: 0.875rem; text-decoration: none; text-transform: lowercase;
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .ch[aria-current] { outline: 3px solid var(--tinta); outline-offset: 2px; text-decoration: underline wavy 2px; text-underline-offset: 4px; }
+  .ch:hover { transform: translate(-2px, -3px) rotate(-2deg); box-shadow: 5px 6px 0 var(--tinta); }
+  .ch--amarillo { background: var(--amarillo); } .ch--rosa { background: var(--rosa); } .ch--azul { background: var(--azul); color: var(--papel); }
+  .cab-logo .disp { width: 48px; height: 48px; flex: none; }
+  /* En celular el menú no se esconde: los chips se deslizan de lado */
+  @media (max-width: 760px) {
+    .cab-logo .mano { display: none; }
+    .cab nav { flex: 1; min-width: 0; }
+    .cab-nav { flex-wrap: nowrap; overflow-x: auto; padding: 6px 6px 8px 2px; scrollbar-width: none; -webkit-mask: linear-gradient(90deg, #000 85%, transparent); mask: linear-gradient(90deg, #000 85%, transparent); }
+    .cab-nav::-webkit-scrollbar { display: none; }
+    .cab-nav li { flex: none; }
+    .ch { min-height: 40px; padding: 0 10px; font-size: 0.8125rem; }
+    .cab-nav { gap: 6px; }
+    .cab-logo .disp { width: 42px; height: 42px; font-size: 0.9375rem; }
+  }
+</style>

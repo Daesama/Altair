@@ -2,7 +2,7 @@
 import Base from '../layouts/Base.astro';
 import WhatsAppLink from '@altair/core/WhatsAppLink.astro';
 import { cop } from '@altair/core/types';
-import { contacto, costosTerceros, lanzamiento, mensajes, mensualidadCubre, planes } from '../../site.config';
+import { contacto, costosTerceros, lanzamiento, mensajes, mensualidadCubre, personal, planes } from '../../site.config';
 
 const check = 'M4 10.5 8 14l8-8';
 ---
@@ -84,6 +84,39 @@ const check = 'M4 10.5 8 14l8-8';
         <p class="pago mono"><span>50 % al iniciar</span><span>50 % al entregar</span></p>
       </section>
     </div>
+
+    <!-- Páginas personales: hoja de vida, hobbies, metas… -->
+    <section class="tile personal" id="personales" aria-labelledby="pers-t" data-rise>
+      <div class="pers-info">
+        <span class="tag tag--dest">Para personas · nuevo</span>
+        <h2 id="pers-t" class="plan-n">Página personal</h2>
+        <p class="plan-tipo mono">Hoja de vida, hobbies, metas y lo que usted quiera</p>
+        <p class="plan-res">Una página con su nombre para mostrar quién es: su trayectoria, sus proyectos, sus libros, su música. Diseño a su gusto, sobrio o con mucha personalidad.</p>
+        <div class="precio">
+          <p class="precio-of"><s>{cop(personal.precioOficial)}</s><span class="sr-only"> precio anterior; precio con descuento:</span> · Pago único</p>
+          <p class="precio-v" data-count-from={personal.precioOficial} data-count-to={personal.precio}>{cop(personal.precio)}</p>
+          <p class="precio-m"><b>+ {cop(personal.renovacionAnual)}/año</b> · dominio y cambios menores</p>
+        </div>
+        <div class="pers-cta">
+          <WhatsAppLink class="btn" telefono={contacto.whatsapp} mensaje={personal.mensaje}>Quiero mi página</WhatsAppLink>
+          <a class="btn btn--ghost" href="/personal">Ver ejemplos</a>
+        </div>
+      </div>
+      <div class="pers-lado">
+        <ul class="incluye">
+          {personal.incluye.map((x) => (
+            <li><svg viewBox="0 0 20 20" aria-hidden="true"><path d={check} fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>{x}</li>
+          ))}
+        </ul>
+        <p class="pers-k mono">Tres ejemplos, tres estilos</p>
+        <ul class="muestras">
+          <li><a class="muestra muestra--mono" href={personal.destacado.url} target="_blank" rel="noopener"><span class="m-t">{personal.destacado.titulo}</span><span class="m-d">Profesional · {personal.destacado.nombre}</span><span class="sr-only"> (se abre en otra pestaña)</span></a></li>
+          {personal.demos.map((d) => (
+            <li><a class={`muestra muestra--${d.mundo}`} href={d.url} target="_blank" rel="noopener"><span class="m-t">{d.titulo}</span><span class="m-d">Creativo · {d.nombre}</span><span class="sr-only"> (se abre en otra pestaña)</span></a></li>
+          ))}
+        </ul>
+      </div>
+    </section>
   </div>
 </Base>
 
@@ -118,6 +151,27 @@ const check = 'M4 10.5 8 14l8-8';
   .plan .btn { margin-top: auto; width: 100%; }
 
   .extra { display: grid; gap: 16px; margin-top: 16px; }
+
+  /* Página personal */
+  .personal { display: grid; gap: 32px; margin-top: 16px; padding: clamp(24px, 4vw, 44px); background: var(--s2); border-color: rgba(122, 75, 255, 0.4); scroll-margin-top: calc(var(--header-h) + 24px); }
+  .pers-info { display: flex; flex-direction: column; align-items: flex-start; }
+  .pers-info .tag--dest { align-self: flex-start; }
+  .pers-info .plan-n { margin-top: 14px; }
+  .pers-info .precio { align-self: stretch; }
+  .pers-cta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
+  .pers-lado .incluye { margin-top: 0; }
+  .pers-k { font-size: 12px; color: var(--fg-3); margin-bottom: 10px; }
+  .muestras { display: grid; gap: 10px; }
+  .muestra { display: grid; gap: 2px; min-height: 64px; align-content: center; padding: 12px 16px; border-radius: 14px; text-decoration: none; border: 1px solid rgba(0, 0, 0, 0.12); transition: transform 0.3s var(--ease-out); }
+  .muestra:hover { transform: translateX(4px); }
+  .m-t { font-weight: 700; font-size: 17px; }
+  .m-d { font-size: 13px; opacity: 0.8; }
+  .muestra--mono { background: #f2eee6; color: #1c1b18; }
+  .muestra--mono .m-t { font-family: Georgia, serif; font-style: italic; font-weight: 400; font-size: 20px; color: #2f4237; }
+  .muestra--papel { background: #ffd23f; color: #141414; border: 2px solid #141414; box-shadow: 3px 3px 0 #141414; border-radius: 0; }
+  .muestra--papel .m-t { text-transform: uppercase; letter-spacing: 0.02em; }
+  .muestra--mar { background: linear-gradient(120deg, #9be7f2, #0b7699 70%); color: #06324f; }
+  @media (min-width: 1024px) { .personal { grid-template-columns: 1fr 1fr; gap: 56px; } }
   .cubre { display: grid; gap: 8px; margin-top: 8px; font-size: 14px; color: var(--fg-2); }
   .cubre li { padding: 10px 12px; border-radius: 12px; background: var(--s2); }
   .extra-b p { color: var(--fg-2); font-size: 15px; max-width: 52ch; }

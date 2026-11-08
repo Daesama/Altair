@@ -1,0 +1,273 @@
+---
+import Base from '../layouts/Base.astro';
+import WhatsAppLink from '@altair/core/WhatsAppLink.astro';
+import { cop } from '@altair/core/types';
+import { contacto, personal } from '../../site.config';
+
+const check = 'M4 10.5 8 14l8-8';
+const flecha = 'M5 15 15 5m-8 0h8v8';
+---
+<Base
+  pagina="personal"
+  titulo="Páginas personales — Altair Studio"
+  descripcion="Su propia página web: quién es, su hoja de vida, sus hobbies y sus metas. Diseño a su gusto, con dominio a su nombre. Vea dos ejemplos."
+>
+  <div class="page wrap">
+    <header class="page-head">
+      <span class="tag" data-in>Páginas personales · nuevo</span>
+      <h1 class="h1" data-reveal="lines">Una página que se parece a usted.</h1>
+      <p class="lead" data-in>Su hoja de vida, sus hobbies, sus metas y lo que quiera contar, en una página con su nombre. La diseñamos a su gusto; usted solo nos cuenta de usted.</p>
+    </header>
+
+    <!-- Ejemplo profesional, primero: una lámina enmarcada con la página en vivo -->
+    <section class="destacado" aria-labelledby="dest-t" data-mundo>
+      <div class="dest-reticula" aria-hidden="true">{Array.from({ length: 12 }, () => <i></i>)}</div>
+      <div class="dest-txt">
+        <p class="mono dest-n">Ejemplo 1 · {personal.destacado.estilo}</p>
+        <h2 id="dest-t" class="dest-t">{personal.destacado.titulo}</h2>
+        <p class="dest-d"><strong>{personal.destacado.nombre}</strong>, {personal.destacado.descripcion}</p>
+        <ul class="dest-tags">{personal.destacado.detalles.map((d) => <li>{d}</li>)}</ul>
+        <a class="dest-cta" href={personal.destacado.url} target="_blank" rel="noopener">
+          {personal.destacado.cta} <span class="sr-only">(se abre en otra pestaña)</span>
+          <svg viewBox="0 0 20 20" aria-hidden="true"><path d={flecha} fill="none" stroke="currentColor" stroke-width="1.6" /></svg>
+        </a>
+      </div>
+      <figure class="dest-marco">
+        <span class="dest-corte k1" aria-hidden="true"></span><span class="dest-corte k2" aria-hidden="true"></span>
+        <span class="dest-corte k3" aria-hidden="true"></span><span class="dest-corte k4" aria-hidden="true"></span>
+        <div class="dest-paspartu">
+          <div class="viva" data-viva>
+            <iframe src={personal.destacado.url} title={`Vista en vivo de la página de ${personal.destacado.nombre}`} loading="lazy" tabindex="-1" aria-hidden="true" scrolling="no"></iframe>
+          </div>
+        </div>
+        <figcaption class="mono">Lámina 01 — {personal.destacado.nombre}, arquitecta</figcaption>
+      </figure>
+    </section>
+
+    <div class="separador">
+      <p class="mono">Ejemplos 2 y 3 · creativos</p>
+      <h2 class="separador-t">¿Algo con más personalidad?</h2>
+    </div>
+
+    <!-- Dos mundos creativos: cada ejemplo se ve en vivo dentro de su propio marco -->
+    <section class="mundos" aria-label="Dos ejemplos creativos de páginas personales">
+      {personal.demos.map((c, i) => (
+        <article class:list={['mundo', `mundo--${c.mundo}`]} data-mundo>
+          {c.mundo === 'papel' ? (
+            <div class="deco deco--papel" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+          ) : (
+            <div class="deco deco--mar" aria-hidden="true">{Array.from({ length: 10 }, (_, k) => <i style={`--k:${k}`}></i>)}</div>
+          )}
+          <div class="mundo-txt">
+            <p class="mundo-n mono">Ejemplo {i + 2} · {c.estilo}</p>
+            <h2 class="mundo-t">{c.titulo}</h2>
+            <p class="mundo-d"><strong>{c.nombre}</strong>, {c.descripcion}</p>
+            <ul class="mundo-tags">{c.detalles.map((d) => <li>{d}</li>)}</ul>
+          </div>
+          <div class="marco" data-marco>
+            <div class="viva" data-viva>
+              <iframe src={c.url} title={`Vista en vivo de la página de ${c.nombre}`} loading="lazy" tabindex="-1" aria-hidden="true" scrolling="no"></iframe>
+            </div>
+            {c.mundo === 'papel' && <p class="marco-pie">{c.pie}</p>}
+          </div>
+          <a class="mundo-cta" href={c.url} target="_blank" rel="noopener">
+            {c.cta} <span class="sr-only">(se abre en otra pestaña)</span>
+            <svg viewBox="0 0 20 20" aria-hidden="true"><path d={flecha} fill="none" stroke="currentColor" stroke-width="2" /></svg>
+          </a>
+        </article>
+      ))}
+    </section>
+    <p class="mundos-nota mono">Pase el mouse sobre cada ejemplo: la página se recorre sola.</p>
+
+    <section class="bloque" aria-labelledby="sec-t">
+      <div class="bloque-cab">
+        <span class="tag">Qué puede tener</span>
+        <h2 id="sec-t" class="h2-p" data-reveal="lines">Las secciones las inventa usted.</h2>
+        <p class="lead">Estas son solo ideas para arrancar. Si quiere una sección que no está aquí, la hacemos: la que sea, sobre lo que sea.</p>
+      </div>
+      <ul class="secciones">
+        <li class="tile sec-propia" data-rise>
+          <span class="mono sec-n">Su idea</span>
+          <h3 class="h3">La sección que usted quiera</h3>
+          <p>Cuéntenos qué quiere mostrar y le damos forma. Por ejemplo:</p>
+          <ul class="sec-ejemplos">{personal.seccionesPropias.map((e) => <li>{e}</li>)}</ul>
+        </li>
+        {personal.secciones.map((s) => (
+          <li class="tile" data-rise>
+            <span class="mono sec-n">Idea</span>
+            <h3 class="h3">{s.t}</h3>
+            <p>{s.d}</p>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section class="bloque paquete-wrap" aria-labelledby="paq-t">
+      <div class="tile paquete" data-rise>
+        <div>
+          <span class="tag tag--dest">Paquete personal</span>
+          <h2 id="paq-t" class="h2-p">Todo listo en {personal.entregaDias} días.</h2>
+          <div class="precio">
+            <p class="precio-antes"><s>{cop(personal.precioOficial)}</s><span class="sr-only"> precio anterior; precio con descuento:</span> <span class="ahorro mono">Ahorra {cop(personal.precioOficial - personal.precio)}</span></p>
+            <p class="precio-v">{cop(personal.precio)}</p>
+            <p class="precio-m">Pago único · luego {cop(personal.renovacionAnual)} al año por dominio y cambios menores</p>
+          </div>
+          <WhatsAppLink class="btn" telefono={contacto.whatsapp} mensaje={personal.mensaje}>Quiero mi página</WhatsAppLink>
+        </div>
+        <ul class="incluye">
+          {personal.incluye.map((x) => (
+            <li><svg viewBox="0 0 20 20" aria-hidden="true"><path d={check} fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>{x}</li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
+    <section class="bloque" aria-labelledby="pasos-t">
+      <div class="bloque-cab">
+        <span class="tag">Cómo funciona</span>
+        <h2 id="pasos-t" class="h2-p" data-reveal="lines">Tres pasos y queda publicada.</h2>
+      </div>
+      <ol class="pasos">
+        {personal.pasos.map((p, i) => (
+          <li class="tile" data-rise>
+            <span class="paso-n">{i + 1}</span>
+            <h3 class="h3">{p.t}</h3>
+            <p>{p.d}</p>
+          </li>
+        ))}
+      </ol>
+    </section>
+  </div>
+</Base>
+
+<style>
+  /* ── Ejemplo profesional: lámina enmarcada sobre papel con retícula ── */
+  .destacado { position: relative; isolation: isolate; display: grid; gap: 40px; align-items: center; margin-inline: calc(50% - 50vw); padding: clamp(56px, 7vw, 104px) max(var(--pad), 5vw); background: #f2eee6; color: #1c1b18; border-top: 1px solid var(--hair); overflow: hidden; }
+  .dest-reticula { position: absolute; inset: 0 max(var(--pad), 5vw); z-index: -1; display: grid; grid-template-columns: repeat(12, 1fr); column-gap: 24px; pointer-events: none; }
+  .dest-reticula i { border-inline: 1px solid rgba(28, 27, 24, 0.05); }
+  .dest-txt { display: grid; gap: 14px; justify-items: start; max-width: 46ch; }
+  .dest-n { font-size: 12px; color: #57534b; }
+  .dest-t { font-family: Georgia, 'Times New Roman', serif; font-weight: 400; font-style: italic; font-size: clamp(3rem, 1.8rem + 4.6vw, 5.5rem); line-height: 0.92; letter-spacing: -0.035em; color: #2f4237; }
+  .dest-d { color: #57534b; font-size: 16px; }
+  .dest-d strong { color: #1c1b18; }
+  .dest-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 2px; }
+  .dest-tags li { padding: 5px 12px; border: 1px solid rgba(28, 27, 24, 0.32); font-size: 13px; font-weight: 500; }
+  .dest-cta { display: inline-flex; align-items: center; gap: 12px; min-height: 52px; margin-top: 10px; padding: 0 24px; background: #2f4237; color: #f2eee6; font-weight: 600; text-decoration: none; transition: background-color 0.3s; }
+  .dest-cta:hover { background: #1c1b18; }
+  .dest-cta svg { width: 16px; transition: transform 0.3s var(--ease-out); }
+  .dest-cta:hover svg { transform: translate(3px, -3px); }
+  .dest-marco { position: relative; justify-self: center; width: min(760px, 100%); padding: 16px; }
+  .dest-paspartu { padding: clamp(14px, 2.4vw, 28px); background: #fbf9f5; border: 1px solid #1c1b18; box-shadow: 0 30px 60px -36px rgba(28, 27, 24, 0.55); transition: transform 0.8s var(--ease-out), box-shadow 0.8s var(--ease-out); }
+  .destacado:hover .dest-paspartu { transform: translateY(-6px); box-shadow: 0 44px 70px -36px rgba(28, 27, 24, 0.6); }
+  .destacado .viva { width: 100%; aspect-ratio: 16 / 10; outline: 1px solid rgba(28, 27, 24, 0.18); }
+  .dest-corte { position: absolute; width: 16px; height: 16px; border: 0 solid #1c1b18; }
+  .k1 { top: 0; left: 0; border-top-width: 1px; border-left-width: 1px; } .k2 { top: 0; right: 0; border-top-width: 1px; border-right-width: 1px; }
+  .k3 { bottom: 30px; left: 0; border-bottom-width: 1px; border-left-width: 1px; } .k4 { bottom: 30px; right: 0; border-bottom-width: 1px; border-right-width: 1px; }
+  .dest-marco figcaption { margin-top: 12px; font-size: 11px; color: #57534b; }
+  @media (min-width: 1024px) { .destacado { grid-template-columns: 5fr 7fr; gap: 56px; } }
+  @media (max-width: 699px) { .destacado .viva { aspect-ratio: 3 / 4; } }
+
+  .separador { display: grid; gap: 10px; justify-items: center; text-align: center; padding-block: clamp(56px, 6vw, 88px) clamp(32px, 4vw, 48px); }
+  .separador .mono { font-size: 12px; color: var(--fg-3); }
+  .separador-t { font-size: clamp(2rem, 1.3rem + 2.6vw, 3.25rem); line-height: 1.05; letter-spacing: -0.04em; font-weight: 600; }
+
+  /* ── Dos mundos: sección a sangre partida en diagonal ── */
+  .mundos { display: flex; flex-direction: column; margin-inline: calc(50% - 50vw); overflow: hidden; border-block: 1px solid var(--hair); }
+  .mundo { position: relative; isolation: isolate; display: grid; gap: 28px; align-content: start; justify-items: start; padding: 56px max(var(--pad), 5vw) 64px; overflow: hidden; }
+  .mundo-txt { position: relative; z-index: 2; display: grid; gap: 12px; max-width: 46ch; }
+  .mundo-n { font-size: 12px; }
+  .mundo-t { font-size: clamp(2.75rem, 1.6rem + 4.5vw, 5.25rem); line-height: 0.92; letter-spacing: -0.05em; font-weight: 700; }
+  .mundo-d { font-size: 16px; }
+  .mundo-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+  .mundo-tags li { padding: 6px 12px; font-size: 13px; font-weight: 600; }
+  .mundo-cta { position: relative; z-index: 2; display: inline-flex; align-items: center; gap: 10px; min-height: 52px; padding: 0 22px; font-weight: 700; text-decoration: none; transition: transform 0.25s var(--ease-out); }
+  .mundo-cta svg { width: 16px; transition: transform 0.3s var(--ease-out); }
+  .mundo-cta:hover svg { transform: translate(3px, -3px); }
+
+  .marco { position: relative; z-index: 2; justify-self: center; }
+  .viva { position: relative; overflow: hidden; background: #fff; }
+  .viva iframe { position: absolute; left: 0; top: 0; width: 1280px; height: 2000px; border: 0; transform: scale(var(--s, 0.3)); transform-origin: 0 0; pointer-events: none; }
+
+  /* Papel: fanzine */
+  .mundo--papel { background: #f3ede2; color: #141414; }
+  .mundo--papel::before { content: ''; position: absolute; inset: 0; z-index: -1; background: radial-gradient(rgba(20, 20, 20, 0.08) 1px, transparent 1.4px) 0 0 / 12px 12px; }
+  .mundo--papel .mundo-n { color: #3d3a35; }
+  .mundo--papel .mundo-t { font-family: var(--f-sans); text-transform: uppercase; }
+  .mundo--papel .mundo-t::after { content: ''; display: block; width: 3.2em; height: 0.28em; margin-top: 0.08em; background: #ff4fa0; transform: rotate(-2deg); }
+  .mundo--papel .mundo-d { color: #3d3a35; }
+  .mundo--papel .mundo-tags li { background: #fffdf8; border: 2px solid #141414; box-shadow: 3px 3px 0 #141414; }
+  .mundo--papel .mundo-tags li:nth-child(2) { background: #ffd23f; transform: rotate(-2deg); }
+  .mundo--papel .mundo-tags li:nth-child(3) { background: #ff4fa0; transform: rotate(2deg); }
+  .mundo--papel .mundo-cta { background: #ffd23f; border: 2.5px solid #141414; box-shadow: 5px 5px 0 #141414; }
+  .mundo--papel .mundo-cta:hover { transform: translate(-2px, -2px); }
+  .mundo--papel .marco { padding: 12px 12px 0; background: #fffdf8; border: 2.5px solid #141414; box-shadow: 8px 8px 0 #141414; transform: rotate(-3deg); transition: transform 0.6s var(--ease-out); }
+  .mundo--papel:hover .marco { transform: rotate(-1deg) scale(1.03); }
+  .mundo--papel .marco::before, .mundo--papel .marco::after { content: ''; position: absolute; z-index: 3; width: 96px; height: 28px; background: rgba(255, 210, 63, 0.8); }
+  .mundo--papel .marco::before { top: -14px; left: 14px; transform: rotate(-10deg); }
+  .mundo--papel .marco::after { top: -12px; right: 18px; transform: rotate(8deg); background: rgba(47, 75, 255, 0.5); }
+  .mundo--papel .viva { width: min(440px, 78vw); aspect-ratio: 4 / 3; }
+  .marco-pie { padding: 10px 4px 12px; font-size: 14px; font-weight: 600; color: #3d3a35; font-style: italic; }
+  .deco--papel i { position: absolute; z-index: 0; border: 2.5px solid #141414; }
+  .deco--papel i:nth-child(1) { right: 6%; top: 10%; width: 70px; height: 70px; border-radius: 50%; background: #ff4fa0; }
+  .deco--papel i:nth-child(2) { right: 30%; bottom: 8%; width: 120px; height: 34px; background: #2f4bff; transform: rotate(-8deg); }
+  .deco--papel i:nth-child(3) { left: 46%; top: 6%; width: 40px; height: 40px; background: #3ddc97; transform: rotate(20deg); }
+  .deco--papel i:nth-child(4) { left: 4%; bottom: 4%; width: 54px; height: 54px; background: #ffd23f; clip-path: polygon(50% 0, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%); border: 0; }
+
+  /* Mar: inmersión */
+  .mundo--mar { background: linear-gradient(180deg, #9be7f2 0%, #0b7699 34%, #08406a 70%, #03142a 100%); color: #eafbff; }
+  .mundo--mar .mundo-n { color: #06324f; }
+  .mundo--mar .mundo-t { font-family: var(--f-sans); color: #06324f; }
+  .mundo--mar .mundo-d { color: #06324f; font-weight: 500; }
+  .mundo--mar .mundo-tags li { border-radius: 999px; background: rgba(234, 251, 255, 0.55); color: #06324f; border: 1.5px solid rgba(6, 50, 79, 0.25); }
+  .mundo--mar .mundo-cta { border-radius: 999px; background: #ff6f59; color: #fff; box-shadow: 0 8px 0 -2px #c2412c; }
+  .mundo--mar .mundo-cta:hover { transform: translateY(-3px); }
+  .mundo--mar .marco { padding: 20px; border-radius: 50%; background: radial-gradient(circle, #e7c46d 0 60%, #b98a2c 66%, #8a6420 72%); box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.7), 0 0 0 6px rgba(124, 243, 232, 0.25); transition: transform 0.8s var(--ease-out); }
+  .mundo--mar:hover .marco { transform: rotate(12deg) scale(1.03); }
+  .mundo--mar .viva { width: min(360px, 70vw); aspect-ratio: 1; border-radius: 50%; }
+  .mundo--mar .viva::after { content: ''; position: absolute; inset: 0; border-radius: 50%; background: linear-gradient(140deg, rgba(255, 255, 255, 0.35), transparent 42%); box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.45); pointer-events: none; }
+  .deco--mar i { position: absolute; z-index: 0; bottom: -30px; left: calc(var(--k) * 10% + 2%); width: calc(8px + var(--k) * 2px); aspect-ratio: 1; border-radius: 50%; border: 1.5px solid rgba(234, 251, 255, 0.6); animation: burbuja calc(6s + var(--k) * 0.7s) linear calc(var(--k) * -0.9s) infinite; }
+  @keyframes burbuja { to { transform: translate(12px, -820px); opacity: 0; } }
+
+  .mundos-nota { margin-top: 14px; font-size: 12px; color: var(--fg-3); text-align: center; }
+
+  @media (min-width: 1024px) {
+    .mundos { flex-direction: row; min-height: 760px; }
+    .mundo { flex: 1 1 0; transition: flex-grow 0.7s var(--ease-out); padding-block: 72px; }
+    .mundo--mar { clip-path: polygon(9% 0, 100% 0, 100% 100%, 0 100%); margin-left: -6vw; padding-left: calc(6vw + 56px); }
+    .mundos:hover .mundo { flex-grow: 0.8; }
+    .mundos .mundo:hover { flex-grow: 1.35; }
+  }
+  @media (prefers-reduced-motion: reduce) { .deco--mar i { animation: none; } .mundo, .marco { transition: none; } }
+  @media (hover: none) { .mundos-nota { display: none; } }
+
+  .bloque { margin-top: clamp(64px, 3rem + 4vw, 112px); }
+  .bloque-cab { display: grid; gap: 16px; justify-items: start; margin-bottom: 32px; }
+  .h2-p { font-size: clamp(2rem, 1.3rem + 2.6vw, 3.25rem); line-height: 1.05; letter-spacing: -0.04em; font-weight: 600; text-wrap: balance; }
+
+  .secciones { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+  .secciones p, .pasos p { color: var(--fg-2); font-size: 15px; }
+  .sec-n { font-size: 12px; color: var(--violet-ink); }
+  /* La tarjeta «su idea» va primero y más grande: deja claro que no hay lista cerrada */
+  .sec-propia { background: linear-gradient(150deg, rgba(122, 75, 255, 0.22), var(--s1) 70%); border: 1.5px dashed rgba(185, 164, 255, 0.6); }
+  .sec-propia .sec-n { color: #fff; background: var(--violet); padding: 2px 10px; border-radius: 999px; align-self: flex-start; }
+  .sec-ejemplos { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
+  .sec-ejemplos li { padding: 5px 12px; border-radius: 999px; background: var(--s3); border: 1px solid var(--hair-2); font-size: 13px; color: var(--fg); }
+  @media (min-width: 960px) { .sec-propia { grid-column: span 2; grid-row: span 2; justify-content: center; padding: 36px; } .sec-propia .h3 { font-size: 2rem; } }
+
+  .paquete { display: grid; gap: 32px; padding: clamp(28px, 4vw, 48px); background: var(--s2); border-color: rgba(122, 75, 255, 0.55); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 30px 60px -30px rgba(122, 75, 255, 0.45); }
+  .paquete > div { display: grid; gap: 18px; justify-items: start; align-content: start; }
+  .tag--dest { background: var(--violet); border-color: transparent; color: #fff; }
+  .precio { padding-block: 8px; }
+  .precio-antes { display: flex; align-items: center; gap: 10px; font-size: 15px; color: var(--fg-3); }
+  .precio-antes s { text-decoration-color: var(--violet); text-decoration-thickness: 2px; }
+  .ahorro { padding: 3px 9px; border-radius: 999px; background: rgba(122, 75, 255, 0.18); color: var(--violet-ink); font-size: 11px; }
+  .precio-v { font-size: clamp(2.5rem, 2rem + 2vw, 3.5rem); font-weight: 600; letter-spacing: -0.045em; line-height: 1; font-variant-numeric: tabular-nums; }
+  .precio-m { margin-top: 8px; font-size: 14px; color: var(--fg-3); max-width: 38ch; }
+  .incluye { display: grid; gap: 14px; align-content: center; font-size: 15px; }
+  .incluye li { display: flex; gap: 10px; align-items: flex-start; }
+  .incluye svg { width: 18px; flex: none; margin-top: 2px; color: var(--blue); }
+  @media (min-width: 900px) { .paquete { grid-template-columns: 1fr 1fr; gap: 56px; } }
+
+  .pasos { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+  .paso-n { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: var(--violet); color: #fff; font-weight: 600; }
+</style>

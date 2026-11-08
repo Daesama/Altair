@@ -1,0 +1,362 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import Base from '../layouts/Base.astro';
+import { igLink, mailLink, waLink } from '@altair/core/whatsapp';
+import { boletas, carta, contacto, creditos, demo, favoritos, ficha, hobbies, metas, persona, sellos, temas } from '../../site.config';
+import retrato from '../assets/fotos/retrato.jpg';
+
+const fotos = import.meta.glob<{ default: ImageMetadata }>('../assets/fotos/*.jpg', { eager: true });
+const foto = (n: string) => fotos[`../assets/fotos/${n}.jpg`].default;
+
+// Letras del nombre como recortes de revista: color y giro fijos (no aleatorios en cada build).
+const tintas = ['rosa', 'amarillo', 'azul', 'tinta', 'papel'];
+const giros = [-6, 4, -3, 7, -5, 3, -8, 5, -2, 6];
+const letras = (t: string, d = 0) => [...t].map((l, i) => ({ l, c: tintas[(i + d) % tintas.length], r: giros[(i + d) % giros.length] }));
+const nombre1 = letras('LUCÍA');
+const nombre2 = letras('PEÑA', 2);
+
+const resaltar = (p: string) => carta.resaltar.reduce((acc, f) => acc.replace(f, `<mark class="marca" data-marca>${f}</mark>`), p);
+const coloresBoleta = ['amarillo', 'rosa', 'azul'];
+const girosSello = [-7, 4, -3, 6, -5, 2];
+// Perforación de la estampilla: círculos color papel sobre el borde.
+const perforaciones: [number, number][] = [
+  ...Array.from({ length: 11 }, (_, i): [number, number] => [i * 10, 0]),
+  ...Array.from({ length: 11 }, (_, i): [number, number] => [i * 10, 116]),
+  ...Array.from({ length: 12 }, (_, i): [number, number] => [0, i * 10 + 3]),
+  ...Array.from({ length: 12 }, (_, i): [number, number] => [100, i * 10 + 3]),
+];
+const posPolaroid = [
+  { x: 4, y: 8, r: -8 }, { x: 28, y: 30, r: 5 }, { x: 54, y: 6, r: -4 }, { x: 74, y: 34, r: 9 },
+];
+---
+<Base>
+  <!-- ───── Portada: collage ───── -->
+  <section class="hero wrap" aria-labelledby="hero-t" data-hero>
+    <div class="hero-txt">
+      <p class="mano hero-hola" data-up>hola, soy</p>
+      <h1 id="hero-t" class="hero-nombre">
+        <span class="sr-only">{persona.nombre}</span>
+        <span class="fila" aria-hidden="true">{nombre1.map((x) => <span class={`letra recorte recorte--${x.c}`} style={`--r:${x.r}deg`} data-letra>{x.l}</span>)}</span>
+        <span class="fila" aria-hidden="true">{nombre2.map((x) => <span class={`letra recorte recorte--${x.c}`} style={`--r:${x.r}deg`} data-letra>{x.l}</span>)}</span>
+      </h1>
+      <p class="hero-tira" data-up><strong>{persona.oficio}</strong> en {persona.ciudad}. {persona.saludo}</p>
+      <a class="btn" href="#postal" data-up>Mándame una postal ✉</a>
+    </div>
+
+    <figure class="hero-foto" data-up>
+      <span class="cinta" style="top:-12px;left:20px;transform:rotate(-12deg)"></span>
+      <span class="cinta cinta--azul" style="bottom:-10px;right:10px;transform:rotate(8deg)"></span>
+      <div class="duotono">
+        <Image src={retrato} alt="Retrato de Lucía, con cuello blanco y fondo rojo, mirando a la cámara" widths={[400, 640, 900]} sizes="(min-width: 960px) 420px, 82vw" loading="eager" fetchpriority="high" />
+      </div>
+      <figcaption class="mano">yo, en mi mejor ángulo (el único)</figcaption>
+    </figure>
+
+    <!-- Stickers arrastrables -->
+    <div class="stickers" aria-hidden="true">
+      <svg class="sticker s-estrella" viewBox="0 0 120 120" data-sticker><path d="M60 4l14 34 37 3-28 24 9 36-32-20-32 20 9-36L9 41l37-3Z" fill="#ff4fa0" stroke="#141414" stroke-width="4" stroke-linejoin="round"/><text x="60" y="70" text-anchor="middle" font-family="Caveat Brush, cursive" font-size="26" fill="#141414">¡hola!</text></svg>
+      <svg class="sticker s-sello" viewBox="0 0 140 140" data-sticker><circle cx="70" cy="70" r="64" fill="#ffd23f" stroke="#141414" stroke-width="4"/><circle cx="70" cy="70" r="36" fill="#fffdf8" stroke="#141414" stroke-width="3"/><defs><path id="circ" d="M70 70m-48 0a48 48 0 1 1 96 0a48 48 0 1 1-96 0"/></defs><g class="gira"><text font-family="Public Sans, sans-serif" font-weight="800" font-size="13" letter-spacing="3" fill="#141414"><textPath href="#circ">HECHO EN BOGOTÁ ✶ HECHO A MANO ✶</textPath></text></g><path d="M58 76c4 6 20 6 24 0M60 62v2m20-2v2" stroke="#141414" stroke-width="4" stroke-linecap="round" fill="none"/></svg>
+      <svg class="sticker s-rayo" viewBox="0 0 80 120" data-sticker><path d="M48 4 10 66h26l-8 50 42-66H44Z" fill="#2f4bff" stroke="#141414" stroke-width="4" stroke-linejoin="round"/></svg>
+      <div class="sticker s-etiqueta" data-sticker>cine &gt; todo</div>
+      <p class="pista s-pista">← ¡arrástralos!</p>
+    </div>
+  </section>
+
+  <!-- ───── Cintas en movimiento ───── -->
+  <div class="cintas" aria-hidden="true">
+    <div class="marquesina m-1"><div class="m-pista">{[...temas, ...temas].map((t) => <span>{t} ✶</span>)}</div></div>
+    <div class="marquesina m-2"><div class="m-pista">{[...temas, ...temas].reverse().map((t) => <span>{t} ●</span>)}</div></div>
+  </div>
+
+  <!-- ───── Carta + ficha ───── -->
+  <section id="carta" class="seccion wrap carta-sec" aria-labelledby="carta-t">
+    <h2 id="carta-t" class="titulo"><span class="recorte recorte--azul" style="--r:-2deg">una</span><span class="recorte recorte--papel" style="--r:2deg">carta</span><span class="recorte" style="--r:-1deg">sobre mí</span></h2>
+    <div class="carta-grid">
+      <article class="hoja" data-up>
+        <span class="cinta cinta--rosa" style="top:-14px;left:44%;transform:rotate(-3deg)"></span>
+        <p class="mano hoja-saludo">{carta.saludo}</p>
+        {carta.parrafos.map((p) => <p set:html={resaltar(p)} />)}
+        <p class="mano hoja-firma">— con cariño, {carta.firma} ♥</p>
+      </article>
+      <aside class="ficha" data-up aria-label="Ficha técnica">
+        <p class="ficha-cab disp">FICHA TÉCNICA</p>
+        <dl>{ficha.map((f) => <div><dt>{f.k}</dt><dd>{f.v}</dd></div>)}</dl>
+        <p class="ficha-sello" data-slam>¡APROBADA!</p>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ───── Trayectoria en boletas ───── -->
+  <section id="boletas" class="seccion boletas-sec" aria-labelledby="bol-t">
+    <div class="wrap">
+      <h2 id="bol-t" class="titulo"><span class="recorte recorte--amarillo" style="--r:2deg">mi vida</span><span class="recorte recorte--papel" style="--r:-3deg">en boletas</span><span class="recorte recorte--rosa" style="--r:1deg">de cine</span></h2>
+      <ol class="boletas">
+        {boletas.map((b, i) => (
+          <li class={`boleta boleta--${coloresBoleta[i % 3]}`} style={`--r:${[-2, 1.5, -1][i]}deg`} data-boleta>
+            <div class="boleta-main">
+              <p class="boleta-func">FUNCIÓN · {b.funcion}</p>
+              <h3 class="disp boleta-tit">{b.titulo}</h3>
+              <p class="boleta-sala">{b.sala}</p>
+              <p class="boleta-nota">{b.nota}</p>
+            </div>
+            <div class="boleta-talon" aria-hidden="true">
+              <span>SILLA</span><strong class="disp">{b.silla}</strong><span>ADMITE 1</span>
+            </div>
+          </li>
+        ))}
+      </ol>
+      <div class="sellos-wrap">
+        <p class="pista">lo que sé hacer (con sello oficial):</p>
+        <ul class="sellos">{sellos.map((s, i) => <li style={`--r:${girosSello[i % girosSello.length]}deg`} class={i % 2 ? 'sello sello--rosa' : 'sello'} data-slam>{s}</li>)}</ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───── Mesa de trabajo: polaroids arrastrables ───── -->
+  <section id="mesa" class="seccion mesa-sec" aria-labelledby="mesa-t">
+    <div class="wrap">
+      <div class="mesa-cab">
+        <h2 id="mesa-t" class="titulo"><span class="recorte recorte--papel" style="--r:-2deg">mi mesa</span><span class="recorte recorte--azul" style="--r:3deg">de hobbies</span></h2>
+        <p class="pista mesa-pista">arrastra las fotos, desordénalas →</p>
+      </div>
+      <ul class="mesa" data-mesa>
+        {hobbies.map((h, i) => (
+          <li class="polaroid" style={`--x:${posPolaroid[i].x}%;--y:${posPolaroid[i].y}%;--r:${posPolaroid[i].r}deg`} data-polaroid>
+            <span class={`chinche chinche--${i % 3}`} aria-hidden="true"></span>
+            <Image src={foto(h.foto)} alt="" widths={[300, 560]} sizes="(min-width: 900px) 260px, 44vw" draggable="false" />
+            <p class="mano polaroid-t">{h.titulo}</p>
+            <p class="polaroid-n">{h.nota}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- ───── Lista de metas ───── -->
+  <section id="lista" class="seccion wrap lista-sec" aria-labelledby="lista-t">
+    <div class="libreta" data-up>
+      <span class="cinta" style="top:-14px;left:16px;transform:rotate(-6deg)"></span>
+      <span class="cinta cinta--azul" style="top:-12px;right:24px;transform:rotate(5deg)"></span>
+      <h2 id="lista-t" class="mano libreta-t">Cosas por hacer antes de los 30</h2>
+      <ul class="metas">
+        {metas.map((m) => (
+          <li class:list={['meta', { 'meta--hecha': m.hecho }]} data-meta>
+            <svg class="caja" viewBox="0 0 40 40" aria-hidden="true">
+              <path d="M6 7c9-2 19-1 28 0 1 9 1 18 0 27-9 1-19 1-28-1-1-8-1-17 0-26Z" fill="none" stroke="#141414" stroke-width="2.6" stroke-linejoin="round"/>
+              {m.hecho && <path class="trazo" d="M10 21l7 8L33 6" fill="none" stroke="#ff4fa0" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" data-trazo/>}
+            </svg>
+            <div class="meta-txt">
+              <p class="meta-p"><span class:list={{ tachado: m.hecho }} data-tache={m.hecho ? '' : undefined}>{m.meta}</span></p>
+              <p class="mano meta-n">{m.hecho ? '✓ ' : '→ '}{m.nota}</p>
+              <span class="sr-only">{m.hecho ? '(cumplida)' : '(pendiente)'}</span>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- ───── Favoritos: hoja de stickers ───── -->
+  <section class="seccion favs-sec" aria-labelledby="fav-t">
+    <div class="wrap">
+      <h2 id="fav-t" class="titulo"><span class="recorte recorte--rosa" style="--r:-3deg">cosas</span><span class="recorte" style="--r:2deg">que amo</span></h2>
+      <ul class="favs">
+        {favoritos.map((f, i) => (
+          <li class={`fav fav--${f.forma}`} style={`--r:${[-6, 5, -3, 7][i]}deg`} data-jitter>
+            <span>{f.tipo}</span><p>{f.v}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- ───── Postal ───── -->
+  <section id="postal" class="seccion wrap postal-sec" aria-labelledby="postal-t">
+    <article class="postal" data-up>
+      <div class="postal-izq">
+        <h2 id="postal-t" class="mano postal-h">¡Escríbeme!</h2>
+        <p>Para encargos, colaboraciones, recomendar una película o mandarme fotos de tu gato. Respondo todo, aunque me demore un poquito.</p>
+        <p class="mano postal-firma">Lu ✶</p>
+      </div>
+      <div class="postal-der">
+        <div class="estampilla" data-slam aria-hidden="true">
+          <svg viewBox="0 0 100 116">
+            <rect width="100" height="116" fill="#ffd23f"/>
+            {perforaciones.map(([x, y]) => <circle cx={x} cy={y} r="3.6" fill="#fffdf8" />)}
+            <g transform="translate(10 10)"><rect width="80" height="96" fill="#2f4bff"/><circle cx="56" cy="30" r="14" fill="#ffd23f"/><path d="M0 96V66l22-22 18 18 14-12 26 24v22Z" fill="#ff4fa0"/><text x="8" y="88" font-family="Lexend Mega, sans-serif" font-weight="800" font-size="11" fill="#f3ede2">$2.000</text></g>
+          </svg>
+        </div>
+        <div class="matasellos" aria-hidden="true"><span>BOGOTÁ</span><span>2026</span></div>
+        <ul class="direccion">
+          <li><span>correo</span><a href={mailLink(contacto.email)}>{contacto.email}</a></li>
+          <li><span>whatsapp</span><a href={waLink(contacto.whatsapp, `¡Hola ${persona.nombreCorto}! Vi tu fanzine.`)} target="_blank" rel="noopener">mándame un mensaje<span class="sr-only"> (se abre en otra pestaña)</span></a></li>
+          <li><span>instagram</span><a href={igLink(contacto.instagram)} target="_blank" rel="noopener">{contacto.instagram}<span class="sr-only"> (se abre en otra pestaña)</span></a></li>
+        </ul>
+      </div>
+    </article>
+  </section>
+
+  <footer class="pie wrap">
+    <p class="mano">Hecho con tijeras, pegante y código en {persona.ciudad}.</p>
+    <p>Persona ficticia: <a href={demo.url}>demo de Altair Studio</a>. {creditos}</p>
+  </footer>
+</Base>
+
+<style>
+  /* ── Portada ── */
+  .hero { position: relative; display: grid; gap: 48px; align-items: center; padding-block: 24px 72px; overflow-x: clip; }
+  .hero-hola { font-size: 2rem; color: var(--azul); transform: rotate(-4deg); margin-bottom: 14px; }
+  .hero-nombre { display: grid; gap: 6px; margin-top: 4px; }
+  .fila { display: flex; gap: 4px; }
+  .letra { font-family: var(--f-disp); font-weight: 900; font-size: clamp(3.25rem, 1.2rem + 9vw, 7.5rem); line-height: 1; padding: 0.04em 0.12em 0.1em; border: 2.5px solid var(--tinta); }
+  .recorte--tinta { background: var(--tinta); color: var(--papel); }
+  .hero-tira { margin-top: 26px; max-width: 46ch; padding: 14px 18px; background: #fffdf8; border: 2px solid var(--tinta); transform: rotate(-1deg); font-size: 1.0625rem; }
+  .hero .btn { margin-top: 26px; }
+
+  .hero-foto { position: relative; justify-self: center; width: min(400px, 80vw); padding: 14px 14px 18px; background: #fffdf8; border: 2.5px solid var(--tinta); box-shadow: var(--sombra); transform: rotate(3deg); }
+  .duotono { position: relative; background: var(--rosa); overflow: hidden; aspect-ratio: 4 / 5; }
+  .duotono :global(img) { width: 100%; height: 100%; object-fit: cover; filter: grayscale(1) contrast(1.25) brightness(1.05); mix-blend-mode: multiply; transition: filter 0.4s; }
+  .duotono::after { content: ''; position: absolute; inset: 0; background: radial-gradient(circle, rgba(20, 20, 20, 0.35) 1px, transparent 1.4px) 0 0 / 6px 6px; mix-blend-mode: multiply; pointer-events: none; }
+  .hero-foto:hover .duotono :global(img) { filter: none; mix-blend-mode: normal; }
+  .hero-foto figcaption { margin-top: 10px; font-size: 1.25rem; text-align: center; }
+
+  .stickers { position: absolute; inset: 0; pointer-events: none; }
+  .sticker { position: absolute; pointer-events: auto; cursor: grab; touch-action: none; filter: drop-shadow(3px 4px 0 rgba(20, 20, 20, 0.9)); z-index: 5; }
+  .sticker:active { cursor: grabbing; }
+  .s-estrella { width: 110px; right: 6%; top: 2%; transform: rotate(12deg); }
+  .s-sello { width: 120px; left: 44%; bottom: 4%; }
+  .s-sello .gira { transform-origin: 70px 70px; animation: girar 14s linear infinite; }
+  .s-rayo { width: 56px; right: 40%; top: 6%; transform: rotate(-14deg); }
+  .s-etiqueta { right: 4%; bottom: 12%; padding: 8px 14px; background: var(--menta); border: 2.5px solid var(--tinta); font-weight: 900; font-size: 1rem; transform: rotate(-7deg); white-space: nowrap; }
+  .s-pista { position: absolute; left: calc(44% + 128px); bottom: 10%; transform: rotate(-4deg); }
+  @keyframes girar { to { transform: rotate(360deg); } }
+  @media (min-width: 960px) { .hero { grid-template-columns: 1.15fr 1fr; padding-block: 32px 110px; } }
+  @media (max-width: 959px) {
+    .s-sello { width: 92px; left: auto; right: 2%; bottom: 30%; }
+    .s-rayo { right: auto; left: 2%; top: auto; bottom: 34%; width: 44px; }
+    .s-estrella { width: 86px; top: auto; bottom: 44%; right: 0; }
+    .s-etiqueta { bottom: 2%; right: 4%; font-size: 0.875rem; }
+    .s-pista { display: none; }
+  }
+
+  /* ── Marquesinas ── */
+  .cintas { position: relative; padding-block: 24px; overflow: hidden; }
+  .marquesina { overflow: hidden; border-block: 2.5px solid var(--tinta); padding-block: 12px; font-family: var(--f-disp); font-weight: 800; font-size: clamp(1rem, 0.8rem + 1vw, 1.5rem); letter-spacing: -0.03em; white-space: nowrap; }
+  .m-1 { background: var(--amarillo); transform: rotate(-2deg) scale(1.04); }
+  .m-2 { background: var(--rosa); transform: rotate(1.5deg) scale(1.04); margin-top: -6px; }
+  .m-pista { display: inline-flex; gap: 28px; animation: correr 26s linear infinite; }
+  .m-2 .m-pista { animation-direction: reverse; animation-duration: 32s; }
+  @keyframes correr { to { transform: translateX(-50%); } }
+
+  /* ── Carta ── */
+  .carta-grid { display: grid; gap: 40px; margin-top: 48px; align-items: start; }
+  .hoja {
+    position: relative; display: grid; gap: 18px; padding: 44px 28px 36px 56px; color: var(--tinta-2);
+    background: #fffdf8 repeating-linear-gradient(transparent 0 31px, rgba(47, 75, 255, 0.18) 31px 32px);
+    border: 2px solid var(--tinta); transform: rotate(-1.2deg); box-shadow: var(--sombra); line-height: 2;
+  }
+  .hoja::before { content: ''; position: absolute; left: 36px; top: 0; bottom: 0; width: 2px; background: rgba(255, 79, 160, 0.6); }
+  .hoja-saludo { font-size: 1.75rem; color: var(--tinta); }
+  .hoja-firma { font-size: 1.75rem; color: var(--rosa); text-align: right; }
+  .hoja :global(.marca) { background: linear-gradient(transparent 20%, var(--amarillo) 20% 85%, transparent 85%) no-repeat 0 0 / var(--m, 100%) 100%; color: var(--tinta); font-weight: 700; padding-inline: 2px; }
+  .ficha { position: relative; padding: 24px; background: var(--azul); color: var(--papel); border: 2.5px solid var(--tinta); transform: rotate(2deg); box-shadow: var(--sombra); }
+  .ficha-cab { font-size: 1rem; padding-bottom: 12px; border-bottom: 2px dashed rgba(243, 237, 226, 0.5); }
+  .ficha dl { display: grid; gap: 12px; margin-top: 16px; }
+  .ficha dt { font-size: 0.75rem; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: var(--amarillo); }
+  .ficha dd { font-weight: 700; }
+  .ficha-sello { position: absolute; right: 14px; bottom: 18px; padding: 6px 12px; border: 3px solid var(--rosa); color: var(--rosa); font-family: var(--f-disp); font-weight: 900; font-size: 1rem; transform: rotate(-14deg); background: rgba(20, 20, 20, 0.2); }
+  @media (min-width: 900px) { .carta-grid { grid-template-columns: 1.6fr 1fr; gap: 56px; } }
+
+  /* ── Boletas ── */
+  .boletas-sec { background: var(--tinta); color: var(--papel); overflow-x: clip; }
+  .boletas-sec .pista { color: var(--amarillo); }
+  .boletas { display: grid; gap: 22px; margin-top: 52px; }
+  .boleta {
+    --muesca: radial-gradient(circle at 0 50%, transparent 14px, #000 14.5px);
+    display: grid; grid-template-columns: 1fr auto; color: var(--tinta); transform: rotate(var(--r)); max-width: 900px;
+    filter: drop-shadow(6px 6px 0 rgba(243, 237, 226, 0.9));
+  }
+  .boleta:nth-child(2) { margin-left: auto; }
+  .boleta-main { padding: 26px 26px 24px; display: grid; gap: 6px; }
+  .boleta--amarillo > div { background: var(--amarillo); } .boleta--rosa > div { background: var(--rosa); } .boleta--azul > div { background: var(--azul); color: var(--papel); }
+  .boleta-func { font-size: 0.75rem; font-weight: 800; letter-spacing: 0.16em; }
+  .boleta-tit { font-size: clamp(1.25rem, 0.9rem + 1.4vw, 2rem); line-height: 1.05; }
+  .boleta-sala { font-weight: 800; }
+  .boleta-nota { max-width: 52ch; opacity: 0.92; }
+  .boleta-talon {
+    display: grid; align-content: center; justify-items: center; gap: 4px; padding: 20px 22px; min-width: 112px; text-align: center;
+    border-left: 3px dashed currentColor; -webkit-mask: var(--muesca); mask: var(--muesca);
+    font-size: 0.6875rem; font-weight: 800; letter-spacing: 0.14em;
+  }
+  .boleta-talon strong { font-size: 1.5rem; letter-spacing: -0.04em; }
+  .sellos-wrap { margin-top: 56px; display: grid; gap: 18px; }
+  .sellos { display: flex; flex-wrap: wrap; gap: 14px 18px; }
+  .sello { padding: 8px 14px; border: 3px double var(--amarillo); color: var(--amarillo); font-weight: 900; text-transform: uppercase; letter-spacing: 0.06em; font-size: 0.875rem; transform: rotate(var(--r)); }
+  .sello--rosa { border-color: var(--rosa); color: var(--rosa); }
+
+  /* ── Mesa ── */
+  .mesa-sec { overflow-x: clip; background: var(--kraft) radial-gradient(rgba(20, 20, 20, 0.12) 1.2px, transparent 1.5px) 0 0 / 14px 14px; border-block: 2.5px solid var(--tinta); }
+  .mesa-cab { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 16px; }
+  .mesa-pista { color: var(--tinta); }
+  .mesa { position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: 22px 14px; margin-top: 40px; }
+  .polaroid { position: relative; padding: 10px 10px 14px; background: #fffdf8; box-shadow: 4px 6px 0 rgba(20, 20, 20, 0.85); transform: rotate(var(--r)); user-select: none; }
+  .polaroid :global(img) { width: 100%; aspect-ratio: 1; object-fit: cover; pointer-events: none; }
+  .polaroid-t { font-size: 1.5rem; line-height: 1.1; margin-top: 8px; }
+  .polaroid-n { font-size: 0.875rem; color: var(--tinta-2); }
+  .chinche { position: absolute; top: -9px; left: 50%; width: 20px; height: 20px; margin-left: -10px; border-radius: 50%; border: 2px solid var(--tinta); z-index: 2; }
+  .chinche--0 { background: var(--rosa); } .chinche--1 { background: var(--azul); } .chinche--2 { background: var(--amarillo); }
+  @media (min-width: 900px) {
+    .mesa { display: block; height: 600px; }
+    .polaroid { position: absolute; left: var(--x); top: var(--y); width: 250px; cursor: grab; touch-action: none; }
+    .polaroid:active { cursor: grabbing; }
+  }
+
+  /* ── Libreta de metas ── */
+  .libreta {
+    position: relative; max-width: 860px; margin-inline: auto; padding: 56px clamp(20px, 5vw, 64px) 44px;
+    background: #fff2a8 repeating-linear-gradient(transparent 0 43px, rgba(47, 75, 255, 0.25) 43px 44px);
+    border: 2.5px solid var(--tinta); box-shadow: var(--sombra); transform: rotate(0.8deg);
+  }
+  .libreta-t { font-size: clamp(2.25rem, 1.6rem + 2.6vw, 3.5rem); line-height: 1; color: var(--tinta); }
+  .metas { display: grid; gap: 22px; margin-top: 36px; }
+  .meta { display: grid; grid-template-columns: 44px 1fr; gap: 14px; align-items: start; }
+  .caja { width: 40px; height: 40px; }
+  .meta-p { font-weight: 800; font-size: clamp(1.0625rem, 1rem + 0.4vw, 1.25rem); line-height: 1.35; }
+  /* Tachón azul que cruza cada línea, aunque el texto ocupe varias */
+  .tachado { background: linear-gradient(var(--azul), var(--azul)) no-repeat 0 58% / var(--t, 100%) 3px; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+  .meta--hecha .meta-p { color: var(--tinta-2); }
+  .meta-n { font-size: 1.375rem; color: var(--azul); line-height: 1.2; }
+  .meta--hecha .meta-n { color: var(--rosa); }
+
+  /* ── Favoritos ── */
+  .favs { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px 14px; margin-top: 52px; }
+  .fav { display: grid; place-content: center; gap: 6px; width: clamp(150px, 42vw, 220px); aspect-ratio: 1; padding: clamp(18px, 4vw, 30px); text-align: center; border: 2.5px solid var(--tinta); transform: rotate(var(--r)); box-shadow: var(--sombra); }
+  .fav span { font-size: 0.75rem; font-weight: 900; letter-spacing: 0.16em; text-transform: uppercase; }
+  .fav p { font-family: var(--f-mano); font-size: 1.625rem; line-height: 1.05; }
+  .fav--estrella { background: var(--amarillo); border: 0; box-shadow: none; clip-path: polygon(50% 0, 61% 33%, 98% 35%, 68% 57%, 79% 92%, 50% 72%, 21% 92%, 32% 57%, 2% 35%, 39% 33%); padding: 56px; }
+  .fav--estrella p { font-size: 1.25rem; }
+  .fav--circulo { background: var(--rosa); border-radius: 50%; }
+  .fav--nube { background: var(--menta); border-radius: 62% 38% 55% 45% / 46% 58% 42% 54%; }
+  .fav--flor { background: var(--azul); color: var(--papel); border-radius: 50%; outline: 3px dashed var(--azul); outline-offset: 8px; }
+  .fav:hover { animation: temblor 0.4s steps(3) infinite; }
+  @keyframes temblor { 0% { transform: rotate(var(--r)); } 33% { transform: rotate(calc(var(--r) + 4deg)) translate(1px, -2px); } 66% { transform: rotate(calc(var(--r) - 3deg)) translate(-2px, 1px); } }
+
+  /* ── Postal ── */
+  .postal { display: grid; max-width: 980px; margin-inline: auto; background: #fffdf8; border: 2.5px solid var(--tinta); box-shadow: 10px 10px 0 var(--tinta); transform: rotate(-1deg); }
+  .postal-izq { display: grid; gap: 16px; align-content: center; padding: 36px 28px; color: var(--tinta-2); }
+  .postal-h { font-size: clamp(3rem, 2rem + 4vw, 5rem); line-height: 0.9; color: var(--rosa); -webkit-text-stroke: 1px var(--tinta); }
+  .postal-firma { font-size: 2rem; color: var(--azul); }
+  .postal-der { position: relative; padding: 36px 28px; border-top: 2px dashed var(--tinta); }
+  .estampilla { width: 100px; margin-left: auto; transform: rotate(6deg); filter: drop-shadow(3px 3px 0 var(--tinta)); }
+  .matasellos { position: absolute; right: 88px; top: 30px; display: grid; place-content: center; width: 96px; height: 96px; border: 3px solid rgba(20, 20, 20, 0.6); border-radius: 50%; color: rgba(20, 20, 20, 0.65); font-weight: 900; font-size: 0.75rem; letter-spacing: 0.14em; text-align: center; transform: rotate(-16deg); }
+  .direccion { display: grid; gap: 0; margin-top: 36px; }
+  .direccion li { display: grid; gap: 2px; padding-block: 12px; border-bottom: 2px solid var(--tinta); }
+  .direccion span { font-family: var(--f-mano); font-size: 1.125rem; color: var(--azul); }
+  .direccion a { font-weight: 800; font-size: 1.0625rem; text-decoration: none; overflow-wrap: anywhere; min-height: 32px; display: inline-flex; align-items: center; }
+  .direccion a:hover { background: var(--amarillo); }
+  @media (min-width: 860px) { .postal { grid-template-columns: 1.1fr 1fr; } .postal-der { border-top: 0; border-left: 2px dashed var(--tinta); } .postal-izq { padding: 48px; } }
+
+  .pie { display: grid; gap: 6px; padding-block: 32px 48px; font-size: 0.8125rem; color: var(--tinta-2); }
+  .pie .mano { font-size: 1.5rem; color: var(--tinta); }
+</style>

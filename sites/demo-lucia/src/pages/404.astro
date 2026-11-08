@@ -1,0 +1,13 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base titulo="Página no encontrada — Lucía Peña (demo)">
+  <section class="wrap nf">
+    <h1 class="titulo"><span class="recorte recorte--rosa" style="--r:-4deg">ups,</span><span class="recorte recorte--papel" style="--r:3deg">esta página</span><span class="recorte" style="--r:-2deg">se perdió</span></h1>
+    <p class="pista">(seguro está debajo de algún papel)</p>
+    <p><a class="btn" href={import.meta.env.BASE_URL}>Volver al fanzine</a></p>
+  </section>
+</Base>
+<style>
+  .nf { min-height: 60vh; display: grid; align-content: center; gap: 24px; padding-block: 80px; }
+</style>

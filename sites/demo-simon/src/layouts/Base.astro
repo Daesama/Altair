@@ -1,0 +1,135 @@
+---
+import Seo from '@altair/core/Seo.astro';
+import { demo, persona, seo, zonas } from '../../site.config';
+import '../styles/global.css';
+import fredokaUrl from '../assets/fonts/fredoka-latin-wght-normal.woff2?url';
+import nunitoUrl from '../assets/fonts/nunito-latin-wght-normal.woff2?url';
+
+interface Props { titulo?: string; buceo?: boolean }
+const { titulo = seo.titulo, buceo = true } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+const jsonLd = {
+  '@context': 'https://schema.org', '@type': 'Person', name: persona.nombre, jobTitle: persona.oficio, url: seo.url,
+  address: { '@type': 'PostalAddress', addressLocality: persona.ciudad, addressCountry: 'CO' },
+};
+// Burbujas: tamaño, posición y ritmo fijos para que el build sea siempre igual.
+const burbujas = Array.from({ length: 22 }, (_, i) => ({
+  x: (i * 37) % 100, s: 6 + ((i * 7) % 22), d: 9 + ((i * 5) % 11), t: -((i * 13) % 18),
+}));
+---
+<!doctype html>
+<html lang="es-CO">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script is:inline>
+      (function () {
+        var d = document.documentElement; d.classList.add('js');
+        if (matchMedia('(prefers-reduced-motion: reduce)').matches) d.classList.add('rm');
+        setTimeout(function () { d.classList.add('motion-fallback'); }, 3000);
+      })();
+    </script>
+    <link rel="preload" href={fredokaUrl} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={nunitoUrl} as="font" type="font/woff2" crossorigin />
+    <link rel="icon" href={`${base}favicon.ico`} sizes="32x32" />
+    <link rel="icon" href={`${base}favicon.svg`} type="image/svg+xml" />
+    <link rel="apple-touch-icon" href={`${base}apple-touch-icon.png`} />
+    <Seo titulo={titulo} descripcion={seo.descripcion} sitio={seo.url} ogImage={seo.ogImage} nombreSitio={persona.nombre} themeColor="#0b7699" jsonLd={jsonLd} />
+  </head>
+  <body>
+    <a class="skip" href="#contenido">Saltar al contenido</a>
+    <aside class="banda" aria-label="Aviso de sitio de demostración">
+      <p>{demo.texto} — <a href={demo.url}>ver altair.lat</a></p>
+    </aside>
+
+    <!-- Agua que cambia de color con la profundidad, y burbujas que suben -->
+    <div class="agua" aria-hidden="true" data-agua></div>
+    <div class="burbujas" aria-hidden="true" data-burbujas>
+      {burbujas.map((b) => <span style={`--x:${b.x}%;--s:${b.s}px;--d:${b.d}s;--t:${b.t}s`}></span>)}
+    </div>
+
+    {buceo && (
+      <nav class="profundimetro" aria-label="Profundidad y secciones" data-medidor>
+        <button type="button" class="medidor-btn" aria-expanded="false" aria-controls="escala" data-medidor-btn>
+          <span class="medidor-n"><span data-metros>0</span><small> m</small></span>
+          <span class="medidor-ir">Ir a…</span>
+        </button>
+        <ol class="medidor-escala" id="escala">
+          {zonas.map((z) => (
+            <li><a href={`#${z.id}`} data-zona-link={z.id}><span class="medidor-m">{z.m} m</span><span class="medidor-t">{z.nombre}</span></a></li>
+          ))}
+        </ol>
+        <span class="medidor-buzo" aria-hidden="true" data-buzo></span>
+      </nav>
+    )}
+
+    <main id="contenido"><slot /></main>
+
+    <script>
+      import { anclas, initMotion } from '@altair/core/motion';
+      import { runPage } from '../scripts/main';
+      const motion = initMotion({ lenis: { lerp: 0.07, wheelMultiplier: 0.9, anchors: false } });
+      anclas(motion);
+      runPage(motion);
+
+      // En pantallas pequeñas el profundímetro se abre como menú
+      const medidor = document.querySelector<HTMLElement>('[data-medidor]');
+      const btn = document.querySelector<HTMLButtonElement>('[data-medidor-btn]');
+      const abrir = (si: boolean) => { medidor?.toggleAttribute('data-abierto', si); btn?.setAttribute('aria-expanded', String(si)); };
+      btn?.addEventListener('click', () => abrir(btn.getAttribute('aria-expanded') !== 'true'));
+      medidor?.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => abrir(false)));
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') abrir(false); });
+      document.addEventListener('click', (e) => { if (medidor && !medidor.contains(e.target as Node)) abrir(false); });
+    </script>
+  </body>
+</html>
+
+<style is:global>
+  .banda { position: relative; z-index: 20; background: var(--marino); color: var(--espuma); font-size: 0.75rem; text-align: center; padding: 8px 12px; }
+  .banda a { color: var(--sol); }
+
+  .agua { position: fixed; inset: 0; z-index: -2; background: var(--z0); }
+  .burbujas { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+  .burbujas span {
+    position: absolute; left: var(--x); bottom: -40px; width: var(--s); height: var(--s); border-radius: 50%;
+    border: 1.5px solid rgba(234, 251, 255, 0.55); background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.05) 60%);
+    animation: subir var(--d) linear var(--t) infinite;
+  }
+  @keyframes subir {
+    0% { transform: translate(0, 0); opacity: 0; }
+    10% { opacity: 1; }
+    50% { transform: translate(14px, -55vh); }
+    100% { transform: translate(-8px, -115vh); opacity: 0.2; }
+  }
+
+  /* Profundímetro: menú + medidor */
+  .profundimetro {
+    position: fixed; z-index: 30; right: 16px; bottom: 16px;
+    display: flex; align-items: center; gap: 10px; padding: 8px 16px 8px 8px; border-radius: 999px;
+    background: rgba(3, 20, 42, 0.72); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(124, 243, 232, 0.35);
+  }
+  .medidor-n { display: flex; align-items: baseline; justify-content: center; gap: 2px; white-space: nowrap; padding-top: 9px; min-width: 76px; height: 44px; border-radius: 999px; background: var(--bio); color: var(--z4); font-family: var(--f-disp); font-weight: 700; font-size: 1.25rem; font-variant-numeric: tabular-nums; }
+  .medidor-n small { font-size: 0.75rem; }
+  .medidor-btn { display: flex; align-items: center; gap: 10px; padding: 0; border: 0; background: none; color: var(--espuma); font: 700 0.9375rem var(--f-disp); cursor: pointer; }
+  .medidor-ir::after { content: ' ▾'; color: var(--bio); }
+  .medidor-buzo { display: none; }
+  /* Celular: la escala se despliega encima del botón */
+  .medidor-escala { display: none; position: absolute; right: 0; bottom: calc(100% + 10px); min-width: 220px; padding: 8px; border-radius: 22px; background: rgba(3, 20, 42, 0.94); border: 1px solid rgba(124, 243, 232, 0.35); }
+  .profundimetro[data-abierto] .medidor-escala { display: grid; gap: 2px; }
+  .medidor-escala a { display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 4px 14px; border-radius: 14px; text-decoration: none; }
+  .medidor-escala a[aria-current='true'] { background: rgba(124, 243, 232, 0.16); }
+  .medidor-m { font-family: var(--f-disp); font-size: 0.8125rem; color: var(--bio); min-width: 48px; }
+  .medidor-t { font-weight: 700; }
+  @media (min-width: 1100px) {
+    .profundimetro { right: 24px; top: 50%; bottom: auto; transform: translateY(-50%); flex-direction: column; align-items: stretch; gap: 14px; padding: 14px; border-radius: 28px; }
+    .medidor-btn { pointer-events: none; }
+    .medidor-ir { display: none; }
+    .medidor-escala { position: relative; right: auto; bottom: auto; min-width: 0; display: grid; gap: 4px; padding: 0 0 0 18px; border: 0; border-radius: 0; background: none; }
+    .medidor-escala::before { content: ''; position: absolute; left: 4px; top: 10px; bottom: 10px; width: 2px; background: linear-gradient(var(--cielo), var(--bio), #1d4f7a); border-radius: 2px; }
+    .medidor-escala a { display: grid; min-height: 44px; align-content: center; padding: 2px 10px; border-radius: 12px; text-decoration: none; line-height: 1.15; transition: background-color 0.2s; }
+    .medidor-escala a:hover, .medidor-escala a[aria-current='true'] { background: rgba(124, 243, 232, 0.14); }
+    .medidor-m { font-family: var(--f-disp); font-size: 0.8125rem; color: var(--bio); }
+    .medidor-t { font-size: 0.875rem; font-weight: 700; }
+    .medidor-buzo { display: block; position: absolute; left: 22px; top: 78px; width: 12px; height: 12px; border-radius: 50%; background: var(--sol); box-shadow: 0 0 0 4px rgba(255, 201, 74, 0.3); }
+  }
+</style>

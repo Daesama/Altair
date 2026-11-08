@@ -44,6 +44,31 @@ export function initMotion(opciones: { lenis?: ConstructorParameters<typeof Leni
   return instancia;
 }
 
+/**
+ * Enlaces internos (#seccion) que caen justo debajo de la cabecera fija.
+ * Calcula el destino al momento del clic (con secciones fijadas ya medidas) y
+ * resta `scroll-padding-top` del <html>. Reemplaza el `anchors` de Lenis, que
+ * se pasaba de largo si ya había scroll previo. Úselo con `lenis: { anchors: false }`.
+ */
+export function anclas(m: Motion): () => void {
+  const alClic = (e: MouseEvent) => {
+    const a = (e.target as Element | null)?.closest<HTMLAnchorElement>('a[href*="#"]');
+    if (!a || a.origin !== location.origin || a.pathname !== location.pathname || !a.hash) return;
+    const destino = document.getElementById(decodeURIComponent(a.hash.slice(1)));
+    if (!destino) return;
+    e.preventDefault();
+    const margen = parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 0;
+    const y = Math.max(0, destino.getBoundingClientRect().top + window.scrollY - margen);
+    if (m.lenis) m.lenis.scrollTo(y, { duration: 1.2 });
+    else window.scrollTo({ top: y, behavior: m.reduced ? 'auto' : 'smooth' });
+    history.pushState(null, '', a.hash);
+    if (!destino.hasAttribute('tabindex')) destino.setAttribute('tabindex', '-1');
+    destino.focus({ preventScroll: true });
+  };
+  document.addEventListener('click', alClic);
+  return () => document.removeEventListener('click', alClic);
+}
+
 /** Detiene/reanuda el scroll suave (p. ej. al abrir un menú). */
 export function setScrollLock(bloquear: boolean): void {
   if (!instancia?.lenis) {

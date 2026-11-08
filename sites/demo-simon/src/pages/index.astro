@@ -1,0 +1,284 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import Base from '../layouts/Base.astro';
+import { igLink, mailLink, waLink } from '@altair/core/whatsapp';
+import { bitacora, contacto, creditos, demo, equipo, metas, pasiones, persona, sobreMi } from '../../site.config';
+import retrato from '../assets/fotos/retrato.jpg';
+
+const fotos = import.meta.glob<{ default: ImageMetadata }>('../assets/fotos/*.jpg', { eager: true });
+const foto = (n: string) => fotos[`../assets/fotos/${n}.jpg`].default;
+
+// Posición de cada meta en el sonar (coordenadas polares → % dentro del círculo).
+const blip = (ang: number, d: number) => {
+  const a = ((ang - 90) * Math.PI) / 180;
+  return { x: 50 + Math.cos(a) * d * 46, y: 50 + Math.sin(a) * d * 46 };
+};
+const estadoTxt = { logrado: 'Logrado', cerca: 'Cada vez más cerca', lejos: 'En el radar' } as const;
+const pez = 'M2 12C10 3 24 3 32 12c-8 9-22 9-30 0Zm30 0 8-7v14Z';
+---
+<Base>
+  <!-- ───── 0 m · Superficie ───── -->
+  <section id="superficie" class="sup" aria-labelledby="hero-t">
+    <div class="sol" aria-hidden="true" data-sol></div>
+    <svg class="nube n1" viewBox="0 0 200 60" aria-hidden="true"><path d="M20 50c-14 0-14-20 2-20 0-16 24-22 34-8 8-16 38-14 40 6 18-4 28 22 6 22Z" fill="#fff"/></svg>
+    <svg class="nube n2" viewBox="0 0 200 60" aria-hidden="true"><path d="M20 50c-14 0-14-20 2-20 0-16 24-22 34-8 8-16 38-14 40 6 18-4 28 22 6 22Z" fill="#fff"/></svg>
+
+    <div class="wrap sup-in">
+      <div class="sup-txt">
+        <p class="sup-logo disp">simón<span>~</span></p>
+        <h1 id="hero-t" class="sup-h disp" data-titulo>¡Hola! Soy <span>Simón</span>.</h1>
+        <p class="sup-p" data-up>{persona.oficio} en {persona.ciudad}. {persona.saludo}</p>
+        <a class="btn" href="#sobre-mi" data-up>Bucea conmigo
+          <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v15m-6-6 6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+      <figure class="salvavidas" data-flota>
+        <div class="aro" aria-hidden="true"></div>
+        <Image src={retrato} alt="Retrato de Simón sonriendo, con sombrero negro y camiseta gris" widths={[320, 520, 760]} sizes="(min-width: 960px) 380px, 70vw" loading="eager" fetchpriority="high" />
+      </figure>
+    </div>
+
+    <div class="olas" aria-hidden="true">
+      <svg class="ola o1" viewBox="0 0 1440 120" preserveAspectRatio="none"><path d="M0 60c120-40 240-40 360 0s240 40 360 0 240-40 360 0 240 40 360 0v60H0Z"/></svg>
+      <svg class="ola o2" viewBox="0 0 1440 120" preserveAspectRatio="none"><path d="M0 70c120-30 240-30 360 0s240 30 360 0 240-30 360 0 240 30 360 0v50H0Z"/></svg>
+      <svg class="ola o3" viewBox="0 0 1440 120" preserveAspectRatio="none"><path d="M0 80c120-24 240-24 360 0s240 24 360 0 240-24 360 0 240 24 360 0v40H0Z"/></svg>
+    </div>
+  </section>
+
+  <!-- ───── 10 m · Sobre mí ───── -->
+  <section id="sobre-mi" class="zona" style="--c: var(--z0)" data-zona="10" aria-labelledby="sobre-t">
+    <svg class="cardumen" viewBox="0 0 400 120" aria-hidden="true" data-cardumen>
+      {[[0, 30], [50, 10], [60, 60], [110, 34], [130, 80], [170, 16], [190, 56], [240, 36]].map(([x, y], i) => (
+        <path d={pez} transform={`translate(${x} ${y}) scale(${1 - (i % 3) * 0.15})`} fill="rgba(234,251,255,0.5)" />
+      ))}
+    </svg>
+    <div class="wrap sobre">
+      <div>
+        <p class="prof">10 metros</p>
+        <h2 id="sobre-t" class="h2" data-up>Un buzo que nació en la <em>montaña</em></h2>
+      </div>
+      <div class="sobre-burbuja" data-up>
+        {sobreMi.texto.map((p) => <p>{p}</p>)}
+      </div>
+      <ul class="datos-burbuja" aria-label="Datos rápidos">
+        {sobreMi.burbujas.map((b, i) => <li style={`--i:${i}`} data-bob>{b}</li>)}
+      </ul>
+    </div>
+  </section>
+
+  <!-- ───── 30 m · Bitácora ───── -->
+  <section id="bitacora" class="zona" style="--c: var(--z1)" data-zona="30" aria-labelledby="bit-t">
+    <div class="wrap">
+      <p class="prof">30 metros</p>
+      <h2 id="bit-t" class="h2" data-up>Mi bitácora de <em>inmersiones</em></h2>
+      <p class="intro" data-up>Así llevan los buzos su hoja de vida. Esta es la mía.</p>
+      <ol class="bitacora">
+        {bitacora.map((b, i) => (
+          <li class="registro" data-registro style={`--i:${i}`}>
+            <p class="registro-n disp">Inmersión <span>nº {b.n}</span></p>
+            <h3 class="registro-rol disp">{b.rol}</h3>
+            <dl class="registro-datos">
+              <div><dt>Fecha</dt><dd>{b.fecha}</dd></div>
+              <div><dt>Lugar</dt><dd>{b.lugar}</dd></div>
+              <div><dt>Prof. máx.</dt><dd>{b.prof}</dd></div>
+            </dl>
+            <p class="registro-nota">“{b.nota}”</p>
+          </li>
+        ))}
+      </ol>
+      <div class="equipo">
+        <h3 class="disp equipo-t">Mi equipo (lo que sé hacer)</h3>
+        <ul>{equipo.map((e, i) => <li style={`--i:${i}`} data-bob>{e}</li>)}</ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───── 60 m · Pasiones (ojos de buey) ───── -->
+  <section id="pasiones" class="zona pasiones" style="--c: var(--z2)" data-zona="60" aria-labelledby="pas-t" data-pasiones>
+    <div class="wrap pasiones-cab">
+      <p class="prof">60 metros</p>
+      <h2 id="pas-t" class="h2">Lo que me <em>mueve</em></h2>
+      <p class="intro">Mira por las ventanas del submarino →</p>
+    </div>
+    <div class="ventanas-marco">
+      <ul class="ventanas" data-ventanas>
+        {pasiones.map((p) => (
+          <li class="ventana">
+            <div class="buey">
+              <Image src={foto(p.foto)} alt="" widths={[320, 560]} sizes="(min-width: 960px) 320px, 72vw" />
+            </div>
+            <h3 class="disp">{p.titulo}</h3>
+            <p>{p.texto}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- ───── 90 m · Sonar ───── -->
+  <section id="sonar" class="zona" style="--c: var(--z3)" data-zona="90" aria-labelledby="son-t">
+    <div class="wrap sonar-sec">
+      <div>
+        <p class="prof">90 metros</p>
+        <h2 id="son-t" class="h2" data-up>Mis metas en el <em>sonar</em></h2>
+        <ol class="metas">
+          {metas.map((m, i) => (
+            <li class={`meta meta--${m.estado}`} data-up>
+              <span class="meta-n disp">{i + 1}</span>
+              <div><p class="meta-t">{m.meta}</p><p class="meta-e">{estadoTxt[m.estado]}</p></div>
+            </li>
+          ))}
+        </ol>
+      </div>
+      <div class="sonar" aria-hidden="true">
+        <div class="sonar-barrido" data-barrido></div>
+        {metas.map((m, i) => {
+          const p = blip(m.angulo, m.dist);
+          return <span class={`blip blip--${m.estado}`} style={`left:${p.x}%;top:${p.y}%;--i:${i}`}>{i + 1}</span>;
+        })}
+      </div>
+    </div>
+  </section>
+
+  <!-- ───── 120 m · Fondo ───── -->
+  <section id="fondo" class="zona fondo" style="--c: var(--z4)" data-zona="120" aria-labelledby="fon-t">
+    <svg class="medusa m1" viewBox="0 0 80 140" aria-hidden="true" data-medusa><path d="M8 44C8 18 22 6 40 6s32 12 32 38c-8 4-56 4-64 0Z" fill="rgba(124,243,232,.35)" stroke="#7cf3e8" stroke-width="2"/><path d="M18 48c-4 20 6 30 0 60M32 48c4 24-6 40 2 76M48 48c-6 22 6 38-2 66M62 48c4 18-4 30 2 52" fill="none" stroke="#7cf3e8" stroke-width="2" stroke-linecap="round" opacity=".8"/></svg>
+    <svg class="medusa m2" viewBox="0 0 80 140" aria-hidden="true" data-medusa><path d="M8 44C8 18 22 6 40 6s32 12 32 38c-8 4-56 4-64 0Z" fill="rgba(198,255,107,.28)" stroke="#c6ff6b" stroke-width="2"/><path d="M18 48c-4 20 6 30 0 60M32 48c4 24-6 40 2 76M48 48c-6 22 6 38-2 66M62 48c4 18-4 30 2 52" fill="none" stroke="#c6ff6b" stroke-width="2" stroke-linecap="round" opacity=".8"/></svg>
+    <div class="wrap fondo-in">
+      <p class="prof">120 metros · el fondo</p>
+      <h2 id="fon-t" class="h2 fondo-h" data-up>Llegaste hasta el fondo. <em>Escríbeme.</em></h2>
+      <div class="botella" data-up>
+        <p class="botella-k disp">Mensaje en una botella</p>
+        <p>Para cursos de buceo, voluntariados con tortugas, charlas en colegios o para poner música en tu fiesta.</p>
+        <ul class="botella-links">
+          <li><a href={mailLink(contacto.email)}><span>Correo</span>{contacto.email}</a></li>
+          <li><a href={waLink(contacto.whatsapp, `¡Hola ${persona.nombreCorto}! Buceé por tu página.`)} target="_blank" rel="noopener"><span>WhatsApp</span>Escríbeme<span class="sr-only"> (se abre en otra pestaña)</span></a></li>
+          <li><a href={igLink(contacto.instagram)} target="_blank" rel="noopener"><span>Instagram</span>{contacto.instagram}<span class="sr-only"> (se abre en otra pestaña)</span></a></li>
+        </ul>
+      </div>
+      <a class="subir" href="#superficie">
+        <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20V5m-6 6 6-6 6 6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Volver a la superficie
+      </a>
+      <footer class="pie">
+        <p>Persona ficticia: <a href={demo.url}>demo de Altair Studio</a>. {creditos}</p>
+      </footer>
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* ── Superficie ── */
+  .sup { position: relative; overflow: hidden; min-height: min(100svh, 900px); background: linear-gradient(180deg, var(--cielo) 0%, var(--cielo-2) 70%, var(--arena) 100%); color: var(--marino); display: grid; align-items: center; padding-block: 56px 160px; }
+  .sol { position: absolute; right: 8%; top: 8%; width: 150px; height: 150px; border-radius: 50%; background: var(--sol); box-shadow: 0 0 0 18px rgba(255, 201, 74, 0.25), 0 0 0 42px rgba(255, 201, 74, 0.12); }
+  .nube { position: absolute; width: 180px; opacity: 0.9; }
+  .n1 { top: 14%; left: 6%; animation: nube 40s linear infinite; }
+  .n2 { top: 30%; left: 55%; width: 120px; animation: nube 55s linear -20s infinite; }
+  @keyframes nube { from { transform: translateX(-30vw); } to { transform: translateX(80vw); } }
+  .sup-in { position: relative; z-index: 2; display: grid; gap: 40px; align-items: center; }
+  .sup-logo { font-size: 1.75rem; color: var(--z0); } .sup-logo span { color: var(--coral); }
+  .sup-h { font-size: clamp(3.25rem, 1.6rem + 7vw, 7.25rem); margin-top: 18px; }
+  .sup-h span { color: var(--coral-osc); display: inline-block; }
+  .sup-p { margin-top: 20px; max-width: 46ch; font-size: 1.125rem; font-weight: 600; }
+  .sup .btn { margin-top: 30px; }
+  .salvavidas { position: relative; justify-self: center; width: min(360px, 72vw); aspect-ratio: 1; }
+  .salvavidas :global(img) { position: absolute; inset: 13%; width: 74%; height: 74%; object-fit: cover; object-position: center 30%; border-radius: 50%; }
+  .aro { position: absolute; inset: 0; border-radius: 50%; background: repeating-conic-gradient(var(--coral) 0 45deg, #fff 45deg 90deg); box-shadow: 0 24px 40px -18px rgba(6, 50, 79, 0.5); -webkit-mask: radial-gradient(circle, transparent 57%, #000 57.5%); mask: radial-gradient(circle, transparent 57%, #000 57.5%); }
+  @media (min-width: 960px) { .sup-in { grid-template-columns: 1.2fr 1fr; } }
+  @media (max-width: 959px) { .sol { width: 84px; height: 84px; right: 6%; top: 3%; box-shadow: 0 0 0 10px rgba(255, 201, 74, 0.25), 0 0 0 22px rgba(255, 201, 74, 0.12); } }
+
+  .olas { position: absolute; left: 0; right: 0; bottom: -2px; height: 140px; }
+  .ola { position: absolute; bottom: 0; left: 0; width: 200%; height: 100%; animation: ola 12s linear infinite; }
+  .o1 { fill: rgba(11, 118, 153, 0.35); animation-duration: 16s; }
+  .o2 { fill: rgba(11, 118, 153, 0.6); animation-duration: 11s; animation-direction: reverse; }
+  .o3 { fill: var(--z0); animation-duration: 8s; }
+  @keyframes ola { to { transform: translateX(-50%); } }
+
+  .intro { margin-top: 14px; color: var(--espuma-2); font-size: 1.125rem; }
+
+  /* ── Sobre mí ── */
+  .cardumen { position: absolute; top: 60px; left: 0; width: 360px; pointer-events: none; }
+  .sobre { display: grid; gap: 40px; }
+  .sobre-burbuja { display: grid; gap: 18px; padding: clamp(26px, 4vw, 44px); border-radius: 48px; background: rgba(234, 251, 255, 0.1); border: 1.5px solid rgba(234, 251, 255, 0.35); backdrop-filter: blur(6px); font-size: 1.1875rem; max-width: 760px; }
+  .datos-burbuja { display: flex; flex-wrap: wrap; gap: 14px; }
+  .datos-burbuja li { padding: 12px 22px; border-radius: 999px; background: radial-gradient(circle at 30% 25%, rgba(255, 255, 255, 0.35), rgba(124, 243, 232, 0.14) 60%); border: 1.5px solid rgba(124, 243, 232, 0.55); font-family: var(--f-disp); font-weight: 500; }
+  @media (min-width: 960px) { .sobre { grid-template-columns: 1fr 1.3fr; align-items: center; } .datos-burbuja { grid-column: 1 / -1; justify-content: center; } }
+
+  /* ── Bitácora ── */
+  .bitacora { display: grid; gap: 28px; margin-top: 52px; }
+  .registro { max-width: 640px; padding: 28px; border-radius: var(--r); background: var(--arena); color: var(--marino); box-shadow: 0 30px 50px -25px rgba(0, 0, 0, 0.6); }
+  .registro:nth-child(2) { margin-left: auto; }
+  .registro:nth-child(3) { margin-left: 12%; }
+  .registro-n { font-size: 0.9375rem; color: var(--coral-osc); text-transform: uppercase; letter-spacing: 0.1em; }
+  .registro-n span { font-size: 1.375rem; letter-spacing: 0; }
+  .registro-rol { font-size: clamp(1.5rem, 1.1rem + 1.4vw, 2.125rem); margin-top: 6px; }
+  .registro-datos { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-top: 18px; padding-block: 14px; border-block: 2px dashed rgba(6, 50, 79, 0.25); }
+  .registro-datos dt { font-size: 0.75rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--z1); }
+  .registro-datos dd { font-weight: 700; }
+  .registro-nota { margin-top: 14px; font-style: italic; font-size: 1.0625rem; }
+  .equipo { margin-top: 64px; text-align: center; }
+  .equipo-t { font-size: 1.5rem; }
+  .equipo ul { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 20px; }
+  .equipo li { padding: 10px 18px; border-radius: 999px; border: 1.5px solid rgba(234, 251, 255, 0.5); background: rgba(234, 251, 255, 0.08); font-weight: 700; }
+
+  /* ── Pasiones ── */
+  .pasiones { overflow: hidden; }
+  .ventanas-marco { margin-top: 48px; }
+  .ventanas { display: grid; gap: 48px; padding-inline: var(--pad); }
+  .ventana { display: grid; justify-items: center; gap: 10px; text-align: center; }
+  .buey { position: relative; width: min(300px, 72vw); aspect-ratio: 1; border-radius: 50%; padding: 18px; background: radial-gradient(circle, #e7c46d 0 58%, #b98a2c 64%, #8a6420 70%); box-shadow: 0 30px 50px -20px rgba(0, 0, 0, 0.7), inset 0 0 0 3px #6b4b14; }
+  .buey::before { content: ''; position: absolute; inset: 4px; border-radius: 50%; background:
+      radial-gradient(circle at 50% 3%, #6b4b14 3px, transparent 4px), radial-gradient(circle at 50% 97%, #6b4b14 3px, transparent 4px),
+      radial-gradient(circle at 3% 50%, #6b4b14 3px, transparent 4px), radial-gradient(circle at 97% 50%, #6b4b14 3px, transparent 4px),
+      radial-gradient(circle at 16% 16%, #6b4b14 3px, transparent 4px), radial-gradient(circle at 84% 84%, #6b4b14 3px, transparent 4px),
+      radial-gradient(circle at 84% 16%, #6b4b14 3px, transparent 4px), radial-gradient(circle at 16% 84%, #6b4b14 3px, transparent 4px); z-index: 1; pointer-events: none; }
+  .buey :global(img) { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.5); }
+  .buey::after { content: ''; position: absolute; inset: 18px; border-radius: 50%; background: linear-gradient(140deg, rgba(255, 255, 255, 0.35), transparent 40%); pointer-events: none; }
+  .ventana h3 { font-size: 1.75rem; margin-top: 10px; }
+  .ventana p { max-width: 30ch; color: var(--espuma-2); }
+  @media (min-width: 1000px) {
+    .ventanas { display: flex; width: max-content; gap: 72px; padding-inline: max(var(--pad), calc((100vw - var(--maxw)) / 2 + var(--pad))) 30vw; }
+    .ventana { width: 320px; }
+  }
+
+  /* ── Sonar ── */
+  .sonar-sec { display: grid; gap: 48px; align-items: center; }
+  .metas { display: grid; gap: 14px; margin-top: 36px; }
+  .meta { display: grid; grid-template-columns: 40px 1fr; gap: 14px; align-items: center; }
+  .meta-n { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; font-size: 1.125rem; color: var(--z4); }
+  .meta--logrado .meta-n { background: var(--bio-2); } .meta--cerca .meta-n { background: var(--bio); } .meta--lejos .meta-n { background: var(--coral); }
+  .meta-t { font-weight: 800; font-size: 1.0625rem; }
+  .meta-e { font-size: 0.875rem; color: var(--espuma-2); }
+  .sonar { position: relative; justify-self: center; width: min(480px, 86vw); aspect-ratio: 1; border-radius: 50%; overflow: hidden;
+    background:
+      linear-gradient(transparent calc(50% - 0.5px), rgba(124, 243, 232, 0.3) 0 calc(50% + 0.5px), transparent 0),
+      linear-gradient(90deg, transparent calc(50% - 0.5px), rgba(124, 243, 232, 0.3) 0 calc(50% + 0.5px), transparent 0),
+      repeating-radial-gradient(circle, transparent 0 calc(12.5% - 1px), rgba(124, 243, 232, 0.28) calc(12.5% - 1px) 12.5%),
+      radial-gradient(circle, #0b3d4a, #041c26);
+    box-shadow: 0 0 0 10px #0d2f45, 0 0 0 12px rgba(124, 243, 232, 0.4), 0 0 60px rgba(124, 243, 232, 0.25); }
+  .sonar-barrido { position: absolute; inset: 0; border-radius: 50%; background: conic-gradient(from 0deg, rgba(124, 243, 232, 0.55), rgba(124, 243, 232, 0) 70deg, transparent 360deg); animation: barrer 4s linear infinite; }
+  @keyframes barrer { to { transform: rotate(360deg); } }
+  .blip { position: absolute; display: grid; place-items: center; width: 30px; height: 30px; margin: -15px 0 0 -15px; border-radius: 50%; font-family: var(--f-disp); font-weight: 700; font-size: 0.875rem; color: var(--z4); animation: latir 4s ease-out calc(var(--i) * 0.8s) infinite; }
+  .blip--logrado { background: var(--bio-2); box-shadow: 0 0 18px var(--bio-2); } .blip--cerca { background: var(--bio); box-shadow: 0 0 18px var(--bio); } .blip--lejos { background: var(--coral); box-shadow: 0 0 18px var(--coral); }
+  @keyframes latir { 0%, 100% { transform: scale(1); } 8% { transform: scale(1.35); } 20% { transform: scale(1); } }
+  @media (min-width: 960px) { .sonar-sec { grid-template-columns: 1fr 1fr; gap: 72px; } }
+
+  /* ── Fondo ── */
+  .fondo { padding-bottom: 48px; overflow: hidden; }
+  .medusa { position: absolute; width: 70px; filter: drop-shadow(0 0 14px rgba(124, 243, 232, 0.7)); }
+  .m1 { left: 8%; top: 18%; } .m2 { right: 10%; top: 46%; width: 54px; filter: drop-shadow(0 0 14px rgba(198, 255, 107, 0.6)); }
+  .fondo-in { display: grid; justify-items: center; text-align: center; gap: 22px; }
+  .fondo-h { max-width: 16ch; }
+  .fondo-h em { text-shadow: 0 0 28px rgba(124, 243, 232, 0.7); }
+  .botella { position: relative; width: min(620px, 100%); margin-top: 24px; padding: 36px 30px 30px; border-radius: 26px; background: var(--arena); color: var(--marino); text-align: left; box-shadow: 0 0 0 2px rgba(124, 243, 232, 0.4), 0 0 80px rgba(124, 243, 232, 0.25); transform: rotate(-1.5deg); }
+  .botella::before { content: ''; position: absolute; left: 50%; top: -22px; width: 54px; height: 36px; margin-left: -27px; border-radius: 10px 10px 6px 6px; background: #a8743a; box-shadow: inset 0 -6px 0 rgba(0, 0, 0, 0.2); }
+  .botella-k { font-size: 1.5rem; color: var(--coral-osc); margin-bottom: 8px; }
+  .botella-links { display: grid; gap: 10px; margin-top: 20px; }
+  .botella-links a { display: grid; gap: 0; min-height: 60px; align-content: center; padding: 10px 18px; border-radius: 16px; background: #fff6e2; text-decoration: none; font-weight: 800; overflow-wrap: anywhere; transition: transform 0.2s, background-color 0.2s; }
+  .botella-links a:hover { transform: translateX(6px); background: #fff; }
+  .botella-links span:first-child { font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--z1); }
+  .subir { display: inline-flex; align-items: center; gap: 10px; min-height: 48px; margin-top: 40px; padding: 0 22px; border-radius: 999px; border: 1.5px solid var(--bio); color: var(--bio); font-family: var(--f-disp); font-weight: 600; text-decoration: none; }
+  .subir:hover { background: rgba(124, 243, 232, 0.12); }
+  .pie { margin-top: 48px; font-size: 0.8125rem; color: var(--espuma-2); }
+</style>

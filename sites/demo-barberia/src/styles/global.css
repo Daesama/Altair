@@ -47,7 +47,7 @@
 @media (min-width: 1200px) { :root { --pad: 64px; } }
 
 *, *::before, *::after { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; scroll-padding-top: calc(var(--banda) + 16px); }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; scroll-padding-top: calc(var(--banda) + 130px); }
 body {
   margin: 0;
   background: var(--crema);

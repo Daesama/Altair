@@ -89,10 +89,11 @@ const jsonLd = localBusiness({
     </Consent>
 
     <script>
-      import { initMotion } from '@altair/core/motion';
+      import { anclas, initMotion } from '@altair/core/motion';
       import { revealAll } from '@altair/core/reveal';
       import { runPage } from '../scripts/main';
-      const motion = initMotion();
+      const motion = initMotion({ lenis: { anchors: false } });
+      anclas(motion);
       revealAll(motion);
       runPage(motion);
     </script>
@@ -125,7 +126,14 @@ const jsonLd = localBusiness({
     transition: transform 0.18s ease-out;
   }
   .cab-wa:hover { transform: rotate(-2deg) scale(1.04); }
-  @media (max-width: 420px) { .cab-nav li:last-child { display: none; } }
+  /* En celulares angostos todo se compacta; ningún enlace del menú se esconde */
+  @media (max-width: 420px) {
+    .cab-in { gap: 6px; }
+    .cab-logo { font-size: 1.3rem; }
+    .cab-nav ul { gap: 0; }
+    .cab-nav a { padding: 0 7px; font-size: 0.9375rem; }
+    .cab-wa { padding: 0 10px; font-size: 0.9375rem; }
+  }
   @media (min-width: 768px) {
     .cab-in { height: 76px; }
     .cab-logo { font-size: 2rem; }

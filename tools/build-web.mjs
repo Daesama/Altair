@@ -14,6 +14,9 @@ const raiz = fileURLToPath(new URL('../', import.meta.url));
 const demos = [
   { paquete: 'demo-barberia', ruta: 'barberia' },
   { paquete: 'demo-restaurante', ruta: 'restaurante' },
+  { paquete: 'demo-juliana', ruta: 'juliana' },
+  { paquete: 'demo-lucia', ruta: 'lucia' },
+  { paquete: 'demo-simon', ruta: 'simon' },
 ];
 
 const filtros = demos.map((d) => `--filter ${d.paquete}`).join(' ');

@@ -1,0 +1,442 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import Base from '../layouts/Base.astro';
+import { mailLink, waLink } from '@altair/core/whatsapp';
+import { contacto, creditos, demo, libros, perfil, persona, principios, proyectos, reconocimientos, rotulo, trayectoria } from '../../site.config';
+import retrato from '../assets/fotos/retrato.jpg';
+import planos from '../assets/fotos/planos.jpg';
+
+const fotos = import.meta.glob<{ default: ImageMetadata }>('../assets/fotos/*.jpg', { eager: true });
+const foto = (n: string) => fotos[`../assets/fotos/${n}.jpg`].default;
+const flecha = 'M4 12h15m-5-5 5 5-5 5';
+
+// Barra de escala: un segmento por año, alternando lleno y vacío como en un plano.
+const anios = Array.from({ length: trayectoria.hasta - trayectoria.desde + 1 }, (_, i) => trayectoria.desde + i);
+const pos = (a: number) => ((a - trayectoria.desde) / (trayectoria.hasta - trayectoria.desde)) * 100;
+const tipoTxt = { estudio: 'Formación', trabajo: 'Práctica', docencia: 'Docencia', premio: 'Reconocimiento' } as const;
+
+// Lomos: ancho según el largo del título, para que la estantería no se vea en serie.
+const ancho = (t: string) => Math.round(Math.min(64, Math.max(42, 30 + t.length * 0.75)));
+const temas = ['Todos', ...new Set(libros.map((l) => l.tema))];
+const iniciales = (a: string) => a.split(' ').filter((p) => /^[A-ZÁÉÍÓÚ]/.test(p)).slice(0, 2).map((p) => p[0]).join('');
+---
+<Base>
+  <!-- ───── Portada: página de título ───── -->
+  <section class="portada" aria-labelledby="hero-t">
+    <div class="reticula wrap" aria-hidden="true">{Array.from({ length: 12 }, () => <span data-linea></span>)}</div>
+    <div class="wrap portada-in">
+      <div class="portada-txt">
+        <p class="mono portada-k" data-up>Monografía nº 01 — {persona.oficio}</p>
+        <h1 id="hero-t" class="portada-h serif" data-reveal="lines">Juliana <em>Ortega</em></h1>
+        <p class="portada-tesis serif" data-up>{persona.tesis}</p>
+        <p class="portada-intro" data-up>{persona.intro}</p>
+        <div class="portada-cta" data-up>
+          <a class="btn" href="#proyectos">Ver proyectos
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d={flecha} fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="square" /></svg>
+          </a>
+          <a class="btn btn--linea" href="#contacto">Escribirme</a>
+        </div>
+      </div>
+
+      <figure class="lamina" data-retrato>
+        <div class="lamina-img">
+          <Image src={retrato} alt="Retrato de Juliana Ortega, sonriendo, con blusa negra y chaqueta de rayas" widths={[420, 640, 900]} sizes="(min-width: 1000px) 420px, 82vw" loading="eager" fetchpriority="high" />
+        </div>
+        <span class="corte c1" aria-hidden="true"></span><span class="corte c2" aria-hidden="true"></span>
+        <span class="corte c3" aria-hidden="true"></span><span class="corte c4" aria-hidden="true"></span>
+        <figcaption><span class="mono">Fig. 1</span> Juliana en el Centro Cultural El Retiro, Bogotá.</figcaption>
+      </figure>
+
+      <div class="rotulo" data-up>
+        <svg class="norte" viewBox="0 0 48 48" aria-hidden="true" data-norte>
+          <circle cx="24" cy="24" r="21" fill="none" stroke="currentColor" stroke-width="1" />
+          <path d="M24 6 31 34 24 28 17 34Z" fill="currentColor" />
+          <text x="24" y="46" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="7" fill="currentColor">N</text>
+        </svg>
+        <dl>{rotulo.map((r) => <div><dt class="mono">{r.k}</dt><dd>{r.v}</dd></div>)}</dl>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───── 01 Perfil ───── -->
+  <section id="perfil" class="capitulo" aria-labelledby="perfil-t">
+    <div class="wrap">
+      <p class="corrido mono"><span><b>01</b> — Perfil</span><span>{persona.nombre}</span></p>
+      <div class="cap-grid">
+        <div class="cap-lado cap-lado--fijo">
+          <h2 id="perfil-t" class="cap-t" data-reveal="lines">Una ciudad se mide por cómo trata a quien <em>camina despacio.</em></h2>
+        </div>
+        <div class="cap-cuerpo perfil">
+          <div class="perfil-txt">
+            <p class="capitular" data-up>{perfil.parrafos[0]}<sup><a href="#nota-1" class="nota-ref">1</a></sup></p>
+            <p data-up>{perfil.parrafos[1]}<sup><a href="#nota-2" class="nota-ref">2</a></sup></p>
+          </div>
+          <ol class="notas" aria-label="Notas">
+            {perfil.notas.map((n, i) => <li id={`nota-${i + 1}`} data-up><span class="mono">{i + 1}</span>{n}</li>)}
+          </ol>
+          <ul class="cifras">
+            {perfil.cifras.map((c) => (
+              <li data-up><strong class="serif" data-contar={c.n}>{c.n}</strong><span class="mono">{c.t}</span></li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───── 02 Proyectos ───── -->
+  <section id="proyectos" class="capitulo" aria-labelledby="proy-t">
+    <div class="wrap">
+      <p class="corrido mono"><span><b>02</b> — Proyectos seleccionados</span><span>{proyectos.length} láminas</span></p>
+      <h2 id="proy-t" class="cap-t proy-titulo" data-reveal="lines">Tres obras que explican <em>cómo pienso.</em></h2>
+      <ol class="proyectos">
+        {proyectos.map((p, i) => (
+          <li class={`proyecto proyecto--${i % 2 ? 'der' : 'izq'}`}>
+            <figure class="proy-fig" data-lamina>
+              <div class="proy-img"><Image src={foto(p.foto)} alt={`${p.titulo}, ${p.lugar}`} widths={[640, 960, 1400]} sizes="(min-width: 1000px) 58vw, 92vw" /></div>
+              <figcaption class="mono">Lámina 02.{i + 1}</figcaption>
+            </figure>
+            <div class="proy-info" data-up>
+              <p class="mono proy-n">{String(i + 1).padStart(2, '0')} / {String(proyectos.length).padStart(2, '0')}</p>
+              <h3 class="serif proy-t">{p.titulo}</h3>
+              <p class="proy-txt">{p.texto}</p>
+              <dl class="ficha">
+                <div><dt class="mono">Lugar</dt><dd>{p.lugar}</dd></div>
+                <div><dt class="mono">Año</dt><dd>{p.anio}</dd></div>
+                <div><dt class="mono">Área</dt><dd>{p.area}</dd></div>
+                <div><dt class="mono">Rol</dt><dd>{p.rol}</dd></div>
+                <div><dt class="mono">Estado</dt><dd>{p.estado}</dd></div>
+              </dl>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- ───── 03 Trayectoria: barra de escala ───── -->
+  <section id="trayectoria" class="capitulo trayectoria" aria-labelledby="tray-t">
+    <div class="wrap">
+      <p class="corrido mono"><span><b>03</b> — Trayectoria</span><span>Escala 1 año = 1 tramo</span></p>
+      <h2 id="tray-t" class="cap-t" data-reveal="lines">Catorce años, <em>a escala.</em></h2>
+      <div class="escala" data-escala>
+        <div class="escala-barra" aria-hidden="true">
+          {anios.slice(0, -1).map((a, i) => <span class:list={['tramo', { 'tramo--lleno': i % 2 === 0 }]} data-tramo></span>)}
+        </div>
+        <ol class="escala-anios mono" aria-hidden="true">
+          {anios.filter((a) => (a - trayectoria.desde) % 2 === 0).map((a) => <li style={`left:${pos(a)}%`}>{a}</li>)}
+        </ol>
+        <ol class="hitos">
+          {trayectoria.hitos.map((h, i) => (
+            <li class={`hito hito--${h.tipo} ${i % 2 ? 'hito--abajo' : 'hito--arriba'}`} style={`--x:${pos(h.anio)}%`} data-hito>
+              <span class="hito-punto" aria-hidden="true"></span>
+              <p class="mono hito-a">{h.anio} · {tipoTxt[h.tipo]}</p>
+              <p class="hito-t serif">{h.titulo}</p>
+              <p class="hito-l">{h.lugar}</p>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───── 04 Libros que he leído ───── -->
+  <section id="libros" class="capitulo libros-sec" aria-labelledby="lib-t">
+    <div class="wrap">
+      <p class="corrido mono"><span><b>04</b> — Libros que he leído</span><span>{libros.length} volúmenes</span></p>
+      <div class="cap-grid">
+        <div class="cap-lado">
+          <h2 id="lib-t" class="cap-t" data-reveal="lines">Libros que he <em>leído.</em></h2>
+          <p class="lib-intro" data-up>Los que me formaron como arquitecta, y algunos que no tienen nada que ver pero también me formaron. Toque un lomo para sacarlo de la estantería.</p>
+          <div class="filtros" role="group" aria-label="Filtrar por tema" data-up>
+            {temas.map((t, i) => <button type="button" class="filtro" aria-pressed={i === 0 ? 'true' : 'false'} data-filtro={t}>{t}</button>)}
+          </div>
+        </div>
+        <div class="cap-cuerpo">
+          <div class="estante" data-estante>
+            <ul class="lomos" aria-label="Estantería">
+              {libros.map((l, i) => (
+                <li style={`--alto:${l.alto}%;--ancho:${ancho(l.titulo)}px`} data-tema={l.tema} data-lomo-li>
+                  <button type="button" class={`lomo lomo--${l.tela}`} aria-pressed={i === 0 ? 'true' : 'false'} data-lomo={i}
+                    aria-label={`${l.titulo}, de ${l.autor}`}>
+                    <span class="lomo-t">{l.titulo}</span>
+                    <span class="lomo-a mono">{iniciales(l.autor)}</span>
+                  </button>
+                </li>
+              ))}
+              <!-- Sujetalibros y libros acostados: la estantería se ve habitada, no en serie -->
+              <li class="deco-estante" aria-hidden="true">
+                <span class="sujeta"></span>
+                <span class="acostados"><i class="ac ac--1"></i><i class="ac ac--2"></i><i class="ac ac--3"></i></span>
+              </li>
+            </ul>
+            <div class="tabla" aria-hidden="true"></div>
+          </div>
+          <article class="ficha-libro" aria-live="polite" data-ficha>
+            <p class="mono ficha-meta"><span data-f-tema>{libros[0].tema}</span> · Leído en <span data-f-anio>{libros[0].anio}</span></p>
+            <h3 class="serif ficha-t" data-f-titulo>{libros[0].titulo}</h3>
+            <p class="ficha-a" data-f-autor>{libros[0].autor}</p>
+            <blockquote class="serif ficha-nota" data-f-nota>{libros[0].nota}</blockquote>
+          </article>
+          <script type="application/json" id="datos-libros" set:html={JSON.stringify(libros)} />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───── 05 Método ───── -->
+  <section id="metodo" class="capitulo" aria-labelledby="met-t">
+    <div class="wrap">
+      <p class="corrido mono"><span><b>05</b> — Método</span><span>Cómo trabajo</span></p>
+      <div class="cap-grid">
+        <figure class="cap-lado cap-lado--fijo metodo-fig" data-lamina>
+          <div class="proy-img"><Image src={planos} alt="Manos dibujando un plano sobre la mesa de trabajo" widths={[400, 700]} sizes="(min-width: 1000px) 30vw, 92vw" /></div>
+          <figcaption class="mono">Lámina 05.1 — Mesa de trabajo</figcaption>
+        </figure>
+        <div class="cap-cuerpo">
+          <h2 id="met-t" class="cap-t" data-reveal="lines">Tres reglas que <em>no negocio.</em></h2>
+          <ol class="principios">
+            {principios.map((p) => (
+              <li data-up><span class="serif princ-n">{p.n}</span><div><h3 class="serif princ-t">{p.t}</h3><p>{p.d}</p></div></li>
+            ))}
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───── 06 Reconocimientos ───── -->
+  <section id="premios" class="capitulo" aria-labelledby="pre-t">
+    <div class="wrap">
+      <p class="corrido mono"><span><b>06</b> — Reconocimientos y docencia</span><span>Selección</span></p>
+      <h2 id="pre-t" class="sr-only">Reconocimientos y docencia</h2>
+      <ul class="premios">
+        {reconocimientos.map((r) => (
+          <li data-up><span class="mono">{r.anio}</span><p class="serif premio-t">{r.t}</p><p class="premio-d">{r.d}</p></li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- ───── 07 Contacto ───── -->
+  <section id="contacto" class="capitulo contacto" aria-labelledby="con-t">
+    <div class="wrap">
+      <p class="corrido mono"><span><b>07</b> — Contacto</span><span>{contacto.estudio}</span></p>
+      <h2 id="con-t" class="contacto-h serif" data-reveal="lines">¿Tiene un proyecto en mente? <em>Conversemos.</em></h2>
+      <div class="contacto-grid">
+        <p class="contacto-p" data-up>Trabajo con entidades públicas, fundaciones, constructoras y familias. También doy charlas y acompaño procesos de participación con comunidades.</p>
+        <dl class="contacto-datos">
+          <div data-up><dt class="mono">Correo</dt><dd><a class="enlace" href={mailLink(contacto.email)}>{contacto.email}</a></dd></div>
+          <div data-up><dt class="mono">WhatsApp</dt><dd><a class="enlace" href={waLink(contacto.whatsapp, `Hola ${persona.nombreCorto}, vi tu página y quisiera conversar sobre un proyecto.`)} target="_blank" rel="noopener">Escribir un mensaje<span class="sr-only"> (se abre en otra pestaña)</span></a></dd></div>
+          <div data-up><dt class="mono">LinkedIn</dt><dd><a class="enlace" href={contacto.linkedin} target="_blank" rel="noopener">Perfil profesional<span class="sr-only"> (se abre en otra pestaña)</span></a></dd></div>
+          <div data-up><dt class="mono">Estudio</dt><dd>{contacto.estudio}</dd></div>
+        </dl>
+      </div>
+      <a class="btn contacto-btn" href={mailLink(contacto.email, 'Conversación sobre un proyecto')} data-up>Agendar una conversación
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d={flecha} fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="square" /></svg>
+      </a>
+    </div>
+  </section>
+
+  <footer class="colofon">
+    <div class="wrap colofon-in">
+      <p class="mono">Colofón</p>
+      <p>Esta página se compuso en Libre Bodoni y Public Sans, con notas en IBM Plex Mono. Persona ficticia: <a class="enlace" href={demo.url}>demo de Altair Studio</a>. {creditos}</p>
+    </div>
+  </footer>
+</Base>
+
+<style>
+  /* ── Portada ── */
+  .portada { position: relative; padding-block: clamp(48px, 7vw, 104px) clamp(64px, 8vw, 120px); overflow: hidden; }
+  .reticula { position: absolute; inset: 0; display: grid; grid-template-columns: repeat(12, 1fr); column-gap: 24px; pointer-events: none; }
+  .reticula span { border-inline: 1px solid rgba(28, 27, 24, 0.05); transform-origin: top; }
+  .portada-in { position: relative; display: grid; gap: 48px; }
+  .portada-k { color: var(--grafito); }
+  .portada-h { font-size: clamp(3.75rem, 1.4rem + 10vw, 10.5rem); line-height: 0.88; letter-spacing: -0.045em; margin-top: 22px; }
+  .portada-h em { color: var(--pino); display: inline-block; }
+  .portada-tesis { margin-top: 30px; max-width: 22ch; font-size: clamp(1.5rem, 1.1rem + 1.4vw, 2.25rem); line-height: 1.2; font-style: italic; }
+  .portada-intro { margin-top: 20px; max-width: 48ch; color: var(--grafito); }
+  .portada-cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 34px; }
+
+  .lamina { position: relative; justify-self: center; width: min(420px, 82vw); padding: 18px; }
+  .lamina-img { overflow: hidden; aspect-ratio: 4 / 5; background: var(--hueso-2); }
+  .lamina-img :global(img) { width: 100%; height: 100%; object-fit: cover; object-position: center 25%; filter: grayscale(0.9) sepia(0.12) contrast(1.04); transition: filter 0.9s var(--ease-out); }
+  .lamina:hover .lamina-img :global(img) { filter: none; }
+  .corte { position: absolute; width: 18px; height: 18px; border-color: var(--tinta); border-style: solid; border-width: 0; }
+  .c1 { top: 0; left: 0; border-top-width: 1px; border-left-width: 1px; } .c2 { top: 0; right: 0; border-top-width: 1px; border-right-width: 1px; }
+  .c3 { bottom: 34px; left: 0; border-bottom-width: 1px; border-left-width: 1px; } .c4 { bottom: 34px; right: 0; border-bottom-width: 1px; border-right-width: 1px; }
+  .lamina figcaption { margin-top: 12px; font-size: 0.8125rem; color: var(--grafito); }
+  .lamina figcaption .mono { color: var(--tinta); margin-right: 8px; }
+
+  .rotulo { display: grid; grid-template-columns: auto 1fr; align-items: stretch; border: 1px solid var(--tinta); background: var(--blanco); max-width: 520px; }
+  .norte { width: 64px; padding: 10px; color: var(--tinta); border-right: 1px solid var(--tinta); box-sizing: content-box; align-self: center; }
+  .rotulo dl { display: grid; grid-template-columns: repeat(auto-fit, minmax(92px, 1fr)); }
+  .rotulo dl div { padding: 8px 12px; border-left: 1px solid var(--linea); border-bottom: 1px solid var(--linea); }
+  .rotulo dt { font-size: 0.5625rem; color: var(--grafito); }
+  .rotulo dd { font-size: 0.875rem; font-weight: 500; }
+  @media (min-width: 1000px) {
+    .portada-in { grid-template-columns: repeat(12, 1fr); column-gap: 24px; row-gap: 40px; align-items: end; }
+    .portada-txt { grid-column: 1 / span 7; }
+    .lamina { grid-column: 9 / -1; grid-row: 1; justify-self: end; }
+    .rotulo { grid-column: 7 / -1; justify-self: end; width: 100%; }
+  }
+
+  /* ── Perfil ── */
+  .perfil { display: grid; gap: 40px; }
+  .perfil-txt { display: grid; gap: 20px; font-size: 1.1875rem; line-height: 1.7; max-width: 62ch; }
+  .capitular::first-letter { float: left; font-family: var(--f-serif); font-size: 5.2em; line-height: 0.8; padding: 0.06em 0.1em 0 0; color: var(--pino); }
+  .nota-ref { font-family: var(--f-mono); font-size: 0.6875rem; color: var(--laton); text-decoration: none; margin-left: 2px; }
+  .notas { display: grid; gap: 12px; padding-top: 18px; border-top: 1px solid var(--linea); max-width: 62ch; }
+  .notas li { display: grid; grid-template-columns: 22px 1fr; font-size: 0.875rem; color: var(--grafito); }
+  .notas .mono { color: var(--laton); }
+  .cifras { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); border-top: 1px solid var(--tinta); }
+  .cifras li { display: grid; gap: 6px; padding: 22px 20px 0 0; }
+  .cifras li + li { padding-left: 20px; border-left: 1px solid var(--linea); }
+  .cifras strong { font-size: clamp(2.75rem, 2rem + 2.4vw, 4rem); font-weight: 400; line-height: 1; letter-spacing: -0.03em; font-variant-numeric: lining-nums; }
+  .cifras .mono { color: var(--grafito); }
+
+  /* ── Proyectos ── */
+  .proy-titulo { max-width: 18ch; margin-bottom: clamp(48px, 6vw, 88px); }
+  .proyectos { display: grid; gap: clamp(72px, 9vw, 140px); }
+  .proyecto { display: grid; gap: 28px; align-items: end; }
+  .proy-fig figcaption { margin-top: 10px; color: var(--grafito); }
+  .proy-img { overflow: hidden; background: var(--hueso-2); }
+  .proy-img :global(img) { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; }
+  .proy-n { color: var(--laton); }
+  .proy-t { font-size: clamp(1.875rem, 1.3rem + 1.8vw, 2.75rem); line-height: 1.05; letter-spacing: -0.02em; margin-top: 10px; }
+  .proy-txt { margin-top: 14px; color: var(--grafito); max-width: 46ch; }
+  .ficha { margin-top: 24px; border-top: 1px solid var(--tinta); }
+  .ficha div { display: grid; grid-template-columns: 90px 1fr; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--linea); font-size: 0.9375rem; }
+  .ficha dt { color: var(--grafito); padding-top: 3px; }
+  @media (min-width: 1000px) {
+    .proyecto { grid-template-columns: repeat(12, 1fr); column-gap: 24px; }
+    .proyecto--izq .proy-fig { grid-column: 1 / span 7; } .proyecto--izq .proy-info { grid-column: 9 / -1; }
+    .proyecto--der .proy-fig { grid-column: 6 / -1; grid-row: 1; } .proyecto--der .proy-info { grid-column: 1 / span 4; grid-row: 1; }
+  }
+
+  /* ── Trayectoria: barra de escala ── */
+  .escala { position: relative; margin-top: clamp(56px, 7vw, 96px); }
+  .escala-barra { display: flex; height: 14px; border: 1px solid var(--tinta); }
+  .tramo { flex: 1; border-right: 1px solid var(--tinta); position: relative; }
+  .tramo:last-child { border-right: 0; }
+  .tramo--lleno { background: var(--tinta); }
+  .escala-anios { position: relative; height: 24px; margin-top: 8px; }
+  .escala-anios li { position: absolute; transform: translateX(-50%); font-size: 0.6875rem; color: var(--grafito); }
+  .escala-anios li:first-child { transform: none; } .escala-anios li:last-child { transform: translateX(-100%); }
+  .hitos { display: grid; gap: 22px; margin-top: 36px; padding-left: 22px; border-left: 1px solid var(--linea-2); }
+  .hito { position: relative; }
+  .hito-punto { position: absolute; left: -28px; top: 6px; width: 11px; height: 11px; background: var(--hueso); border: 1.5px solid var(--tinta); }
+  .hito--trabajo .hito-punto { background: var(--tinta); }
+  .hito--docencia .hito-punto { border-radius: 50%; }
+  .hito--premio .hito-punto { background: var(--pino); border-color: var(--pino); transform: rotate(45deg); }
+  .hito-a { color: var(--laton); font-size: 0.6875rem; }
+  .hito-t { font-size: 1.25rem; line-height: 1.15; margin-top: 2px; }
+  .hito-l { font-size: 0.875rem; color: var(--grafito); }
+  @media (min-width: 1000px) {
+    .escala { padding-block: 150px; }
+    .escala-barra { position: relative; }
+    .hitos { position: absolute; inset: 0; margin: 0; padding: 0; border: 0; display: block; }
+    .hito { position: absolute; left: var(--x); width: 180px; transform: translateX(-12px); }
+    .hito:last-child { transform: translateX(calc(-100% + 12px)); text-align: right; }
+    .hito::before { content: ''; position: absolute; left: 12px; width: 1px; background: var(--linea-2); }
+    .hito:last-child::before { left: auto; right: 12px; }
+    /* La barra empieza a 150 px (relleno superior) y mide 14 px: su centro está a 157 px. */
+    .hito--arriba { bottom: calc(100% - 150px + 26px); }
+    .hito--arriba::before { top: 100%; height: 33px; }
+    .hito--abajo { top: 214px; }
+    .hito--abajo::before { bottom: 100%; height: 57px; }
+    .hito-punto { left: 6.5px; top: auto; z-index: 1; }
+    .hito--arriba .hito-punto { top: calc(100% + 27.5px); }
+    .hito--abajo .hito-punto { bottom: calc(100% + 51.5px); }
+    .hito:last-child .hito-punto { left: auto; right: 7px; }
+  }
+
+  /* ── Libros ── */
+  .libros-sec { background: var(--hueso-2); }
+  .lib-intro { margin-top: 20px; color: var(--grafito); max-width: 40ch; }
+  .filtros { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 24px; }
+  .filtro { min-height: 40px; padding: 0 14px; background: transparent; border: 1px solid var(--linea-2); font: 500 0.8125rem var(--f-sans); color: var(--grafito); cursor: pointer; transition: background-color 0.2s, color 0.2s; }
+  .filtro:hover { color: var(--tinta); border-color: var(--tinta); }
+  .filtro[aria-pressed='true'] { background: var(--tinta); border-color: var(--tinta); color: var(--hueso); }
+
+  .estante { position: relative; margin-top: 8px; }
+  .lomos { display: flex; align-items: flex-end; gap: 3px; height: 340px; padding-inline: 4px; overflow-x: auto; overflow-y: hidden; scrollbar-width: thin; }
+  .lomos li { flex: none; height: var(--alto); width: var(--ancho); display: flex; align-items: flex-end; }
+  .lomos li[data-oculto] .lomo { opacity: 0.18; }
+  .lomo {
+    position: relative; width: 100%; height: 100%; padding: 16px 0 12px; border: 0; cursor: pointer;
+    display: flex; flex-direction: column; align-items: center; justify-content: space-between;
+    color: var(--hueso); font: inherit; text-align: center;
+    background: linear-gradient(90deg, rgba(0, 0, 0, 0.22), rgba(255, 255, 255, 0.08) 18%, rgba(0, 0, 0, 0) 40%, rgba(0, 0, 0, 0.18)), var(--tela);
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.12);
+    transform-origin: bottom; transition: transform 0.45s var(--ease-out), opacity 0.4s var(--ease-out);
+  }
+  .lomo::before, .lomo::after { content: ''; position: absolute; left: 6px; right: 6px; height: 2px; background: rgba(214, 186, 128, 0.75); }
+  .lomo::before { top: 8px; } .lomo::after { bottom: 34px; }
+  .lomo:hover { transform: translateY(-10px); }
+  .lomo[aria-pressed='true'] { transform: translateY(-22px); box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.12), 0 10px 18px -8px rgba(0, 0, 0, 0.45); }
+  .lomo-t { writing-mode: vertical-rl; transform: rotate(180deg); font-family: var(--f-serif); font-size: 0.875rem; line-height: 1.1; max-height: calc(100% - 48px); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .lomo-a { font-size: 0.5625rem; letter-spacing: 0.1em; }
+  .lomo--vino { --tela: var(--t-vino); } .lomo--pino { --tela: var(--t-pino); } .lomo--grafito { --tela: var(--t-grafito); }
+  .lomo--tinta { --tela: var(--t-tinta); } .lomo--mostaza { --tela: var(--t-mostaza); }
+  .lomo--arena { --tela: var(--t-arena); color: var(--tinta); }
+  .lomos .deco-estante { flex: 1 0 170px; width: auto; height: 100%; display: flex; align-items: flex-end; gap: 18px; padding-left: 4px; }
+  .sujeta { width: 10px; height: 46%; background: linear-gradient(90deg, #3a3833, #55524b); border-top: 3px solid #2a2925; }
+  .acostados { display: grid; gap: 0; align-content: end; width: min(200px, 100%); }
+  .ac { display: block; height: 22px; border-radius: 1px; box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.12), inset 0 -3px 0 rgba(0, 0, 0, 0.12); }
+  .ac--1 { width: 82%; margin-left: 10%; background: var(--t-arena); }
+  .ac--2 { width: 94%; background: var(--t-tinta); height: 26px; }
+  .ac--3 { width: 88%; margin-left: 4%; background: var(--t-vino); }
+  .lomos li[data-lomo-li] + .deco-estante { margin-left: 6px; }
+  .tabla { height: 14px; background: linear-gradient(180deg, #8a6a43, #6e5333); box-shadow: 0 10px 16px -10px rgba(0, 0, 0, 0.5); }
+
+  .ficha-libro { margin-top: 36px; padding: 28px 30px; background: var(--blanco); border: 1px solid var(--linea-2); border-left: 4px solid var(--pino); max-width: 640px; }
+  .ficha-meta { color: var(--laton); }
+  .ficha-t { font-size: clamp(1.625rem, 1.2rem + 1.4vw, 2.25rem); line-height: 1.1; margin-top: 10px; letter-spacing: -0.02em; }
+  .ficha-a { margin-top: 4px; color: var(--grafito); }
+  .ficha-nota { margin-top: 18px; font-size: 1.1875rem; font-style: italic; line-height: 1.45; }
+  .ficha-nota::before { content: '«'; color: var(--pino); } .ficha-nota::after { content: '»'; color: var(--pino); }
+
+  /* ── Método ── */
+  .metodo-fig figcaption { margin-top: 10px; color: var(--grafito); }
+  .metodo-fig :global(img) { aspect-ratio: 4 / 5; filter: grayscale(0.6) sepia(0.1); }
+  .principios { display: grid; margin-top: 40px; border-top: 1px solid var(--tinta); }
+  .principios li { display: grid; grid-template-columns: 72px 1fr; gap: 20px; padding-block: 28px; border-bottom: 1px solid var(--linea); }
+  .princ-n { font-size: 2.75rem; line-height: 1; font-style: italic; color: var(--pino); }
+  .princ-t { font-size: 1.5rem; line-height: 1.15; margin-bottom: 8px; }
+  .principios p { color: var(--grafito); max-width: 54ch; }
+
+  /* ── Reconocimientos ── */
+  .premios { border-top: 1px solid var(--tinta); }
+  .premios li { display: grid; gap: 4px 24px; padding: 20px 8px; border-bottom: 1px solid var(--linea); transition: background-color 0.3s; }
+  .premios li:hover { background: var(--blanco); }
+  .premios .mono { color: var(--laton); padding-top: 6px; }
+  .premio-t { font-size: 1.375rem; line-height: 1.2; }
+  .premio-d { color: var(--grafito); font-size: 0.9375rem; }
+  @media (min-width: 900px) { .premios li { grid-template-columns: 90px 1.2fr 1fr; align-items: baseline; } }
+
+  /* ── Contacto ── */
+  .contacto { background: var(--tinta); color: var(--hueso); border-top: 0; }
+  .contacto .corrido { color: rgba(242, 238, 230, 0.6); border-color: rgba(242, 238, 230, 0.2); }
+  .contacto .corrido b { color: var(--hueso); }
+  .contacto-h { font-size: clamp(2.75rem, 1.4rem + 5vw, 6rem); line-height: 0.98; letter-spacing: -0.035em; max-width: 14ch; }
+  .contacto-h em { color: var(--pino-claro); }
+  .contacto-grid { display: grid; gap: 40px; margin-top: 56px; }
+  .contacto-p { color: rgba(242, 238, 230, 0.75); max-width: 44ch; font-size: 1.125rem; }
+  .contacto-datos { border-top: 1px solid rgba(242, 238, 230, 0.3); }
+  .contacto-datos div { display: grid; grid-template-columns: 110px 1fr; gap: 12px; padding: 14px 0; border-bottom: 1px solid rgba(242, 238, 230, 0.15); }
+  .contacto-datos dt { color: rgba(242, 238, 230, 0.6); padding-top: 4px; }
+  .contacto-datos dd { overflow-wrap: anywhere; }
+  .contacto .enlace { color: var(--hueso); }
+  .contacto-btn { margin-top: 44px; background: var(--hueso); color: var(--tinta); }
+  .contacto-btn:hover { background: var(--pino-claro); }
+  .contacto :focus-visible { outline-color: var(--pino-claro); }
+  @media (min-width: 1000px) { .contacto-grid { grid-template-columns: 1fr 1fr; gap: 72px; } }
+
+  .colofon { background: var(--tinta); color: rgba(242, 238, 230, 0.6); border-top: 1px solid rgba(242, 238, 230, 0.15); }
+  .colofon-in { display: grid; gap: 8px; padding-block: 28px 40px; font-size: 0.8125rem; }
+  .colofon .mono { color: var(--hueso); }
+  .colofon .enlace { color: var(--hueso); }
+</style>

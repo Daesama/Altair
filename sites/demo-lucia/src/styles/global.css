@@ -1,0 +1,105 @@
+/* ───── Fuentes autoalojadas ───── */
+@font-face {
+  font-family: 'Lexend Mega';
+  src: url('../assets/fonts/lexend-mega-latin-wght-normal.woff2') format('woff2-variations');
+  font-weight: 100 900; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'Public Sans';
+  src: url('../assets/fonts/public-sans-latin-wght-normal.woff2') format('woff2-variations');
+  font-weight: 100 900; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'Caveat Brush';
+  src: url('../assets/fonts/caveat-brush-latin-400-normal.woff2') format('woff2');
+  font-weight: 400; font-style: normal; font-display: swap;
+}
+
+/* ───── Tokens: tinta risográfica sobre papel ───── */
+:root {
+  --papel: #f3ede2;
+  --papel-2: #e8dfcd;
+  --kraft: #c9a879;
+  --rosa: #ff4fa0;
+  --amarillo: #ffd23f;
+  --azul: #2f4bff;
+  --menta: #3ddc97;
+  --tinta: #141414;
+  --tinta-2: #3d3a35;   /* 10:1 sobre papel */
+
+  --f-disp: 'Lexend Mega', 'Arial Black', system-ui, sans-serif;
+  --f-sans: 'Public Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --f-mano: 'Caveat Brush', 'Segoe Print', cursive;
+
+  --pad: 18px;
+  --maxw: 1200px;
+  --sombra: 6px 6px 0 var(--tinta);
+  color-scheme: light;
+}
+@media (min-width: 768px) { :root { --pad: 36px; } }
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; scroll-padding-top: 96px; }
+body {
+  margin: 0;
+  background: var(--papel);
+  color: var(--tinta);
+  font-family: var(--f-sans);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+}
+/* Grano de impresión */
+body::after {
+  content: ''; position: fixed; inset: 0; z-index: 80; pointer-events: none; opacity: 0.16; mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.1' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+/* Los recortes girados y las boletas que entran de lado no deben ensanchar la página */
+main { overflow-x: clip; }
+img { display: block; max-width: 100%; height: auto; }
+h1, h2, h3, p, ul, ol, figure, dl, dd, blockquote { margin: 0; }
+ul, ol { padding: 0; list-style: none; }
+a { color: inherit; }
+::selection { background: var(--amarillo); }
+:focus-visible { outline: 3px solid var(--azul); outline-offset: 3px; }
+
+.wrap { width: 100%; max-width: var(--maxw); margin-inline: auto; padding-inline: var(--pad); }
+.disp { font-family: var(--f-disp); font-weight: 800; letter-spacing: -0.04em; line-height: 0.95; }
+.mano { font-family: var(--f-mano); font-weight: 400; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.skip { position: fixed; top: 8px; left: 8px; z-index: 100; padding: 10px 16px; background: var(--tinta); color: var(--amarillo); transform: translateY(-200%); }
+.skip:focus { transform: none; }
+
+/* Cinta adhesiva */
+.cinta { position: absolute; width: 110px; height: 30px; background: rgba(255, 210, 63, 0.75); mix-blend-mode: multiply; z-index: 3;
+  clip-path: polygon(3% 0, 97% 4%, 100% 50%, 96% 100%, 2% 96%, 0 48%); }
+.cinta--rosa { background: rgba(255, 79, 160, 0.6); }
+.cinta--azul { background: rgba(47, 75, 255, 0.45); }
+
+/* Títulos de sección: recortes pegados */
+.titulo { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; font-family: var(--f-disp); font-weight: 800; letter-spacing: -0.05em; line-height: 1; font-size: clamp(1.75rem, 1rem + 3.4vw, 3.5rem); }
+.recorte { display: inline-block; padding: 0.12em 0.28em 0.18em; background: var(--tinta); color: var(--papel); transform: rotate(var(--r, -2deg)); }
+.recorte--rosa { background: var(--rosa); color: var(--tinta); }
+.recorte--amarillo { background: var(--amarillo); color: var(--tinta); }
+.recorte--azul { background: var(--azul); color: var(--papel); }
+.recorte--papel { background: #fffdf8; color: var(--tinta); box-shadow: 3px 3px 0 var(--tinta); }
+
+.seccion { position: relative; padding-block: clamp(72px, 9vw, 130px); }
+.pista { font-family: var(--f-mano); font-size: 1.5rem; color: var(--azul); }
+
+.btn {
+  display: inline-flex; align-items: center; gap: 10px; min-height: 52px; padding: 0 22px;
+  background: var(--amarillo); color: var(--tinta); border: 2.5px solid var(--tinta); box-shadow: var(--sombra);
+  font-weight: 800; text-decoration: none; text-transform: uppercase; letter-spacing: 0.04em; font-size: 0.9375rem;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.btn:hover { transform: translate(-2px, -2px); box-shadow: 8px 8px 0 var(--tinta); }
+.btn:active { transform: translate(4px, 4px); box-shadow: 2px 2px 0 var(--tinta); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+
+.js:not(.rm) [data-up] { opacity: 0; }
+.motion-fallback [data-up] { opacity: 1 !important; }

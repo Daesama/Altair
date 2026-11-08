@@ -1,0 +1,14 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base titulo="Página no encontrada — Juliana Ortega (demo)">
+  <section class="wrap nf">
+    <p class="mono">Error 404 — Lámina no encontrada</p>
+    <h1 class="cap-t">Esta página no está en <em>el índice.</em></h1>
+    <p><a class="btn" href={import.meta.env.BASE_URL}>Volver a la portada</a></p>
+  </section>
+</Base>
+<style>
+  .nf { min-height: 60vh; display: grid; align-content: center; gap: 24px; padding-block: 96px; }
+  .nf .mono { color: var(--grafito); }
+</style>

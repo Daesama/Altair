@@ -1,0 +1,16 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base titulo="Página no encontrada — Simón Arango (demo)" buceo={false}>
+  <section class="zona nf" style="--c: var(--z3)">
+    <div class="wrap nf-in">
+      <p class="prof">??? metros</p>
+      <h1 class="h2">Te fuiste muy <em>profundo</em>. Esta página no existe.</h1>
+      <p><a class="btn" href={import.meta.env.BASE_URL}>Volver a la superficie</a></p>
+    </div>
+  </section>
+</Base>
+<style>
+  .nf { min-height: 80vh; display: grid; align-items: center; }
+  .nf-in { display: grid; gap: 24px; }
+</style>

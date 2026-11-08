@@ -84,10 +84,11 @@ const jsonLd = localBusiness({
     </Consent>
 
     <script>
-      import { initMotion } from '@altair/core/motion';
+      import { anclas, initMotion } from '@altair/core/motion';
       import { revealAll } from '@altair/core/reveal';
       import { runPage } from '../scripts/main';
-      const motion = initMotion({ lenis: { lerp: 0.08 } });
+      const motion = initMotion({ lenis: { lerp: 0.08, anchors: false } });
+      anclas(motion);
       revealAll(motion);
       runPage(motion);
     </script>
@@ -109,10 +110,18 @@ const jsonLd = localBusiness({
   @media (min-width: 640px) { .banda-largo { display: inline; } .banda-corto { display: none; } }
   .banda-punto { display: inline-block; width: 6px; height: 6px; margin-right: 8px; border-radius: 50%; background: var(--laton-claro); vertical-align: middle; }
 
-  .mast { border-bottom: 1px solid rgba(30, 20, 18, 0.2); }
+  /* La cabecera acompaña el scroll, debajo de la banda de demo */
+  .mast { position: sticky; top: var(--banda); z-index: 55; background: var(--crema); border-bottom: 1px solid rgba(30, 20, 18, 0.2); }
   .mast-in { display: flex; align-items: center; gap: 24px; height: 72px; }
   .mast-logo { font-size: 2.25rem; line-height: 1; text-decoration: none; color: var(--vino); }
-  .mast-nav { display: none; gap: 28px; }
+  .mast-nav { display: flex; gap: 28px; }
+  /* En celular el menú baja a una segunda fila en vez de esconderse */
+  @media (max-width: 767px) {
+    .mast-in { flex-wrap: wrap; height: auto; padding-block: 10px 0; row-gap: 0; }
+    .mast nav { order: 3; width: 100%; border-top: 1px solid rgba(30, 20, 18, 0.12); }
+    .mast-nav { justify-content: space-between; gap: 8px; }
+    .mast-nav a { padding-block: 10px; min-height: 44px; }
+  }
   .mast-nav a { position: relative; display: inline-block; text-decoration: none; font-size: 0.9375rem; font-weight: 500; padding-block: 12px; }
   .mast-nav a::after { content: ''; position: absolute; left: 0; right: 0; bottom: 8px; height: 1px; background: var(--vino); transform: scaleX(0); transform-origin: left; transition: transform 0.5s var(--ease); }
   .mast-nav a:hover::after, .mast-nav a:focus-visible::after { transform: scaleX(1); }

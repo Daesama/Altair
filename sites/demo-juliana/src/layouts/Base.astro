@@ -1,0 +1,115 @@
+---
+import Seo from '@altair/core/Seo.astro';
+import { demo, persona, seo } from '../../site.config';
+import '../styles/global.css';
+import bodoniUrl from '../assets/fonts/libre-bodoni-latin-wght-normal.woff2?url';
+import sansUrl from '../assets/fonts/public-sans-latin-wght-normal.woff2?url';
+
+interface Props { titulo?: string }
+const { titulo = seo.titulo } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+const jsonLd = {
+  '@context': 'https://schema.org', '@type': 'Person', name: persona.nombre, jobTitle: persona.oficio, url: seo.url,
+  worksFor: { '@type': 'Organization', name: 'Taller Ortega' },
+  address: { '@type': 'PostalAddress', addressLocality: persona.ciudad, addressCountry: 'CO' },
+};
+const menu = [
+  { href: '#perfil', n: '01', t: 'Perfil' },
+  { href: '#proyectos', n: '02', t: 'Proyectos' },
+  { href: '#trayectoria', n: '03', t: 'Trayectoria' },
+  { href: '#libros', n: '04', t: 'Libros' },
+  { href: '#contacto', n: '07', t: 'Contacto' },
+];
+---
+<!doctype html>
+<html lang="es-CO">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script is:inline>
+      (function () {
+        var d = document.documentElement; d.classList.add('js');
+        if (matchMedia('(prefers-reduced-motion: reduce)').matches) d.classList.add('rm');
+        setTimeout(function () { d.classList.add('motion-fallback'); }, 3000);
+      })();
+    </script>
+    <link rel="preload" href={bodoniUrl} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={sansUrl} as="font" type="font/woff2" crossorigin />
+    <link rel="icon" href={`${base}favicon.ico`} sizes="32x32" />
+    <link rel="icon" href={`${base}favicon.svg`} type="image/svg+xml" />
+    <link rel="apple-touch-icon" href={`${base}apple-touch-icon.png`} />
+    <Seo titulo={titulo} descripcion={seo.descripcion} sitio={seo.url} ogImage={seo.ogImage} nombreSitio={persona.nombre} themeColor="#f2eee6" jsonLd={jsonLd} />
+  </head>
+  <body>
+    <a class="skip" href="#contenido">Saltar al contenido</a>
+    <aside class="banda" aria-label="Aviso de sitio de demostración">
+      <p class="mono">{demo.texto} — <a href={demo.url}>ver altair.lat</a></p>
+    </aside>
+
+    <header class="cab">
+      <div class="wrap cab-in">
+        <a href={base} class="cab-logo" aria-label={`${persona.nombre}, inicio`}>
+          <span class="cab-mono" aria-hidden="true">JO</span>
+          <span class="cab-nombre"><span class="serif">Juliana Ortega</span><span class="mono">Arquitecta · Urbanista</span></span>
+        </a>
+        <nav aria-label="Principal" class="cab-nav">
+          <ul>
+            {menu.map((m) => <li><a href={m.href}><span class="mono">{m.n}</span>{m.t}</a></li>)}
+          </ul>
+        </nav>
+        <span class="cab-progreso" aria-hidden="true" data-progreso></span>
+      </div>
+    </header>
+
+    <main id="contenido"><slot /></main>
+
+    <script>
+      import { anclas, initMotion } from '@altair/core/motion';
+      import { revealAll } from '@altair/core/reveal';
+      import { runPage } from '../scripts/main';
+      const motion = initMotion({ lenis: { lerp: 0.1, anchors: false } });
+      anclas(motion);
+      revealAll(motion);
+      runPage(motion);
+
+      // Marca en el menú el capítulo que se está leyendo
+      const links = [...document.querySelectorAll<HTMLAnchorElement>('.cab-nav a')];
+      const io = new IntersectionObserver((es) => es.forEach((e) => {
+        if (e.isIntersecting) links.forEach((l) => l.toggleAttribute('aria-current', l.hash === '#' + e.target.id));
+      }), { rootMargin: '-40% 0px -55% 0px' });
+      links.forEach((l) => { const s = document.querySelector(l.hash); if (s) io.observe(s); });
+    </script>
+  </body>
+</html>
+
+<style is:global>
+  .banda { background: var(--tinta); color: var(--hueso-2); text-align: center; padding: 9px 12px; }
+  .banda .mono { font-size: 0.6875rem; letter-spacing: 0.06em; }
+  .banda a { color: var(--hueso); }
+
+  .cab { position: sticky; top: 0; z-index: 50; background: rgba(242, 238, 230, 0.92); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid var(--linea-2); }
+  .cab-in { position: relative; display: flex; align-items: center; gap: 24px; height: var(--cab); }
+  .cab-logo { display: inline-flex; align-items: center; gap: 12px; text-decoration: none; min-width: 0; }
+  .cab-mono { display: grid; place-items: center; width: 38px; height: 38px; border: 1px solid var(--tinta); font-family: var(--f-serif); font-size: 0.9375rem; letter-spacing: 0.02em; flex: none; }
+  .cab-nombre { display: grid; line-height: 1.15; }
+  .cab-nombre .serif { font-size: 1.125rem; }
+  .cab-nombre .mono { font-size: 0.625rem; color: var(--grafito); }
+  .cab-nav { margin-left: auto; min-width: 0; }
+  .cab-nav ul { display: flex; gap: 2px; }
+  .cab-nav a { position: relative; display: inline-flex; align-items: baseline; gap: 6px; min-height: 44px; align-items: center; padding: 0 12px; text-decoration: none; font-size: 0.875rem; font-weight: 500; color: var(--grafito); transition: color 0.2s; }
+  .cab-nav a .mono { font-size: 0.625rem; color: var(--laton); }
+  .cab-nav a::after { content: ''; position: absolute; left: 12px; right: 12px; bottom: 10px; height: 1px; background: var(--pino); transform: scaleX(0); transform-origin: left; transition: transform 0.4s var(--ease-out); }
+  .cab-nav a:hover, .cab-nav a[aria-current] { color: var(--tinta); }
+  .cab-nav a:hover::after, .cab-nav a[aria-current]::after { transform: scaleX(1); }
+  .cab-progreso { position: absolute; left: 0; bottom: -1px; height: 2px; width: 100%; background: var(--pino); transform: scaleX(0); transform-origin: left; }
+  /* Celular: el menú se desliza de lado, no se esconde */
+  @media (max-width: 899px) {
+    .cab-in { gap: 12px; }
+    .cab-nombre { display: none; }
+    .cab-nav ul { overflow-x: auto; scrollbar-width: none; -webkit-mask: linear-gradient(90deg, #000 88%, transparent); mask: linear-gradient(90deg, #000 88%, transparent); }
+    .cab-nav ul::-webkit-scrollbar { display: none; }
+    .cab-nav li { flex: none; }
+    .cab-nav a { padding: 0 9px; font-size: 0.8125rem; }
+    .cab-nav a .mono { display: none; }
+  }
+</style>

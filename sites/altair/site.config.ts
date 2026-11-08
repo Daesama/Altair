@@ -255,3 +255,57 @@ export const estrella = {
   hip: 'HIP 97649',
   hd: 'HD 187642',
 };
+
+/* ───── Páginas personales (línea en prueba, ver /personal) ───── */
+
+export const personal = {
+  precio: 400_000, // precio con descuento
+  precioOficial: 600_000, // precio de antes, se muestra tachado
+  renovacionAnual: 120_000, // PLACEHOLDER: dominio + cambios menores
+  entregaDias: 7,
+  rondasCambios: 2,
+  incluye: [
+    'Hasta 6 secciones: de nuestras ideas o las que usted invente',
+    'Un diseño propio, con el estilo, los colores y el movimiento que le guste',
+    'Dominio a su nombre el primer año (sunombre.com o .co)',
+    'Se ve bien en celular y aparece en Google con su nombre',
+    '2 rondas de cambios incluidas',
+    'Botones a su correo, WhatsApp y redes',
+  ],
+  /** Ejemplos de secciones propias: muestran que la lista de ideas no es cerrada. */
+  seccionesPropias: ['Mis recetas', 'Mi mascota', 'Mi banda', 'Mapa de mis viajes', 'Mi blog', 'Mis tatuajes', 'Mi colección', 'Lo que estoy aprendiendo'],
+  secciones: [
+    { t: 'Sobre mí', d: 'Quién es, de dónde viene y qué le mueve. Con su foto y su forma de hablar.' },
+    { t: 'Hoja de vida', d: 'Experiencia, estudios y habilidades, más fácil de leer que un PDF.' },
+    { t: 'Hobbies', d: 'Lo que hace cuando no trabaja: música, deporte, arte, viajes, cocina…' },
+    { t: 'Metas', d: 'Lo que quiere lograr este año y los que vienen, con su avance.' },
+    { t: 'Favoritos', d: 'Libros, canciones, lugares y películas que lo definen.' },
+  ],
+  /** Ejemplo profesional: va primero en /personal. */
+  destacado: {
+    titulo: 'Monografía', estilo: 'profesional', nombre: 'Juliana Ortega',
+    descripcion: 'arquitecta y urbanista. Su página se lee como un libro bien impreso: capítulos numerados, láminas de proyectos, una trayectoria dibujada como barra de escala y la estantería de los libros que la formaron.',
+    detalles: ['Sobria y elegante', 'Proyectos con ficha técnica', 'Libros que he leído'],
+    cta: 'Abrir la monografía', url: '/demos/juliana/',
+  },
+  demos: [
+    {
+      mundo: 'papel', titulo: 'Fanzine', estilo: 'hecho a mano', nombre: 'Lucía Peña',
+      descripcion: 'ilustradora. Su página es un fanzine de papel con cinta, sellos y stickers que se pueden arrastrar.',
+      detalles: ['Stickers que se lanzan', 'Hoja de vida en boletas de cine', 'Metas tachadas a mano'],
+      pie: 'lucía, versión web (se puede tocar)', cta: 'Entrar al fanzine', url: '/demos/lucia/',
+    },
+    {
+      mundo: 'mar', titulo: 'Inmersión', estilo: 'scroll que bucea', nombre: 'Simón Arango',
+      descripcion: 'biólogo marino. Su página es un buceo: el agua se oscurece al bajar y un profundímetro cuenta los metros.',
+      detalles: ['Del cielo al abismo', 'Bitácora de buceo', 'Metas en un sonar'],
+      pie: '', cta: 'Bajar al océano', url: '/demos/simon/',
+    },
+  ],
+  pasos: [
+    { t: 'Nos cuenta de usted', d: 'Llena un formulario corto con sus textos, fotos y gustos. Si prefiere, lo hacemos en una llamada.' },
+    { t: 'Le mostramos la página', d: 'En unos días le enviamos un enlace privado para verla en su celular y pedir cambios.' },
+    { t: 'La publicamos', d: 'Con su dominio, lista para poner en su hoja de vida, su LinkedIn o su Instagram.' },
+  ],
+  mensaje: 'Hola, Altair. Quiero mi página personal. ¿Me cuentan cómo empezamos?',
+};

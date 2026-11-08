@@ -16,9 +16,10 @@ import { planes } from './paginas/planes';
 import { portafolio } from './paginas/portafolio';
 import { proceso } from './paginas/proceso';
 import { contacto } from './paginas/contacto';
+import { personal } from './paginas/personal';
 
 type Limpieza = () => void;
-const paginas: Record<string, (m: Motion) => Limpieza[]> = { inicio, planes, portafolio, proceso, contacto };
+const paginas: Record<string, (m: Motion) => Limpieza[]> = { inicio, planes, portafolio, proceso, contacto, personal };
 
 enCadaPagina((m) => {
   const { gsap, ScrollTrigger } = m;
