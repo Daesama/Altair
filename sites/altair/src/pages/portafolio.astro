@@ -8,6 +8,8 @@ const imgs = import.meta.glob<{ default: ImageMetadata }>('../assets/portfolio/*
 const img = (archivo: string) => imgs[`../assets/portfolio/${archivo}`].default;
 const flecha = 'M5 15 15 5m-8 0h8v8';
 const dominio = (url: string) => url.replace(/^https?:\/\//, '');
+/** Las demos viven en altair.lat: enlace interno para que funcione igual en local y publicado. */
+const enlace = (url: string) => url.replace(/^https:\/\/altair\.lat(?=\/)/, '');
 ---
 <Base
   pagina="portafolio"
@@ -39,7 +41,7 @@ const dominio = (url: string) => url.replace(/^https?:\/\//, '');
             <p class="tipo mono">{c.real ? <span class="real">Cliente real</span> : <span class="demo">Demo</span>} {c.tipo.replace(/^Demo · /, '')}</p>
             <h2 class="h3">{c.nombre}</h2>
             <p class="desc">{c.descripcion}</p>
-            <a class="go" href={c.url} target="_blank" rel="noopener">
+            <a class="go" href={enlace(c.url)} target="_blank" rel="noopener">
               Abrir {dominio(c.url)} <span class="sr-only">(se abre en otra pestaña)</span>
               <svg viewBox="0 0 20 20" aria-hidden="true"><path d={flecha} fill="none" stroke="currentColor" stroke-width="1.8" /></svg>
             </a>

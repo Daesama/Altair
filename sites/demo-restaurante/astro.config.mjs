@@ -2,12 +2,14 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 
+// Se publica dentro de altair.lat, en /demos/restaurante/ (ver tools/build-web.mjs).
 export default defineConfig({
-  site: 'https://restaurante.altair.lat',
+  site: 'https://altair.lat',
+  base: '/demos/restaurante/',
   output: 'static',
-  trailingSlash: 'never',
+  trailingSlash: 'always',
   compressHTML: true,
-  build: { format: 'file' },
+  build: { format: 'directory' },
   integrations: [
     sitemap(),
   ],

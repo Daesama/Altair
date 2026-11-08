@@ -76,17 +76,17 @@ export const ritual = {
 };
 
 export const seo: SeoBase = {
-  url: 'https://barberia.altair.lat',
+  url: 'https://altair.lat/demos/barberia',
   titulo: 'Filo Barbería & Spa — Chapinero Alto, Bogotá (demo)',
   descripcion:
     'Corte clásico, afeitado con navaja y spa en Chapinero Alto. Precios, horarios y reservas por WhatsApp. Sitio de demostración creado por Altair Studio.',
   locale: 'es_CO',
-  ogImage: '/og.png',
+  ogImage: '/demos/barberia/og.png',
 };
 
 export const demo = {
   texto: 'Sitio de demostración creado por Altair Studio',
-  url: 'https://altair.lat',
+  url: '/',
 };
 
 export const mensajes = {

@@ -11,6 +11,7 @@
     "dev:barberia": "pnpm --filter demo-barberia dev",
     "dev:restaurante": "pnpm --filter demo-restaurante dev",
     "build": "pnpm -r --filter ./sites/* build",
+    "build:web": "node tools/build-web.mjs",
     "shots": "node tools/shots.mjs",
     "lh": "node tools/lighthouse.mjs"
   },

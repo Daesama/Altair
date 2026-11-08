@@ -8,6 +8,8 @@ import '../styles/global.css';
 import bagelUrl from '../assets/fonts/bagel-fat-one-latin-400-normal.woff2?url';
 import familjenUrl from '../assets/fonts/familjen-grotesk-latin-wght-normal.woff2?url';
 
+/** Ruta base del sitio (se publica en altair.lat/demos/...). */
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 const precios = carta.flatMap((c) => c.platos.map((p) => p.precio));
 const jsonLd = localBusiness({
   tipo: 'Restaurant',
@@ -41,9 +43,9 @@ const jsonLd = localBusiness({
     </script>
     <link rel="preload" href={bagelUrl} as="font" type="font/woff2" crossorigin />
     <link rel="preload" href={familjenUrl} as="font" type="font/woff2" crossorigin />
-    <link rel="icon" href="/favicon.ico" sizes="32x32" />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="icon" href={`${base}favicon.ico`} sizes="32x32" />
+    <link rel="icon" href={`${base}favicon.svg`} type="image/svg+xml" />
+    <link rel="apple-touch-icon" href={`${base}apple-touch-icon.png`} />
     <Seo
       titulo={seo.titulo}
       descripcion={seo.descripcion}
@@ -67,7 +69,7 @@ const jsonLd = localBusiness({
 
     <header class="cab">
       <div class="wrap cab-in">
-        <a href="/" class="cab-logo letrero" aria-label={`${negocio.nombre}, inicio`}>La Leñera</a>
+        <a href={base} class="cab-logo letrero" aria-label={`${negocio.nombre}, inicio`}>La Leñera</a>
         <nav aria-label="Principal" class="cab-nav">
           <ul>
             <li><a href="#carta">Carta</a></li>

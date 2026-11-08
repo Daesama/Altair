@@ -105,17 +105,17 @@ export const carta: { id: string; categoria: string; nota?: string; platos: Plat
 ];
 
 export const seo: SeoBase = {
-  url: 'https://restaurante.altair.lat',
+  url: 'https://altair.lat/demos/restaurante',
   titulo: 'La Leñera, cocina de fogón — La Candelaria, Bogotá (demo)',
   descripcion:
     'Ajiaco, sancocho y carne a la leña en La Candelaria. Carta con precios, horarios y reservas por WhatsApp. Sitio de demostración creado por Altair Studio.',
   locale: 'es_CO',
-  ogImage: '/og.png',
+  ogImage: '/demos/restaurante/og.png',
 };
 
 export const demo = {
   texto: 'Sitio de demostración creado por Altair Studio',
-  url: 'https://altair.lat',
+  url: '/',
 };
 
 export const mensajes = {

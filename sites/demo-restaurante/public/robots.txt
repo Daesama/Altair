@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://restaurante.altair.lat/sitemap-index.xml

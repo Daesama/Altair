@@ -2,3 +2,5 @@ User-agent: *
 Allow: /
 
 Sitemap: https://altair.lat/sitemap-index.xml
+Sitemap: https://altair.lat/demos/barberia/sitemap-index.xml
+Sitemap: https://altair.lat/demos/restaurante/sitemap-index.xml

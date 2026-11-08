@@ -8,7 +8,7 @@
  */
 import { chromium } from 'playwright';
 
-const [barberia = 'http://localhost:4322/', restaurante = 'http://localhost:4323/'] = process.argv.slice(2);
+const [barberia = 'http://localhost:4322/demos/barberia/', restaurante = 'http://localhost:4323/demos/restaurante/'] = process.argv.slice(2);
 const destino = 'sites/altair/src/assets/portfolio/';
 const casos = [
   { url: 'https://arkei.co', archivo: 'arke' },

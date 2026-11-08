@@ -12,9 +12,9 @@ export const marca = {
 };
 
 export const contacto: Contacto = {
-  whatsapp: '+57 300 000 0000', // PLACEHOLDER
-  email: 'hola@altair.lat', // PLACEHOLDER (verificar que el buzón exista)
-  instagram: '@altair.studio', // PLACEHOLDER
+  whatsapp: '+57 301 753 6941',
+  email: 'contacto@altair.lat',
+  instagram: '@altairlat',
   ciudad: 'Bogotá, Colombia',
 };
 
@@ -149,7 +149,7 @@ export const portafolio: Caso[] = [
     nombre: 'Filo Barbería & Spa',
     tipo: 'Demo · plan Esencial',
     descripcion: 'Servicios con precios, galería, reservas por WhatsApp y ubicación.',
-    url: 'https://barberia.altair.lat',
+    url: 'https://altair.lat/demos/barberia/',
     captura: 'barberia.png',
     capturaMovil: 'barberia-movil.png',
     real: false,
@@ -158,7 +158,7 @@ export const portafolio: Caso[] = [
     nombre: 'La Leñera',
     tipo: 'Demo · plan Esencial',
     descripcion: 'Carta por categorías, platos destacados y reservas por WhatsApp.',
-    url: 'https://restaurante.altair.lat',
+    url: 'https://altair.lat/demos/restaurante/',
     captura: 'restaurante.png',
     capturaMovil: 'restaurante-movil.png',
     real: false,
@@ -171,7 +171,7 @@ export const legal = {
   tipoDocumento: 'C.C.', // PLACEHOLDER (C.C. o NIT)
   documento: '000.000.000', // PLACEHOLDER
   direccion: 'Dirección de notificación, Bogotá', // PLACEHOLDER
-  emailDatos: 'datos@altair.lat', // PLACEHOLDER
+  emailDatos: 'contacto@altair.lat',
   fechaActualizacion: '6 de noviembre de 2026',
   revisionesIncluidas: 2, // rondas de cambios incluidas en el precio
   garantiaDias: 30,

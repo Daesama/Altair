@@ -1,14 +1,14 @@
 # Despliegue en Cloudflare Pages
 
-Los tres sitios son estáticos y se publican como **tres proyectos de Cloudflare Pages** conectados al mismo repositorio de GitHub (`Daesama/Altair`).
+Todo se publica como **un solo proyecto de Cloudflare Pages** conectado al repositorio de GitHub (`Daesama/Altair`). Las demos y las páginas de clientes en revisión van dentro de altair.lat, cada una en su carpeta:
 
-| Proyecto | Dominio | Comando de build | Directorio de salida |
-|---|---|---|---|
-| `altair` | `altair.lat` | `pnpm --filter altair build` | `sites/altair/dist` |
-| `altair-barberia` | `barberia.altair.lat` | `pnpm --filter demo-barberia build` | `sites/demo-barberia/dist` |
-| `altair-restaurante` | `restaurante.altair.lat` | `pnpm --filter demo-restaurante build` | `sites/demo-restaurante/dist` |
+| Sitio | Dirección |
+|---|---|
+| Web de Altair | `https://altair.lat` |
+| Demo barbería | `https://altair.lat/demos/barberia/` |
+| Demo restaurante | `https://altair.lat/demos/restaurante/` |
 
-En los tres el **directorio raíz** es la raíz del repositorio (déjelo vacío). Así Cloudflare instala las dependencias del monorepo desde `pnpm-lock.yaml` y el paquete `@altair/core` queda disponible.
+El comando `pnpm build:web` (`tools/build-web.mjs`) construye los tres sitios y copia cada demo en `sites/altair/dist/demos/<nombre>/`. Esa carpeta es la que se publica.
 
 ---
 
@@ -25,53 +25,57 @@ Esto se hace una sola vez y es lo que más tarda, porque el cambio de nameserver
 6. Cambie los nameservers actuales por los dos de Cloudflare y guarde.
 7. Vuelva a Cloudflare y pulse **Check nameservers**. Cuando el dominio aparezca como **Active**, siga con el paso 2.
 
-## 2. Crear los tres proyectos de Pages
-
-Repita estos pasos tres veces, una por fila de la tabla de arriba:
+## 2. Crear el proyecto de Pages
 
 1. En Cloudflare vaya a **Workers & Pages → Create → Pages → Connect to Git**.
 2. Autorice GitHub y elija el repositorio `Daesama/Altair`.
 3. Configure:
-   - **Project name:** `altair`, `altair-barberia` o `altair-restaurante`.
-   - **Production branch:** `main`.
-   - **Framework preset:** `None`. El comando se escribe a mano.
-   - **Build command:** el de la tabla.
-   - **Build output directory:** el de la tabla.
-   - **Root directory:** vacío (la raíz del repositorio).
+   - **Project name:** `altair`
+   - **Production branch:** `main`
+   - **Framework preset:** `None`
+   - **Build command:** `pnpm build:web`
+   - **Build output directory:** `sites/altair/dist`
+   - **Root directory:** vacío (la raíz del repositorio)
 4. En **Environment variables (Production y Preview)** agregue:
    - `NODE_VERSION` = `22`
    - `PNPM_VERSION` = `10.34.9`
-5. Pulse **Save and Deploy**. Al terminar, el sitio queda en `https://<proyecto>.pages.dev`. Ábralo y revise que se vea bien.
+5. Pulse **Save and Deploy**. Al terminar, el sitio queda en `https://altair.pages.dev` (o el nombre que Cloudflare asigne). Abra también `/demos/barberia/` y `/demos/restaurante/`.
 
 > Si el build falla porque no encuentra pnpm, cambie el comando de build a
-> `npx pnpm@10.34.9 install --frozen-lockfile && npx pnpm@10.34.9 --filter <sitio> build`.
+> `npx pnpm@10.34.9 install --frozen-lockfile && npx pnpm@10.34.9 build:web`.
 
-## 3. Conectar los dominios
+> Si antes había creado los proyectos `altair-barberia` y `altair-restaurante`, ya no hacen falta: puede borrarlos, junto con los subdominios `barberia` y `restaurante` en DNS.
+
+## 3. Conectar el dominio
 
 Con el dominio ya **Active** en Cloudflare:
 
-1. **Proyecto `altair`** → **Custom domains → Set up a custom domain** → escriba `altair.lat` → **Activate domain**. Cloudflare crea el registro DNS solo.
+1. Proyecto `altair` → **Custom domains → Set up a custom domain** → escriba `altair.lat` → **Activate domain**. Cloudflare crea el registro DNS solo.
 2. En el mismo proyecto agregue también `www.altair.lat`.
    - Luego, en **Rules → Redirect Rules** del dominio, cree la regla «Redirect from WWW to root» para que `www` lleve a `altair.lat`.
-3. **Proyecto `altair-barberia`** → **Custom domains** → `barberia.altair.lat`.
-4. **Proyecto `altair-restaurante`** → **Custom domains** → `restaurante.altair.lat`.
-5. Espere a que cada dominio diga **Active**. El certificado SSL se emite solo, en unos minutos.
+3. Espere a que el dominio diga **Active**. El certificado SSL se emite solo, en unos minutos.
 
 ## 4. Revisión final
 
-- [ ] `https://altair.lat`, `https://barberia.altair.lat` y `https://restaurante.altair.lat` cargan con candado (HTTPS).
+- [ ] `https://altair.lat`, `https://altair.lat/demos/barberia/` y `https://altair.lat/demos/restaurante/` cargan con candado (HTTPS).
 - [ ] `https://www.altair.lat` redirige a `https://altair.lat`.
 - [ ] `https://altair.lat/sitemap-index.xml` y `https://altair.lat/robots.txt` responden.
-- [ ] Los botones de WhatsApp abren el número real, no el placeholder `+57 300 000 0000`.
-- [ ] En **SSL/TLS → Overview** el modo está en **Full**. Pages funciona con cualquier modo, pero Full evita problemas si luego agrega otros servicios.
+- [ ] Los enlaces del portafolio abren las demos.
+- [ ] Los botones de WhatsApp abren el número real.
+- [ ] En **SSL/TLS → Overview** el modo está en **Full**.
 - [ ] Opcional: en **Google Search Console** agregue `altair.lat` como propiedad de dominio y envíe el sitemap.
 
 ## Despliegues siguientes
 
-Cada `git push` a `main` vuelve a publicar los **tres** proyectos.
+Cada `git push` a `main` vuelve a publicar todo: altair.lat y las demos. Si un build falla, el sitio sigue mostrando la última versión buena hasta que se corrija.
 
-Para que un proyecto solo se publique cuando cambie su carpeta, use en cada proyecto **Settings → Builds → Build watch paths**:
+## Mostrarle una página a un cliente
 
-- `altair`: `sites/altair/*`, `packages/core/*`
-- `altair-barberia`: `sites/demo-barberia/*`, `packages/core/*`
-- `altair-restaurante`: `sites/demo-restaurante/*`, `packages/core/*`
+1. Cree el sitio en `sites/<nombre>` (copie una demo como punto de partida).
+2. En su `astro.config.mjs` ponga `site: 'https://altair.lat'`, `base: '/demos/<nombre>/'`, `trailingSlash: 'always'` y `build: { format: 'directory' }`.
+3. Use `import.meta.env.BASE_URL` en vez de `/` para íconos y enlaces al inicio.
+4. Agréguelo a la lista `demos` de `tools/build-web.mjs`.
+5. Mientras esté en revisión, pase `noindex` al componente `Seo` para que Google no la muestre.
+6. `git push` → el cliente la ve en `https://altair.lat/demos/<nombre>/`.
+
+Cuando el cliente lance con su propio dominio, la página pasa a un proyecto de Pages aparte: quite `base`, cambie `site` por el dominio del cliente y sáquela de `tools/build-web.mjs`.

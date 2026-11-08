@@ -5,8 +5,8 @@ Monorepo con los tres sitios de Altair Studio. Todos son estáticos (Astro), con
 | Carpeta | Sitio | Qué es |
 |---|---|---|
 | `sites/altair` | altair.lat | Web de ventas del estudio |
-| `sites/demo-barberia` | barberia.altair.lat | Demo «Filo Barbería & Spa» (negocio ficticio) |
-| `sites/demo-restaurante` | restaurante.altair.lat | Demo «La Leñera, cocina de fogón» (negocio ficticio) |
+| `sites/demo-barberia` | altair.lat/demos/barberia | Demo «Filo Barbería & Spa» (negocio ficticio) |
+| `sites/demo-restaurante` | altair.lat/demos/restaurante | Demo «La Leñera, cocina de fogón» (negocio ficticio) |
 | `packages/core` | — | Solo lógica compartida, sin estilos: SEO, WhatsApp, mapa, aviso de datos y animación |
 | `tools` | — | Capturas con Playwright, Lighthouse y capturas del portafolio |
 
@@ -25,7 +25,12 @@ pnpm dev:altair        # http://localhost:4321
 pnpm dev:barberia
 pnpm dev:restaurante
 pnpm build             # construye los tres sitios en sites/*/dist
+pnpm build:web         # arma altair.lat completo, con las demos en /demos/ (es lo que se publica)
 ```
+
+Las demos se publican dentro de altair.lat, así que en local también viven en su carpeta: por ejemplo `pnpm dev:barberia` abre en `http://localhost:<puerto>/demos/barberia/`.
+
+**Agregar otra página (demo o cliente en revisión):** cree la carpeta en `sites/`, ponga `base: '/demos/<nombre>/'` en su `astro.config.mjs` y agréguela a la lista de `tools/build-web.mjs`. Con el siguiente `git push` queda en `altair.lat/demos/<nombre>/`.
 
 Para ver la versión final ya construida de un sitio: `pnpm --filter altair preview`.
 
@@ -88,7 +93,7 @@ Para regenerar los íconos sin construir el sitio: `pnpm --filter altair brand`.
   ```bash
   pnpm --filter demo-barberia preview --port 4322   # en una terminal
   pnpm --filter demo-restaurante preview --port 4323 # en otra
-  node tools/portfolio.mjs                           # o pase las URLs públicas como argumentos
+  node tools/portfolio.mjs                           # usa :4322/demos/barberia/ y :4323/demos/restaurante/; o pase las URLs públicas como argumentos
   ```
 
 ## Verificación
@@ -96,7 +101,7 @@ Para regenerar los íconos sin construir el sitio: `pnpm --filter altair brand`.
 ```bash
 node tools/shots.mjs http://localhost:4321/ altair            # capturas 375 y 1440 px en .shots/
 node tools/shots.mjs http://localhost:4321/ altair --reduced   # con movimiento reducido
-node tools/lighthouse.mjs http://localhost:4321/ http://localhost:4322/ http://localhost:4323/
+node tools/lighthouse.mjs http://localhost:4321/ http://localhost:4322/demos/barberia/ http://localhost:4323/demos/restaurante/
 ```
 
 `lighthouse.mjs` usa el perfil móvil por defecto, imprime los cuatro puntajes con LCP, CLS y TBT, y lista lo que esté por debajo de 90.
@@ -111,7 +116,7 @@ node tools/lighthouse.mjs http://localhost:4321/ http://localhost:4322/ http://l
 
 ## Desplegar
 
-Vea [DEPLOY.md](DEPLOY.md): tres proyectos de Cloudflare Pages, dominios y DNS.
+Vea [DEPLOY.md](DEPLOY.md): un solo proyecto de Cloudflare Pages publica altair.lat con las demos en `/demos/`.
 
 ## Legal
 

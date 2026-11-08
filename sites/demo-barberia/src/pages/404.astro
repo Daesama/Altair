@@ -5,7 +5,7 @@ import Base from '../layouts/Base.astro';
   <section class="wrap nf">
     <p class="kicker">Página no encontrada</p>
     <h1 class="serif nf-h">Esta silla está vacía.</h1>
-    <p>La dirección no existe. <a class="enlace" href="/">Volver al inicio</a>.</p>
+    <p>La dirección no existe. <a class="enlace" href={import.meta.env.BASE_URL}>Volver al inicio</a>.</p>
   </section>
 </Base>
 <style>
