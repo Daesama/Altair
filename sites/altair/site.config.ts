@@ -167,9 +167,9 @@ export const portafolio: Caso[] = [
 
 /** Datos del responsable del tratamiento (Ley 1581 de 2012) y de los términos. */
 export const legal = {
-  responsable: 'NOMBRE COMPLETO DEL RESPONSABLE', // PLACEHOLDER
-  tipoDocumento: 'C.C.', // PLACEHOLDER (C.C. o NIT)
-  documento: '000.000.000', // PLACEHOLDER
+  responsable: 'Daniel Esteban Sastoque Marin',
+  tipoDocumento: 'C.C.',
+  documento: '1.023.377.607',
   direccion: 'Dirección de notificación, Bogotá', // PLACEHOLDER
   emailDatos: 'contacto@altair.lat',
   fechaActualizacion: '6 de noviembre de 2026',
